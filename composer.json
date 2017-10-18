@@ -1,6 +1,7 @@
 {
   "name": "alfatraining/alfaview-php-sdk",
   "description": "alfaview gRPC SDK for PHP",
+  "license": "MIT",
   "require": {
     "grpc/grpc": "^1.6",
     "google/protobuf": "^3.4"
