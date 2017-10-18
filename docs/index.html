@@ -1,0 +1,5155 @@
+<!DOCTYPE html>
+
+<html>
+  <head>
+    <title>Protocol Documentation</title>
+    <meta charset="UTF-8">
+    <link rel="stylesheet" type="text/css" href="http://fonts.googleapis.com/css?family=Ubuntu:400,700,400italic"/>
+    <style>
+      body {
+        width: 60em;
+        margin: 1em auto;
+        color: #222;
+        font-family: "Ubuntu", sans-serif;
+        padding-bottom: 4em;
+      }
+
+      h1 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      h2 {
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+        margin: 1.5em 0;
+      }
+
+      h3 {
+        font-weight: normal;
+        border-bottom: 1px solid #aaa;
+        padding-bottom: 0.5ex;
+      }
+
+      a {
+        text-decoration: none;
+        color: #567e25;
+      }
+
+      table {
+        width: 100%;
+        font-size: 80%;
+        border-collapse: collapse;
+      }
+
+      thead {
+        font-weight: 700;
+        background-color: #dcdcdc;
+      }
+
+      tbody tr:nth-child(even) {
+        background-color: #fbfbfb;
+      }
+
+      td {
+        border: 1px solid #ccc;
+        padding: 0.5ex 2ex;
+      }
+
+      td p {
+        text-indent: 1em;
+        margin: 0;
+      }
+
+      td p:nth-child(1) {
+        text-indent: 0;  
+      }
+
+       
+      .field-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .field-table td:nth-child(3) {  
+        width: 6em;
+      }
+      .field-table td:nth-child(4) {  
+        width: auto;
+      }
+
+       
+      .extension-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(3) {  
+        width: 10em;
+      }
+      .extension-table td:nth-child(4) {  
+        width: 5em;
+      }
+      .extension-table td:nth-child(5) {  
+        width: auto;
+      }
+
+       
+      .enum-table td:nth-child(1) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(2) {  
+        width: 10em;
+      }
+      .enum-table td:nth-child(3) {  
+        width: auto;
+      }
+
+       
+      .scalar-value-types-table tr {
+        height: 3em;
+      }
+
+       
+      #toc-container ul {
+        list-style-type: none;
+        padding-left: 1em;
+        line-height: 180%;
+        margin: 0;
+      }
+      #toc > li > a {
+        font-weight: bold;
+      }
+
+       
+      .file-heading {
+        width: 100%;
+        display: table;
+        border-bottom: 1px solid #aaa;
+        margin: 4em 0 1.5em 0;
+      }
+      .file-heading h2 {
+        border: none;
+        display: table-cell;
+      }
+      .file-heading a {
+        text-align: right;
+        display: table-cell;
+      }
+
+       
+      .badge {
+        width: 1.6em;
+        height: 1.6em;
+        display: inline-block;
+
+        line-height: 1.6em;
+        text-align: center;
+        font-weight: bold;
+        font-size: 60%;
+
+        color: #89ba48;
+        background-color: #dff0c8;
+
+        margin: 0.5ex 1em 0.5ex -1em;
+        border: 1px solid #fbfbfb;
+        border-radius: 1ex;
+      }
+    </style>
+
+    
+    <link rel="stylesheet" type="text/css" href="stylesheet.css"/>
+  </head>
+
+  <body>
+
+    <h1 id="title">Protocol Documentation</h1>
+
+    <h2>Table of Contents</h2>
+
+    <div id="toc-container">
+      <ul id="toc">
+        
+          
+          <li>
+            <a href="#accountStatus.proto">accountStatus.proto</a>
+            <ul>
+              
+              
+                <li>
+                  <a href="#authentication.AccountStatus"><span class="badge">E</span>AccountStatus</a>
+                </li>
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#replyInfo.proto">replyInfo.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.ReplyInfo"><span class="badge">M</span>ReplyInfo</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#common.ReplyStatusCode"><span class="badge">E</span>ReplyStatusCode</a>
+                </li>
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#accessInfo.proto">accessInfo.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.AccessInfo"><span class="badge">M</span>AccessInfo</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#accessToken.proto">accessToken.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.AccessToken"><span class="badge">M</span>AccessToken</a>
+                </li>
+              
+                <li>
+                  <a href="#common.AccessToken.PermissionsEntry"><span class="badge">M</span>AccessToken.PermissionsEntry</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#user.proto">user.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.User"><span class="badge">M</span>User</a>
+                </li>
+              
+                <li>
+                  <a href="#common.User.MetadataEntry"><span class="badge">M</span>User.MetadataEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#common.UserProfile"><span class="badge">M</span>UserProfile</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#authenticationService.proto">authenticationService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#authentication.ActivationTokenCredentials"><span class="badge">M</span>ActivationTokenCredentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthMethodInfoList"><span class="badge">M</span>AuthMethodInfoList</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationCreateReply"><span class="badge">M</span>AuthenticationCreateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationCreateRequest"><span class="badge">M</span>AuthenticationCreateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationInformationReply"><span class="badge">M</span>AuthenticationInformationReply</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationInformationReply.AuthenticationMethodInformationEntry"><span class="badge">M</span>AuthenticationInformationReply.AuthenticationMethodInformationEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationInformationReply.PermissionsEntry"><span class="badge">M</span>AuthenticationInformationReply.PermissionsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationInformationRequest"><span class="badge">M</span>AuthenticationInformationRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationMethodInformation"><span class="badge">M</span>AuthenticationMethodInformation</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationMethodInformation.MetadataEntry"><span class="badge">M</span>AuthenticationMethodInformation.MetadataEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationMethodInformation.PermissionsEntry"><span class="badge">M</span>AuthenticationMethodInformation.PermissionsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationReply"><span class="badge">M</span>AuthenticationReply</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationReply.PermissionsEntry"><span class="badge">M</span>AuthenticationReply.PermissionsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationRequest"><span class="badge">M</span>AuthenticationRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationRequest.MetadataEntry"><span class="badge">M</span>AuthenticationRequest.MetadataEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationRequest.PermissionsEntry"><span class="badge">M</span>AuthenticationRequest.PermissionsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthenticationUpdateRequest"><span class="badge">M</span>AuthenticationUpdateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.AuthorizationCodeCredentials"><span class="badge">M</span>AuthorizationCodeCredentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.CompanyCreateReply"><span class="badge">M</span>CompanyCreateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.CompanyCreateRequest"><span class="badge">M</span>CompanyCreateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.CompanySwitchCredentials"><span class="badge">M</span>CompanySwitchCredentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.ExternalOauth2Credentials"><span class="badge">M</span>ExternalOauth2Credentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.GuestAccessCredentials"><span class="badge">M</span>GuestAccessCredentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.LdapCredentials"><span class="badge">M</span>LdapCredentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.ListAuthenticationsReply"><span class="badge">M</span>ListAuthenticationsReply</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.ListAuthenticationsReply.ResultsEntry"><span class="badge">M</span>ListAuthenticationsReply.ResultsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.ListAuthenticationsRequest"><span class="badge">M</span>ListAuthenticationsRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.PasswordResetReply"><span class="badge">M</span>PasswordResetReply</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.PasswordResetRequest"><span class="badge">M</span>PasswordResetRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.RefreshTokenCredentials"><span class="badge">M</span>RefreshTokenCredentials</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.SignAccessTokenRequest"><span class="badge">M</span>SignAccessTokenRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#authentication.UsernamePasswordCredentials"><span class="badge">M</span>UsernamePasswordCredentials</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#authentication.AuthenticationService"><span class="badge">S</span>AuthenticationService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#chat.proto">chat.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.ChatHistoryReply"><span class="badge">M</span>ChatHistoryReply</a>
+                </li>
+              
+                <li>
+                  <a href="#common.ChatHistoryRequest"><span class="badge">M</span>ChatHistoryRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#common.ChatMessage"><span class="badge">M</span>ChatMessage</a>
+                </li>
+              
+                <li>
+                  <a href="#common.ChatSendReply"><span class="badge">M</span>ChatSendReply</a>
+                </li>
+              
+                <li>
+                  <a href="#common.ChatSendRequest"><span class="badge">M</span>ChatSendRequest</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#company.proto">company.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.Company"><span class="badge">M</span>Company</a>
+                </li>
+              
+                <li>
+                  <a href="#common.Company.MetadataEntry"><span class="badge">M</span>Company.MetadataEntry</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#permissions.proto">permissions.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.Permissions"><span class="badge">M</span>Permissions</a>
+                </li>
+              
+              
+                <li>
+                  <a href="#common.BackendPermission"><span class="badge">E</span>BackendPermission</a>
+                </li>
+              
+                <li>
+                  <a href="#common.RoomPermission"><span class="badge">E</span>RoomPermission</a>
+                </li>
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#room.proto">room.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#common.Room"><span class="badge">M</span>Room</a>
+                </li>
+              
+                <li>
+                  <a href="#common.Room.MetadataEntry"><span class="badge">M</span>Room.MetadataEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#common.Room.PermissionsEntry"><span class="badge">M</span>Room.PermissionsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#common.Room.SubRoomsEntry"><span class="badge">M</span>Room.SubRoomsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#common.SubRoom"><span class="badge">M</span>SubRoom</a>
+                </li>
+              
+              
+              
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#userService.proto">userService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#user.UserCreateReply"><span class="badge">M</span>UserCreateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserCreateRequest"><span class="badge">M</span>UserCreateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserDestroyRequest"><span class="badge">M</span>UserDestroyRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserListReply"><span class="badge">M</span>UserListReply</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserListReply.UsersEntry"><span class="badge">M</span>UserListReply.UsersEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserListRequest"><span class="badge">M</span>UserListRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserProfileUpdateRequest"><span class="badge">M</span>UserProfileUpdateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#user.UserUpdateRequest"><span class="badge">M</span>UserUpdateRequest</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#user.UserService"><span class="badge">S</span>UserService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#companyService.proto">companyService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#companyService.CompanyCreateReply"><span class="badge">M</span>CompanyCreateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#companyService.CompanyCreateRequest"><span class="badge">M</span>CompanyCreateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#companyService.CompanyDestroyRequest"><span class="badge">M</span>CompanyDestroyRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#companyService.CompanyListReply"><span class="badge">M</span>CompanyListReply</a>
+                </li>
+              
+                <li>
+                  <a href="#companyService.CompanyListReply.CompaniesEntry"><span class="badge">M</span>CompanyListReply.CompaniesEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#companyService.CompanyListRequest"><span class="badge">M</span>CompanyListRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#companyService.CompanyUpdateRequest"><span class="badge">M</span>CompanyUpdateRequest</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#companyService.CompanyService"><span class="badge">S</span>CompanyService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+          
+          <li>
+            <a href="#roomService.proto">roomService.proto</a>
+            <ul>
+              
+                <li>
+                  <a href="#roomService.RoomCreateReply"><span class="badge">M</span>RoomCreateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomCreateRequest"><span class="badge">M</span>RoomCreateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomDestroyReply"><span class="badge">M</span>RoomDestroyReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomDestroyRequest"><span class="badge">M</span>RoomDestroyRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomInfo"><span class="badge">M</span>RoomInfo</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomInfo.UsersEntry"><span class="badge">M</span>RoomInfo.UsersEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomListReply"><span class="badge">M</span>RoomListReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomListReply.RoomsEntry"><span class="badge">M</span>RoomListReply.RoomsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomListRequest"><span class="badge">M</span>RoomListRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomPermissionsReply"><span class="badge">M</span>RoomPermissionsReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomPermissionsRequest"><span class="badge">M</span>RoomPermissionsRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomStatusReply"><span class="badge">M</span>RoomStatusReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomStatusReply.RoomsEntry"><span class="badge">M</span>RoomStatusReply.RoomsEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomStatusRequest"><span class="badge">M</span>RoomStatusRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomUpdateReply"><span class="badge">M</span>RoomUpdateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomUpdateRequest"><span class="badge">M</span>RoomUpdateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomsUpdateReply"><span class="badge">M</span>RoomsUpdateReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomsUpdateReply.UpdateRepliesEntry"><span class="badge">M</span>RoomsUpdateReply.UpdateRepliesEntry</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.RoomsUpdateRequest"><span class="badge">M</span>RoomsUpdateRequest</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.UserInfo"><span class="badge">M</span>UserInfo</a>
+                </li>
+              
+              
+              
+              
+                <li>
+                  <a href="#roomService.roomService"><span class="badge">S</span>roomService</a>
+                </li>
+              
+            </ul>
+          </li>
+        
+        <li><a href="#scalar-value-types">Scalar Value Types</a></li>
+      </ul>
+    </div>
+
+    
+      
+      <div class="file-heading">
+        <h2 id="accountStatus.proto">accountStatus.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+
+      
+        <h3 id="authentication.AccountStatus">AccountStatus</h3>
+        <p>Account status indicates the authentication method's status and is the low-level construct for implementing</p><p>expiring passwords, force-locking accounts or verify-your-email-address-before-you-can-use-this-account</p><p>type of functionality in a business logic.</p><p>There may be certain special states (like locked, see below) that cannot be reset from the outside and</p><p>need handling on our end (think failed payments that lock company accounts).</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>DEFAULT</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ACTIVATED</td>
+                <td>1</td>
+                <td><p>fully usable account</p></td>
+              </tr>
+            
+              <tr>
+                <td>DEACTIVATED</td>
+                <td>2</td>
+                <td><p>deactivated from the outside</p></td>
+              </tr>
+            
+              <tr>
+                <td>LOCKED</td>
+                <td>3</td>
+                <td><p>deactivated from the inside (password reset needed, payment pending, etc.)</p></td>
+              </tr>
+            
+              <tr>
+                <td>PENDING</td>
+                <td>4</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>DELETED</td>
+                <td>5</td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="replyInfo.proto">replyInfo.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.ReplyInfo">ReplyInfo</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>requestId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>statusCode</td>
+                  <td><a href="#common.ReplyStatusCode">ReplyStatusCode</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>statusMessage</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+        <h3 id="common.ReplyStatusCode">ReplyStatusCode</h3>
+        <p>rational behind the status code values:</p><p>there are status codes which do not indicate an error... those codes have a value LESS than 1000</p><p>in contrast, any code with 1000 or more indicates an error of some sort</p><p>[ks-03-2017]: alfatraining/proto#20: we decided that the range 500-999 is reserved for warnings</p><p>this means that codes in this range do NOT indicate success NOR unrecoverable error</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>OK</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ACCEPTED</td>
+                <td>3</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>WELCOME</td>
+                <td>4</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>PING</td>
+                <td>1</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>PONG</td>
+                <td>2</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>PARTIAL_ERROR</td>
+                <td>5</td>
+                <td><p>for situations where multiple entities are transferred in one go, this status code can be used to indicate partial failures in replies</p></td>
+              </tr>
+            
+              <tr>
+                <td>INTERNAL_ERROR</td>
+                <td>1000</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>AUTHENTICATION_ERROR</td>
+                <td>1002</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ACCOUNT_STATUS_ERROR</td>
+                <td>1003</td>
+                <td><p>used by the authentication service to indicate errors concerning the account status (deactivated, deleted, locked)</p></td>
+              </tr>
+            
+              <tr>
+                <td>PROTOCOL_ERROR</td>
+                <td>1004</td>
+                <td><p>used by hydra when a message is not formatted correctly, and maybe other services will have similar requirements</p></td>
+              </tr>
+            
+              <tr>
+                <td>NOT_IMPLEMENTED</td>
+                <td>501</td>
+                <td><p>returned when the action/event is not implemented by the service but it is not necessarily an invalid action</p></td>
+              </tr>
+            
+              <tr>
+                <td>ACTION_INVALID</td>
+                <td>1005</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>INSUFFICIENT_PERMISSIONS</td>
+                <td>1006</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>RANGE_ERROR</td>
+                <td>1007</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>HOSTNAME_INVALID</td>
+                <td>1008</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>REQUEST_ID_INVALID</td>
+                <td>1009</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ACCESS_INFO_MISSING</td>
+                <td>1040</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>REQUEST_EMPTY</td>
+                <td>1041</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>VERSION_OUTDATED</td>
+                <td>1042</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>MAX_SIZE_EXCEEDED</td>
+                <td>1043</td>
+                <td><p>when a user supplied string is too large</p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_ID_INVALID</td>
+                <td>1010</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_INVALID</td>
+                <td>1011</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_OFFLINE</td>
+                <td>1012</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OTHER_CLIENT_CONNECTED</td>
+                <td>1013</td>
+                <td><p>returned by engine to the currently connected client when a new client with the same userId joins the same room</p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_UPDATE</td>
+                <td>12</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_LEAVE</td>
+                <td>13</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_ID_INVALID</td>
+                <td>1020</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_INVALID</td>
+                <td>1021</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_HOST_INVALID</td>
+                <td>1022</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_NOT_RUNNING</td>
+                <td>1023</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>SUBROOM_INVALID</td>
+                <td>500</td>
+                <td><p>returned when the client tries to join a subroom that does not exist</p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_NOT_FOUND</td>
+                <td>1025</td>
+                <td><p>used when the engine cannot find the room indicated via its room ID</p></td>
+              </tr>
+            
+              <tr>
+                <td>OUT_OF_SLOTS_ROOM</td>
+                <td>1030</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OUT_OF_SLOTS_USER</td>
+                <td>1031</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OUT_OF_SLOTS_AUDIO</td>
+                <td>1032</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>OUT_OF_SLOTS_VIDEO</td>
+                <td>1033</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>STREAM_ID_INVALID</td>
+                <td>1050</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>HYDRA_STREAM_ASSOCIATED_OK</td>
+                <td>103</td>
+                <td><p>hydra is using 100-199 for ok and 1100-1199 for not ok</p></td>
+              </tr>
+            
+              <tr>
+                <td>HYDRA_STREAM_CLOSED</td>
+                <td>104</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>HYDRA_STREAM_CREATED</td>
+                <td>105</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>HYDRA_STREAM_TIMEOUT</td>
+                <td>1100</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>HYDRA_STREAM_ERROR</td>
+                <td>1101</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>HYDRA_CLIENT_TIMEOUT</td>
+                <td>1102</td>
+                <td><p>when client is disconnected because a specific amount of time passed without having any streams</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="accessInfo.proto">accessInfo.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.AccessInfo">AccessInfo</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>requestId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accessToken</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>includeMetadata</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>returnObjectIdsOnly</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="accessToken.proto">accessToken.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.AccessToken">AccessToken</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>expiresAt</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#common.AccessToken.PermissionsEntry">AccessToken.PermissionsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>use common.BackendPermission enum values as keys and set the value to true </p></td>
+                </tr>
+              
+                <tr>
+                  <td>isGuest</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>map&lt;string, string&gt; metadata = 5; // key =&gt; value </p></td>
+                </tr>
+              
+                <tr>
+                  <td>displayName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>used by services when isGuest is true </p></td>
+                </tr>
+              
+                <tr>
+                  <td>basePermissionsId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>used for having shareable guest access credentials </p></td>
+                </tr>
+              
+                <tr>
+                  <td>extensionDisallowed</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>if true this access token cannot be used to sign another access token with an expiration date bigger than its own </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.AccessToken.PermissionsEntry">AccessToken.PermissionsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="user.proto">user.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.User">User</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>metadata</td>
+                  <td><a href="#common.User.MetadataEntry">User.MetadataEntry</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userProfile</td>
+                  <td><a href="#common.UserProfile">UserProfile</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.User.MetadataEntry">User.MetadataEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.UserProfile">UserProfile</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>firstname</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>lastname</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>title</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="authenticationService.proto">authenticationService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="authentication.ActivationTokenCredentials">ActivationTokenCredentials</h3>
+        <p>ActivationTokenCredentials are used to provide a way of creating users on our</p><p>platform that need to finish signing up for themselves. They are used alongside</p><p>other credential messages and provide the following additional features:</p><p>- issue short-lived temporary token (60 seconds or less) without any</p><p>backend permissions in order to fetch information that's been added</p><p>for them (most notably, their user profile or information about the</p><p>company they are joining like the company's display name)</p><p>- activate/create the authentication method they were assigned</p><p>to be used with (like UsernamePasswordCredentials)</p><p>- expire after a customizable amount of time (30 days by default)</p><p>- can be deactivated/blocked before they expire (just like any other</p><p>authentication method we have)</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>activationToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>code</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>password, should be something random </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>expiry</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>keyType</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>the key type to register this for (password, ldap, etc.) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>principal</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>the principal for the key type above, for UsernamePasswordCredentials it&#39;s the username, for AuthorizationCodeCredentials it&#39;d be the client ID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthMethodInfoList">AuthMethodInfoList</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>list</td>
+                  <td><a href="#authentication.AuthenticationMethodInformation">AuthenticationMethodInformation</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationCreateReply">AuthenticationCreateReply</h3>
+        <p>AuthenticationCreateReply contains information about the success or</p><p>failure of the AuthenticationCreate operation.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#authentication..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationCreateRequest">AuthenticationCreateRequest</h3>
+        <p>AuthenticationCreateRequest carries all the required information</p><p>to create authentication methods for a user.</p><p>This is only used if the user ID is not known and should be picked</p><p>by the authentication service, otherwise use the AuthenticationUpdateRequest.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authenticationRequest</td>
+                  <td><a href="#authentication.AuthenticationRequest">AuthenticationRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationInformationReply">AuthenticationInformationReply</h3>
+        <p>AuthenticationInformationReply contains information about a user's authentication methods</p><p>and their permissions.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#authentication..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#authentication.AuthenticationInformationReply.PermissionsEntry">AuthenticationInformationReply.PermissionsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>permissions of the user </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authenticationMethodInformation</td>
+                  <td><a href="#authentication.AuthenticationInformationReply.AuthenticationMethodInformationEntry">AuthenticationInformationReply.AuthenticationMethodInformationEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) =&gt; AuthenticationMethodInformation </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationInformationReply.AuthenticationMethodInformationEntry">AuthenticationInformationReply.AuthenticationMethodInformationEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#authentication.AuthenticationMethodInformation">AuthenticationMethodInformation</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationInformationReply.PermissionsEntry">AuthenticationInformationReply.PermissionsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationInformationRequest">AuthenticationInformationRequest</h3>
+        <p>Use AuthenticationInformationRequest to find out about a user's authentication methods</p><p>and their permissions.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationMethodInformation">AuthenticationMethodInformation</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>type</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>principal</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#authentication.AuthenticationMethodInformation.PermissionsEntry">AuthenticationMethodInformation.PermissionsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>permissions of the user </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountStatus</td>
+                  <td><a href="#authentication.AccountStatus">AccountStatus</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>metadata</td>
+                  <td><a href="#authentication.AuthenticationMethodInformation.MetadataEntry">AuthenticationMethodInformation.MetadataEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>returns metadata associated with the authentication method found for the authentication </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationMethodInformation.MetadataEntry">AuthenticationMethodInformation.MetadataEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationMethodInformation.PermissionsEntry">AuthenticationMethodInformation.PermissionsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationReply">AuthenticationReply</h3>
+        <p>AuthenticationReply contains information about the response.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#authentication..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accessToken</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>expiresAt</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>timestamp of token expiration </p></td>
+                </tr>
+              
+                <tr>
+                  <td>refreshToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>exchange for a new access token by using the refresh token grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#authentication.AuthenticationReply.PermissionsEntry">AuthenticationReply.PermissionsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>permissions of the access token (map to names using the common.BackendPermission enum keys) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountStatus</td>
+                  <td><a href="#authentication.AccountStatus">AccountStatus</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationReply.PermissionsEntry">AuthenticationReply.PermissionsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationRequest">AuthenticationRequest</h3>
+        <p>AuthenticationRequest contains everything needed to authenticate a user on our platform.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>requestId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>usernamePasswordCredentials</td>
+                  <td><a href="#authentication.UsernamePasswordCredentials">UsernamePasswordCredentials</a></td>
+                  <td></td>
+                  <td><p>password grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authorizationCodeCredentials</td>
+                  <td><a href="#authentication.AuthorizationCodeCredentials">AuthorizationCodeCredentials</a></td>
+                  <td></td>
+                  <td><p>authorization code grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>refreshTokenCredentials</td>
+                  <td><a href="#authentication.RefreshTokenCredentials">RefreshTokenCredentials</a></td>
+                  <td></td>
+                  <td><p>refresh token grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>ldapCredentials</td>
+                  <td><a href="#authentication.LdapCredentials">LdapCredentials</a></td>
+                  <td></td>
+                  <td><p>external LDAP token grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>guestAccessCredentials</td>
+                  <td><a href="#authentication.GuestAccessCredentials">GuestAccessCredentials</a></td>
+                  <td></td>
+                  <td><p>guest access token grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>activationTokenCredentials</td>
+                  <td><a href="#authentication.ActivationTokenCredentials">ActivationTokenCredentials</a></td>
+                  <td></td>
+                  <td><p>activation token grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companySwitchCredentials</td>
+                  <td><a href="#authentication.CompanySwitchCredentials">CompanySwitchCredentials</a></td>
+                  <td></td>
+                  <td><p>company switch grant </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#authentication.AuthenticationRequest.PermissionsEntry">AuthenticationRequest.PermissionsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountStatus</td>
+                  <td><a href="#authentication.AccountStatus">AccountStatus</a></td>
+                  <td></td>
+                  <td><p>set to the desired account status (default is ignored) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>metadata</td>
+                  <td><a href="#authentication.AuthenticationRequest.MetadataEntry">AuthenticationRequest.MetadataEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>use and set only when this message is used for creating/updating authentication methods (ignored otherwise) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationRequest.MetadataEntry">AuthenticationRequest.MetadataEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationRequest.PermissionsEntry">AuthenticationRequest.PermissionsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#int32">int32</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthenticationUpdateRequest">AuthenticationUpdateRequest</h3>
+        <p>AuthenticationUpdateRequest carries all the required information</p><p>on how to update a user's authentication methods.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>removeAll</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>removes all the user&#39;s associated authentication methods </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authenticationRequest</td>
+                  <td><a href="#authentication.AuthenticationRequest">AuthenticationRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.AuthorizationCodeCredentials">AuthorizationCodeCredentials</h3>
+        <p>AuthorizationCodeCredentials are used for external services in need of elevated privileges inside</p><p>our platform. That's because they may need to be handled/monitored differently than regular users.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>clientId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>identifier (synonymous with a username) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>code</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>API key or client secret </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>company identifier </p></td>
+                </tr>
+              
+                <tr>
+                  <td>redirectUri</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>optional, for future use </p></td>
+                </tr>
+              
+                <tr>
+                  <td>currentCode</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>To update an existing authorization code, pass it here. </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.CompanyCreateReply">CompanyCreateReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#authentication..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.CompanyCreateRequest">CompanyCreateRequest</h3>
+        <p>CompanyCreateRequest is used to create a new company.</p><p>Creating a company involves creating an admin user for it,</p><p>as well as a user profile for that user.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>user</td>
+                  <td><a href="#authentication..common.User">.common.User</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authenticationRequest</td>
+                  <td><a href="#authentication.AuthenticationRequest">AuthenticationRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.CompanySwitchCredentials">CompanySwitchCredentials</h3>
+        <p>CompanySwitchCredentials are used to switch to another company the user</p><p>is also a part of. All fields are required.</p><p>Use the ListAuthentications endpoint to list all the companies you're a part of.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessToken</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>a valid access token </p></td>
+                </tr>
+              
+                <tr>
+                  <td>refreshToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>a valid refresh token for the access token above </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>the company to switch to </p></td>
+                </tr>
+              
+                <tr>
+                  <td>principal</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>identifier used to create the access/refresh token </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.ExternalOauth2Credentials">ExternalOauth2Credentials</h3>
+        <p>ExternalOauth2Credentials are used to authenticate against an external OAuth2 provider</p><p>(Google, Facebook etc.). An internal user with a unique user ID is still generated to tie into our platform.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>Oauth2Uid</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>external ID of the provider&#39;s user </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Oauth2Provider</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>provider to use for checking token validity (tbd) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Oauth2Token</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>access token (short-lived) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Oauth2Refresh</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>refresh token (OAuth2 code flow, long-lived) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>Oauth2Expiry</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>Unix timestamp of access token expiration </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.GuestAccessCredentials">GuestAccessCredentials</h3>
+        <p>GuestAccessCredentials are used to provide a way for the platform to accept guests into a room or</p><p>temporary access to other services like our web apps or the file service (among others).</p><p>A user ID is auto-generated upon creation of guest access credentials and no user profile will be created.</p><p>Services that need to accept user IDs should also accept metadata maps where a display name can be added</p><p>under the guest user's ID as the key. Guest users usually don't have a lot of backend permissions, although</p><p>that's certainly possible.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>only pass when authenticating; auth service will not accept this when creating guest access credentials </p></td>
+                </tr>
+              
+                <tr>
+                  <td>code</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>password, should be something random </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>email</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>optional but recommended (see displayName field) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>for now this is required when creating guest access credentials (subject to change) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>displayName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>optional; the email address is used if not set or, if that&#39;s not set either, &#34;Unnamed guest&#34; is used, can also be used when authenticating; added to the access token </p></td>
+                </tr>
+              
+                <tr>
+                  <td>expiry</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p>optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>shareable</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>provides shareable guest access credentials to be used multiple times </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.LdapCredentials">LdapCredentials</h3>
+        <p>LdapCredentials are used to authenticate via an external LDAP server. Depending on the way the LDAP</p><p>is set up it might not be necessary to pass all properties.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>username</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>password</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>bindDN</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>denotes the bind DN to use for authenticating (leave empty if in doubt) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>searchDN</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.ListAuthenticationsReply">ListAuthenticationsReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#authentication..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>maxOffset</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>returns the maximum offset you can pass for the next page; you&#39;ve reached the
+end when the offset you passed in the request is equal to the max offset returned. </p></td>
+                </tr>
+              
+                <tr>
+                  <td>results</td>
+                  <td><a href="#authentication.ListAuthenticationsReply.ResultsEntry">ListAuthenticationsReply.ResultsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>user ID =&gt; AuthMethodInfoList </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.ListAuthenticationsReply.ResultsEntry">ListAuthenticationsReply.ResultsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#authentication.AuthMethodInfoList">AuthMethodInfoList</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.ListAuthenticationsRequest">ListAuthenticationsRequest</h3>
+        <p>ListAuthenticationsRequest is used to list authentication methods.</p><p>You may list by a variety of different attributes – these are also</p><p>combinable, i.e. requesting the authentication methods of a list of user IDs</p><p>of a specific key type in a specific state (pending/activated/locked).</p><p>Depending on your permissions, some of these will be invalid or disallowed.</p><p>For normal users only their own authentication methods will be returned</p><p>(matching the user ID in their token).</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>limit</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>default: 100 max: 1000 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>offset</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>default: 0 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>principal</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>filter by principals </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userIdList</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>filter by list of user IDs </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accountStatus</td>
+                  <td><a href="#authentication.AccountStatus">AccountStatus</a></td>
+                  <td>repeated</td>
+                  <td><p>filter by account status </p></td>
+                </tr>
+              
+                <tr>
+                  <td>keyType</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.) </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>filter by users in a company </p></td>
+                </tr>
+              
+                <tr>
+                  <td>onlyEligibleForCompanySwitch</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>filter by those eligible for company switch </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.PasswordResetReply">PasswordResetReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#authentication..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>passwordResetToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.PasswordResetRequest">PasswordResetRequest</h3>
+        <p>PasswordResetRequest is used to reset a user's password.</p><p>Although it is an implementation detail it is encouraged to</p><p>only return the password reset token in the response if the</p><p>user doing the resetting (i.e. an admin user) is part of</p><p>the same company as the user whose password is being reset.</p><p>Otherwise, the authentication service should handle emailing</p><p>the password reset token itself.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>username</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.RefreshTokenCredentials">RefreshTokenCredentials</h3>
+        <p>RefreshTokenCredentials are used to exchange a refresh token for a new access token.</p><p>Refresh tokens usually have a validity of 30 days. They are safe to pass to 3rd party applications integrating with us if,</p><p>and only if, they are created with a limited set of permissions when originally authenticating. The access token must be</p><p>passed and using a refresh token will then return an access token with at most those permissions originally granted.</p><p>If permissions were revoked for that user in the meantime, these will not be included in the new access token as well.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>principal</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>identifier used to create the access token </p></td>
+                </tr>
+              
+                <tr>
+                  <td>refreshToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accessToken</td>
+                  <td><a href="#bytes">bytes</a></td>
+                  <td></td>
+                  <td><p>an access token (is usually expired but doesn&#39;t have to be) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.SignAccessTokenRequest">SignAccessTokenRequest</h3>
+        <p>SignAccessTokenRequest is used to sign credentials without authenticating.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#authentication..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>accessToken</td>
+                  <td><a href="#authentication..common.AccessToken">.common.AccessToken</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="authentication.UsernamePasswordCredentials">UsernamePasswordCredentials</h3>
+        <p>UsernamePasswordCredentials are used to authenticate using a username and password.</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>username</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>password</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>current</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>to update credentials pass the current password here </p></td>
+                </tr>
+              
+                <tr>
+                  <td>passwordResetToken</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>to reset the user&#39;s password pass a reset token here </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="authentication.AuthenticationService">AuthenticationService</h3>
+        <p>AuthenticationService is used to authenticate against our platform using different</p><p>authentication methods, check whether you are still authenticated as well as</p><p>update your authentication credentials upon user updates.</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>authenticate</td>
+                <td><a href="#authentication.AuthenticationRequest">AuthenticationRequest</a></td>
+                <td><a href="#authentication.AuthenticationReply">AuthenticationReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>signAccessToken</td>
+                <td><a href="#authentication.SignAccessTokenRequest">SignAccessTokenRequest</a></td>
+                <td><a href="#authentication.AuthenticationReply">AuthenticationReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>isAuthenticated</td>
+                <td><a href="#common.AccessInfo">common.AccessInfo</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>requestPasswordReset</td>
+                <td><a href="#authentication.PasswordResetRequest">PasswordResetRequest</a></td>
+                <td><a href="#authentication.PasswordResetReply">PasswordResetReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>listAuthentications</td>
+                <td><a href="#authentication.ListAuthenticationsRequest">ListAuthenticationsRequest</a></td>
+                <td><a href="#authentication.ListAuthenticationsReply">ListAuthenticationsReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>authenticationCreate</td>
+                <td><a href="#authentication.AuthenticationCreateRequest">AuthenticationCreateRequest</a></td>
+                <td><a href="#authentication.AuthenticationCreateReply">AuthenticationCreateReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>authenticationUpdate</td>
+                <td><a href="#authentication.AuthenticationUpdateRequest">AuthenticationUpdateRequest</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>authenticationInformation</td>
+                <td><a href="#authentication.AuthenticationInformationRequest">AuthenticationInformationRequest</a></td>
+                <td><a href="#authentication.AuthenticationInformationReply">AuthenticationInformationReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>companyCreate</td>
+                <td><a href="#authentication.CompanyCreateRequest">CompanyCreateRequest</a></td>
+                <td><a href="#authentication.CompanyCreateReply">CompanyCreateReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="chat.proto">chat.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.ChatHistoryReply">ChatHistoryReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#common.ReplyInfo">ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>chatMessage</td>
+                  <td><a href="#common.ChatMessage">ChatMessage</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.ChatHistoryRequest">ChatHistoryRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#common.AccessInfo">AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>receiver</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>from</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>to</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.ChatMessage">ChatMessage</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>sender</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>user-uuid </p></td>
+                </tr>
+              
+                <tr>
+                  <td>receiver</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>roomid </p></td>
+                </tr>
+              
+                <tr>
+                  <td>time</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>text</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>broadcast</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>id</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>unique message id, set by server </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subRoomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p>subroomId that this message was sent from (set by sender) </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.ChatSendReply">ChatSendReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#common.ReplyInfo">ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.ChatSendRequest">ChatSendRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#common.AccessInfo">AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>chatMessage</td>
+                  <td><a href="#common.ChatMessage">ChatMessage</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="company.proto">company.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.Company">Company</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>displayName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>ownerId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>createdAt</td>
+                  <td><a href="#int64">int64</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>metadata</td>
+                  <td><a href="#common.Company.MetadataEntry">Company.MetadataEntry</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.Company.MetadataEntry">Company.MetadataEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="permissions.proto">permissions.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.Permissions">Permissions</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>admin</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>default for bool is false </p></td>
+                </tr>
+              
+                <tr>
+                  <td>voice</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>video</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>promote</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>join</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>screen</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>vip</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subroomManage</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subroomCreatePublic</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subroomCreatePrivate</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>chat</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>chatBroadcast</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>fileAdmin</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>fileUpload</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>fileList</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>fairUse</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>action</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>remove</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>workaround for python&#39;s inability to handle maps with null-values </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+        <h3 id="common.BackendPermission">BackendPermission</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>UNSET</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_CREATE</td>
+                <td>1</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_SHOW</td>
+                <td>2</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_INVITE</td>
+                <td>3</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_LIST</td>
+                <td>4</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>USER_ADMIN</td>
+                <td>5</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>GRANT_PERMISSIONS</td>
+                <td>6</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>COMPANY_CREATE</td>
+                <td>7</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>COMPANY_LIST</td>
+                <td>8</td>
+                <td><p>list your own companies</p></td>
+              </tr>
+            
+              <tr>
+                <td>COMPANY_ADMIN</td>
+                <td>9</td>
+                <td><p>administrate all companies (alfatraining internal)</p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_CREATE</td>
+                <td>10</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_LIST</td>
+                <td>13</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ROOM_ADMIN</td>
+                <td>15</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>NONE</td>
+                <td>999</td>
+                <td><p>set this to strip access tokens of all their permissions</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+        <h3 id="common.RoomPermission">RoomPermission</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Name</td><td>Number</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>_</td>
+                <td>0</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ADMIN</td>
+                <td>1</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>VOICE</td>
+                <td>2</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>VIDEO</td>
+                <td>3</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>PROMOTE</td>
+                <td>4</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>JOIN</td>
+                <td>5</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>SCREEN</td>
+                <td>6</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>VIP</td>
+                <td>7</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>SUBROOM_MANAGE</td>
+                <td>8</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>SUBROOM_CREATE_PUBLIC</td>
+                <td>9</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>SUBROOM_CREATE_PRIVATE</td>
+                <td>15</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>CHAT</td>
+                <td>10</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>CHAT_BROADCAST</td>
+                <td>11</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>FILE_ADMIN</td>
+                <td>20</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>FILE_UPLOAD</td>
+                <td>21</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>FILE_LIST</td>
+                <td>22</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>FAIR_USE</td>
+                <td>25</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>ACTION</td>
+                <td>30</td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="room.proto">room.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="common.Room">Room</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>parentId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>displayName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>host</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>metadata</td>
+                  <td><a href="#common.Room.MetadataEntry">Room.MetadataEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>K =&gt; v </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#common.Room.PermissionsEntry">Room.PermissionsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>userid =&gt; permissions </p></td>
+                </tr>
+              
+                <tr>
+                  <td>defaultPermissions</td>
+                  <td><a href="#common.Permissions">Permissions</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>subRooms</td>
+                  <td><a href="#common.Room.SubRoomsEntry">Room.SubRoomsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.Room.MetadataEntry">Room.MetadataEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.Room.PermissionsEntry">Room.PermissionsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#common.Permissions">Permissions</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.Room.SubRoomsEntry">Room.SubRoomsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#common.SubRoom">SubRoom</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="common.SubRoom">SubRoom</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>displayName</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>sort</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>custom sorting key to determine the order of subrooms in the UI </p></td>
+                </tr>
+              
+                <tr>
+                  <td>remove</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p>workaround for python&#39;s inability to handle maps with null-values </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="userService.proto">userService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="user.UserCreateReply">UserCreateReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#user..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserCreateRequest">UserCreateRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#user..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>user</td>
+                  <td><a href="#user..common.User">.common.User</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authenticationRequest</td>
+                  <td><a href="#user..authentication.AuthenticationRequest">.authentication.AuthenticationRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserDestroyRequest">UserDestroyRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#user..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserListReply">UserListReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#user..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>users</td>
+                  <td><a href="#user.UserListReply.UsersEntry">UserListReply.UsersEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>userId =&gt; User </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userIdList</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserListReply.UsersEntry">UserListReply.UsersEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#user..common.User">.common.User</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserListRequest">UserListRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#user..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userIdList</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>list of user IDs that you want to query for </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserProfileUpdateRequest">UserProfileUpdateRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#user..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userProfile</td>
+                  <td><a href="#user..common.UserProfile">.common.UserProfile</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="user.UserUpdateRequest">UserUpdateRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#user..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>user</td>
+                  <td><a href="#user..common.User">.common.User</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>authenticationRequest</td>
+                  <td><a href="#user..authentication.AuthenticationRequest">.authentication.AuthenticationRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="user.UserService">UserService</h3>
+        <p>Manages user as well as user profile information on our platform.</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>userList</td>
+                <td><a href="#user.UserListRequest">UserListRequest</a></td>
+                <td><a href="#user.UserListReply">UserListReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>userCreate</td>
+                <td><a href="#user.UserCreateRequest">UserCreateRequest</a></td>
+                <td><a href="#user.UserCreateReply">UserCreateReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>userUpdate</td>
+                <td><a href="#user.UserUpdateRequest">UserUpdateRequest</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>userDestroy</td>
+                <td><a href="#user.UserDestroyRequest">UserDestroyRequest</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>userProfileUpdate</td>
+                <td><a href="#user.UserProfileUpdateRequest">UserProfileUpdateRequest</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="companyService.proto">companyService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="companyService.CompanyCreateReply">CompanyCreateReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#companyService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="companyService.CompanyCreateRequest">CompanyCreateRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#companyService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>company</td>
+                  <td><a href="#companyService..common.Company">.common.Company</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userCreateRequest</td>
+                  <td><a href="#companyService..user.UserCreateRequest">.user.UserCreateRequest</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="companyService.CompanyDestroyRequest">CompanyDestroyRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#companyService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="companyService.CompanyListReply">CompanyListReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#companyService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companies</td>
+                  <td><a href="#companyService.CompanyListReply.CompaniesEntry">CompanyListReply.CompaniesEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>companyId =&gt; Company </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="companyService.CompanyListReply.CompaniesEntry">CompanyListReply.CompaniesEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#companyService..common.Company">.common.Company</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="companyService.CompanyListRequest">CompanyListRequest</h3>
+        <p>CompanyListRequest is used to list companies.</p><p>If the companyIdList is empty and the user does not have the COMPANY_[LIST/ADMIN]</p><p>permission the list returned will only contain the user's company according to their</p><p>company ID in the access token.</p><p>Users that have the COMPANY_[LIST/ADMIN] permission are returned a list of all the companies there are.</p><p>When providing a concrete set of company IDs, users without the COMPANY_[LIST/ADMIN] permission will</p><p>be returned a list of Company models that only have the displayName property set (except for their</p><p>own company which is returned in full (see above)).</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#companyService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyIdList</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>list of company IDs that you want to query for </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="companyService.CompanyUpdateRequest">CompanyUpdateRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#companyService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>company</td>
+                  <td><a href="#companyService..common.Company">.common.Company</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>companyId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="companyService.CompanyService">CompanyService</h3>
+        <p>Manages companies within our platform.</p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>companyList</td>
+                <td><a href="#companyService.CompanyListRequest">CompanyListRequest</a></td>
+                <td><a href="#companyService.CompanyListReply">CompanyListReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>companyCreate</td>
+                <td><a href="#companyService.CompanyCreateRequest">CompanyCreateRequest</a></td>
+                <td><a href="#companyService.CompanyCreateReply">CompanyCreateReply</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>companyUpdate</td>
+                <td><a href="#companyService.CompanyUpdateRequest">CompanyUpdateRequest</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>companyDestroy</td>
+                <td><a href="#companyService.CompanyDestroyRequest">CompanyDestroyRequest</a></td>
+                <td><a href="#common.ReplyInfo">common.ReplyInfo</a></td>
+                <td><p></p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+    
+      
+      <div class="file-heading">
+        <h2 id="roomService.proto">roomService.proto</h2><a href="#title">Top</a>
+      </div>
+      <p></p>
+
+      
+        <h3 id="roomService.RoomCreateReply">RoomCreateReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>room</td>
+                  <td><a href="#roomService..common.Room">.common.Room</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomCreateRequest">RoomCreateRequest</h3>
+        <p>room create</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>room</td>
+                  <td><a href="#roomService..common.Room">.common.Room</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomDestroyReply">RoomDestroyReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomDestroyRequest">RoomDestroyRequest</h3>
+        <p>room destroy</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomInfo">RoomInfo</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>users</td>
+                  <td><a href="#roomService.RoomInfo.UsersEntry">RoomInfo.UsersEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>key is user-uuid </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomInfo.UsersEntry">RoomInfo.UsersEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#roomService.UserInfo">UserInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomListReply">RoomListReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>rooms</td>
+                  <td><a href="#roomService.RoomListReply.RoomsEntry">RoomListReply.RoomsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>key is room-uuid </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomListReply.RoomsEntry">RoomListReply.RoomsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#roomService..common.Room">.common.Room</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomListRequest">RoomListRequest</h3>
+        <p>room list</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>limit</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>default:100 max:1000 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>offset</td>
+                  <td><a href="#uint32">uint32</a></td>
+                  <td></td>
+                  <td><p>default:0 </p></td>
+                </tr>
+              
+                <tr>
+                  <td>filterRoomIds</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p>list of room IDs that you want to query for </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomPermissionsReply">RoomPermissionsReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>permissions</td>
+                  <td><a href="#roomService..common.Permissions">.common.Permissions</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomPermissionsRequest">RoomPermissionsRequest</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>userId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomStatusReply">RoomStatusReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>rooms</td>
+                  <td><a href="#roomService.RoomStatusReply.RoomsEntry">RoomStatusReply.RoomsEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>key is room-uuid </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomStatusReply.RoomsEntry">RoomStatusReply.RoomsEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#roomService.RoomInfo">RoomInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomStatusRequest">RoomStatusRequest</h3>
+        <p>room status</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomIds</td>
+                  <td><a href="#string">string</a></td>
+                  <td>repeated</td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomUpdateReply">RoomUpdateReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomUpdateRequest">RoomUpdateRequest</h3>
+        <p>room update</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>room</td>
+                  <td><a href="#roomService..common.Room">.common.Room</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>removeDefaultPermissions</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomsUpdateReply">RoomsUpdateReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>updateReplies</td>
+                  <td><a href="#roomService.RoomsUpdateReply.UpdateRepliesEntry">RoomsUpdateReply.UpdateRepliesEntry</a></td>
+                  <td>repeated</td>
+                  <td><p>key is the room ID </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomsUpdateReply.UpdateRepliesEntry">RoomsUpdateReply.UpdateRepliesEntry</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>key</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>value</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.RoomsUpdateRequest">RoomsUpdateRequest</h3>
+        <p>update multiple rooms in one go</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomsToUpdate</td>
+                  <td><a href="#roomService.RoomUpdateRequest">RoomUpdateRequest</a></td>
+                  <td>repeated</td>
+                  <td><p>access info should be ingnored in the individual RoomUpdateRequests </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.UserInfo">UserInfo</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>online</td>
+                  <td><a href="#bool">bool</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+
+      
+
+      
+
+      
+        <h3 id="roomService.roomService">roomService</h3>
+        <p></p>
+        <table class="enum-table">
+          <thead>
+            <tr><td>Method Name</td><td>Request Type</td><td>Response Type</td><td>Description</td></tr>
+          </thead>
+          <tbody>
+            
+              <tr>
+                <td>Create</td>
+                <td><a href="#roomService.RoomCreateRequest">RoomCreateRequest</a></td>
+                <td><a href="#roomService.RoomCreateReply">RoomCreateReply</a></td>
+                <td><p>creates or replaces all values</p></td>
+              </tr>
+            
+              <tr>
+                <td>Update</td>
+                <td><a href="#roomService.RoomUpdateRequest">RoomUpdateRequest</a></td>
+                <td><a href="#roomService.RoomUpdateReply">RoomUpdateReply</a></td>
+                <td><p>adds or overwrites all values</p></td>
+              </tr>
+            
+              <tr>
+                <td>UpdateRooms</td>
+                <td><a href="#roomService.RoomsUpdateRequest">RoomsUpdateRequest</a></td>
+                <td><a href="#roomService.RoomsUpdateReply">RoomsUpdateReply</a></td>
+                <td><p>adds or overwrites all values for multiple rooms</p></td>
+              </tr>
+            
+              <tr>
+                <td>List</td>
+                <td><a href="#roomService.RoomListRequest">RoomListRequest</a></td>
+                <td><a href="#roomService.RoomListReply">RoomListReply</a></td>
+                <td><p>list all rooms which are accessible by the current user</p></td>
+              </tr>
+            
+              <tr>
+                <td>Destroy</td>
+                <td><a href="#roomService.RoomDestroyRequest">RoomDestroyRequest</a></td>
+                <td><a href="#roomService.RoomDestroyReply">RoomDestroyReply</a></td>
+                <td><p>deletes room and kicks all users</p></td>
+              </tr>
+            
+              <tr>
+                <td>Status</td>
+                <td><a href="#roomService.RoomStatusRequest">RoomStatusRequest</a></td>
+                <td><a href="#roomService.RoomStatusReply">RoomStatusReply</a></td>
+                <td><p>return mutable room information</p></td>
+              </tr>
+            
+              <tr>
+                <td>Permissions</td>
+                <td><a href="#roomService.RoomPermissionsRequest">RoomPermissionsRequest</a></td>
+                <td><a href="#roomService.RoomPermissionsReply">RoomPermissionsReply</a></td>
+                <td><p>returns user permissions for a room</p></td>
+              </tr>
+            
+          </tbody>
+        </table>
+      
+    
+
+    <h2 id="scalar-value-types">Scalar Value Types</h2>
+    <table class="scalar-value-types-table">
+      <thead>
+        <tr><td>.proto Type</td><td>Notes</td><td>C++ Type</td><td>Java Type</td><td>Python Type</td></tr>
+      </thead>
+      <tbody>
+        
+          <tr id="double">
+            <td>double</td>
+            <td></td>
+            <td>double</td>
+            <td>double</td>
+            <td>float</td>
+          </tr>
+        
+          <tr id="float">
+            <td>float</td>
+            <td></td>
+            <td>float</td>
+            <td>float</td>
+            <td>float</td>
+          </tr>
+        
+          <tr id="int32">
+            <td>int32</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint32 instead.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+          </tr>
+        
+          <tr id="int64">
+            <td>int64</td>
+            <td>Uses variable-length encoding. Inefficient for encoding negative numbers – if your field is likely to have negative values, use sint64 instead.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+          </tr>
+        
+          <tr id="uint32">
+            <td>uint32</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int/long</td>
+          </tr>
+        
+          <tr id="uint64">
+            <td>uint64</td>
+            <td>Uses variable-length encoding.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+          </tr>
+        
+          <tr id="sint32">
+            <td>sint32</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int32s.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+          </tr>
+        
+          <tr id="sint64">
+            <td>sint64</td>
+            <td>Uses variable-length encoding. Signed int value. These more efficiently encode negative numbers than regular int64s.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+          </tr>
+        
+          <tr id="fixed32">
+            <td>fixed32</td>
+            <td>Always four bytes. More efficient than uint32 if values are often greater than 2^28.</td>
+            <td>uint32</td>
+            <td>int</td>
+            <td>int</td>
+          </tr>
+        
+          <tr id="fixed64">
+            <td>fixed64</td>
+            <td>Always eight bytes. More efficient than uint64 if values are often greater than 2^56.</td>
+            <td>uint64</td>
+            <td>long</td>
+            <td>int/long</td>
+          </tr>
+        
+          <tr id="sfixed32">
+            <td>sfixed32</td>
+            <td>Always four bytes.</td>
+            <td>int32</td>
+            <td>int</td>
+            <td>int</td>
+          </tr>
+        
+          <tr id="sfixed64">
+            <td>sfixed64</td>
+            <td>Always eight bytes.</td>
+            <td>int64</td>
+            <td>long</td>
+            <td>int/long</td>
+          </tr>
+        
+          <tr id="bool">
+            <td>bool</td>
+            <td></td>
+            <td>bool</td>
+            <td>boolean</td>
+            <td>boolean</td>
+          </tr>
+        
+          <tr id="string">
+            <td>string</td>
+            <td>A string must always contain UTF-8 encoded or 7-bit ASCII text.</td>
+            <td>string</td>
+            <td>String</td>
+            <td>str/unicode</td>
+          </tr>
+        
+          <tr id="bytes">
+            <td>bytes</td>
+            <td>May contain any arbitrary sequence of bytes.</td>
+            <td>string</td>
+            <td>ByteString</td>
+            <td>str</td>
+          </tr>
+        
+      </tbody>
+    </table>
+  </body>
+</html>
+
