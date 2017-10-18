@@ -1,0 +1,17 @@
+{
+  "name": "alfatraining/alfaview-php-sdk",
+  "description": "alfaview gRPC SDK for PHP",
+  "require": {
+    "grpc/grpc": "^1.6",
+    "google/protobuf": "^3.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "Alfatraining\\": "src/Alfatraining",
+      "GPBMetadata\\": "src/GPBMetadata"
+    }
+  },
+  "require-dev": {
+    "symfony/var-dumper": "^3.3"
+  }
+}
