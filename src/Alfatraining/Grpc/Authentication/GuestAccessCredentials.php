@@ -38,7 +38,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * pass these when creating guest access credentials for a particular guest in a particular room
+     * optional but recommended (see displayName field)
      *
      * Generated from protobuf field <code>string email = 4;</code>
      */
@@ -148,7 +148,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * pass these when creating guest access credentials for a particular guest in a particular room
+     * optional but recommended (see displayName field)
      *
      * Generated from protobuf field <code>string email = 4;</code>
      * @return string
@@ -159,7 +159,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * pass these when creating guest access credentials for a particular guest in a particular room
+     * optional but recommended (see displayName field)
      *
      * Generated from protobuf field <code>string email = 4;</code>
      * @param string $var

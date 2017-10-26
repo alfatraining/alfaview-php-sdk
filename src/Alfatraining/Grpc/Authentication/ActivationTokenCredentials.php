@@ -42,7 +42,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * pass these when creating activation token credentials
+     * optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 4;</code>
      */
@@ -136,7 +136,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * pass these when creating activation token credentials
+     * optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 4;</code>
      * @return int|string
@@ -147,7 +147,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * pass these when creating activation token credentials
+     * optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 4;</code>
      * @param int|string $var
