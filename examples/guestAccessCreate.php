@@ -72,7 +72,7 @@ if ($authenticationCreateReply === null) {
   print("Guest access creation failed!");
   die();
 }
-$userId = $authenticationCreateReply->getUserId();
+$guestId = $authenticationCreateReply->getUserId();
 
 // attach the guest to a room
 $guestPermissions = new Permissions();
@@ -82,8 +82,8 @@ $guestPermissions->setChat(true);
 $guestPermissions->setJoin(true);
 $guestPermissions->setFairUse(true);
 $room = new Room();
-$room->setMetadata(array($userId => $name));
-$room->setPermissions(array($userId => $guestPermissions));
+$room->setMetadata(array($guestId => $name));
+$room->setPermissions(array($guestId => $guestPermissions));
 $roomUpdateRequest = new RoomUpdateRequest();
 $roomUpdateRequest->setRoomId($roomId);
 $roomUpdateRequest->setRoom($room);

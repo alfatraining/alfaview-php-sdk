@@ -2,23 +2,23 @@
 
 require dirname(__FILE__).'/../vendor/autoload.php';
 
-use Alfatraining\Grpc\Authentication\AuthenticationServiceClient;
 use Alfatraining\Grpc\Authentication\AuthenticationRequest;
+use Alfatraining\Grpc\Authentication\AuthenticationServiceClient;
 use Alfatraining\Grpc\Authentication\AuthorizationCodeCredentials;
 use Alfatraining\Grpc\Authentication\ListAuthenticationsRequest;
 use Alfatraining\Grpc\Common\AccessInfo;
 use Alfatraining\Grpc\Room\RoomListRequest;
 use Alfatraining\Grpc\Room\RoomServiceClient;
-use Alfatraining\Grpc\User\UserListRequest;
-use Alfatraining\Grpc\User\UserServiceClient;
 
 // configuration
 $clientId = '';
 $authCode = '';
 $companyId = '';
+$roomServiceAddress = '';
 $authServiceAddress = '';
 $userServiceAddress = '';
-$roomServiceAddress = '';
+
+$roomId = '';
 
 // set up clients
 $credentials = \Grpc\ChannelCredentials::createSsl();
@@ -46,7 +46,7 @@ $accessInfo->setAccessToken($authReply->getAccessToken());
 
 // request room data for a specific room and filter guest ids
 $roomListRequest = new RoomListRequest();
-$roomListRequest->setFilterRoomIds(array('XXXXXXXX-XXXX-XXXX-XXXX-XXXXXXXXXXXX')); // limits the request to just the specified room ids
+$roomListRequest->setFilterRoomIds(array($roomId)); // limits the request to just the specified room ids
 $roomListRequest->setAccessInfo($accessInfo);
 list($roomListReply, $status) = $roomClient->List($roomListRequest)->wait();
 $guestIds = array();
