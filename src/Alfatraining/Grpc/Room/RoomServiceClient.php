@@ -5,7 +5,7 @@ namespace Alfatraining\Grpc\Room;
 
 /**
  */
-class roomServiceClient extends \Grpc\BaseStub {
+class RoomServiceClient extends \Grpc\BaseStub {
 
     /**
      * @param string $hostname hostname
