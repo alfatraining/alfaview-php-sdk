@@ -1,3 +1,10 @@
+# Note:
+# When compiling the protofiles make sure to
+# temporarily add the corresponding php namespace option.
+#
+# Example:
+# option php_namespace = "Alfatraining\\Grpc\\Authentication";
+
 .PHONY: protoc docs
 
 protoc:
