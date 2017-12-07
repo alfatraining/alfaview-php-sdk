@@ -106,6 +106,32 @@ class ReplyStatusCode
      */
     const MAX_SIZE_EXCEEDED = 1043;
     /**
+     * Generated from protobuf enum <code>RESPONSE_EMPTY = 1044;</code>
+     */
+    const RESPONSE_EMPTY = 1044;
+    /**
+     * Generated from protobuf enum <code>NOT_FOUND = 1045;</code>
+     */
+    const NOT_FOUND = 1045;
+    /**
+     * Generated from protobuf enum <code>REMOTE_ERROR = 1046;</code>
+     */
+    const REMOTE_ERROR = 1046;
+    /**
+     * Generated from protobuf enum <code>TIMEOUT = 1047;</code>
+     */
+    const TIMEOUT = 1047;
+    /**
+     * Generated from protobuf enum <code>CANCELED = 1048;</code>
+     */
+    const CANCELED = 1048;
+    /**
+     * context dependent; on join room it is returned by engine when the room is full
+     *
+     * Generated from protobuf enum <code>QUOTA_EXCEEDED = 1060;</code>
+     */
+    const QUOTA_EXCEEDED = 1060;
+    /**
      * Generated from protobuf enum <code>USER_ID_INVALID = 1010;</code>
      */
     const USER_ID_INVALID = 1010;
@@ -180,12 +206,16 @@ class ReplyStatusCode
      */
     const STREAM_ID_INVALID = 1050;
     /**
+     * Generated from protobuf enum <code>STREAM_NOT_FOUND = 1051;</code>
+     */
+    const STREAM_NOT_FOUND = 1051;
+    /**
+     * Generated from protobuf enum <code>STREAM_HOST_INVALID = 1052;</code>
+     */
+    const STREAM_HOST_INVALID = 1052;
+    /**
      * hydra is using 100-199 for ok and 1100-1199 for not ok
      *
-     * Generated from protobuf enum <code>HYDRA_STREAM_ASSOCIATED_OK = 103;</code>
-     */
-    const HYDRA_STREAM_ASSOCIATED_OK = 103;
-    /**
      * Generated from protobuf enum <code>HYDRA_STREAM_CLOSED = 104;</code>
      */
     const HYDRA_STREAM_CLOSED = 104;
