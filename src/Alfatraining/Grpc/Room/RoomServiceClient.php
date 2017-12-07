@@ -107,4 +107,17 @@ class RoomServiceClient extends \Grpc\BaseStub {
         $metadata, $options);
     }
 
+    /**
+     * @param \Alfatraining\Grpc\Room\CreateJoinLinkRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     */
+    public function CreateJoinLink(\Alfatraining\Grpc\Room\CreateJoinLinkRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/roomService.roomService/CreateJoinLink',
+        $argument,
+        ['\Alfatraining\Grpc\Room\CreateJoinLinkReply', 'decode'],
+        $metadata, $options);
+    }
+
 }

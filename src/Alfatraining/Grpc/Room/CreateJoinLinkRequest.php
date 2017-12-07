@@ -9,20 +9,16 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * RoomPermissions
+ * CreateJoinLink
  *
- * Generated from protobuf message <code>roomService.RoomPermissionsRequest</code>
+ * Generated from protobuf message <code>roomService.CreateJoinLinkRequest</code>
  */
-class RoomPermissionsRequest extends \Google\Protobuf\Internal\Message
+class CreateJoinLinkRequest extends \Google\Protobuf\Internal\Message
 {
     /**
      * Generated from protobuf field <code>.common.AccessInfo accessInfo = 1;</code>
      */
     private $accessInfo = null;
-    /**
-     * Generated from protobuf field <code>string userId = 11;</code>
-     */
-    private $userId = '';
     /**
      * Generated from protobuf field <code>string roomId = 12;</code>
      */
@@ -51,28 +47,6 @@ class RoomPermissionsRequest extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkMessage($var, \Alfatraining\Grpc\Common\AccessInfo::class);
         $this->accessInfo = $var;
-
-        return $this;
-    }
-
-    /**
-     * Generated from protobuf field <code>string userId = 11;</code>
-     * @return string
-     */
-    public function getUserId()
-    {
-        return $this->userId;
-    }
-
-    /**
-     * Generated from protobuf field <code>string userId = 11;</code>
-     * @param string $var
-     * @return $this
-     */
-    public function setUserId($var)
-    {
-        GPBUtil::checkString($var, True);
-        $this->userId = $var;
 
         return $this;
     }
