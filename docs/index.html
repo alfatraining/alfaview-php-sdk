@@ -607,6 +607,14 @@
             <ul>
               
                 <li>
+                  <a href="#roomService.CreateJoinLinkReply"><span class="badge">M</span>CreateJoinLinkReply</a>
+                </li>
+              
+                <li>
+                  <a href="#roomService.CreateJoinLinkRequest"><span class="badge">M</span>CreateJoinLinkRequest</a>
+                </li>
+              
+                <li>
                   <a href="#roomService.RoomCreateReply"><span class="badge">M</span>RoomCreateReply</a>
                 </li>
               
@@ -690,7 +698,7 @@
               
               
                 <li>
-                  <a href="#roomService.roomService"><span class="badge">S</span>roomService</a>
+                  <a href="#roomService.RoomService"><span class="badge">S</span>RoomService</a>
                 </li>
               
             </ul>
@@ -937,6 +945,42 @@
               </tr>
             
               <tr>
+                <td>RESPONSE_EMPTY</td>
+                <td>1044</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>NOT_FOUND</td>
+                <td>1045</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>REMOTE_ERROR</td>
+                <td>1046</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>TIMEOUT</td>
+                <td>1047</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>CANCELED</td>
+                <td>1048</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>QUOTA_EXCEEDED</td>
+                <td>1060</td>
+                <td><p>context dependent; on join room it is returned by engine when the room is full</p></td>
+              </tr>
+            
+              <tr>
                 <td>USER_ID_INVALID</td>
                 <td>1010</td>
                 <td><p></p></td>
@@ -1039,15 +1083,21 @@
               </tr>
             
               <tr>
-                <td>HYDRA_STREAM_ASSOCIATED_OK</td>
-                <td>103</td>
-                <td><p>hydra is using 100-199 for ok and 1100-1199 for not ok</p></td>
+                <td>STREAM_NOT_FOUND</td>
+                <td>1051</td>
+                <td><p></p></td>
+              </tr>
+            
+              <tr>
+                <td>STREAM_HOST_INVALID</td>
+                <td>1052</td>
+                <td><p></p></td>
               </tr>
             
               <tr>
                 <td>HYDRA_STREAM_CLOSED</td>
                 <td>104</td>
-                <td><p></p></td>
+                <td><p>hydra is using 100-199 for ok and 1100-1199 for not ok</p></td>
               </tr>
             
               <tr>
@@ -4339,6 +4389,66 @@ end when the offset you passed in the request is equal to the max offset returne
       <p></p>
 
       
+        <h3 id="roomService.CreateJoinLinkReply">CreateJoinLinkReply</h3>
+        <p></p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>replyInfo</td>
+                  <td><a href="#roomService..common.ReplyInfo">.common.ReplyInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>joinLink</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
+        <h3 id="roomService.CreateJoinLinkRequest">CreateJoinLinkRequest</h3>
+        <p>CreateJoinLink</p>
+
+        
+          <table class="field-table">
+            <thead>
+              <tr><td>Field</td><td>Type</td><td>Label</td><td>Description</td></tr>
+            </thead>
+            <tbody>
+              
+                <tr>
+                  <td>accessInfo</td>
+                  <td><a href="#roomService..common.AccessInfo">.common.AccessInfo</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+                <tr>
+                  <td>roomId</td>
+                  <td><a href="#string">string</a></td>
+                  <td></td>
+                  <td><p> </p></td>
+                </tr>
+              
+            </tbody>
+          </table>
+        
+
+        
+      
         <h3 id="roomService.RoomCreateReply">RoomCreateReply</h3>
         <p></p>
 
@@ -4647,7 +4757,7 @@ end when the offset you passed in the request is equal to the max offset returne
         
       
         <h3 id="roomService.RoomPermissionsRequest">RoomPermissionsRequest</h3>
-        <p></p>
+        <p>RoomPermissions</p>
 
         
           <table class="field-table">
@@ -4959,7 +5069,7 @@ end when the offset you passed in the request is equal to the max offset returne
       
 
       
-        <h3 id="roomService.roomService">roomService</h3>
+        <h3 id="roomService.RoomService">RoomService</h3>
         <p></p>
         <table class="enum-table">
           <thead>
@@ -5014,6 +5124,13 @@ end when the offset you passed in the request is equal to the max offset returne
                 <td><a href="#roomService.RoomPermissionsRequest">RoomPermissionsRequest</a></td>
                 <td><a href="#roomService.RoomPermissionsReply">RoomPermissionsReply</a></td>
                 <td><p>returns user permissions for a room</p></td>
+              </tr>
+            
+              <tr>
+                <td>CreateJoinLink</td>
+                <td><a href="#roomService.CreateJoinLinkRequest">CreateJoinLinkRequest</a></td>
+                <td><a href="#roomService.CreateJoinLinkReply">CreateJoinLinkReply</a></td>
+                <td><p>creates a link to launch the client</p></td>
               </tr>
             
           </tbody>

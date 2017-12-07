@@ -150,6 +150,8 @@
   
 
 - [roomService.proto](#roomService.proto)
+    - [CreateJoinLinkReply](#roomService.CreateJoinLinkReply)
+    - [CreateJoinLinkRequest](#roomService.CreateJoinLinkRequest)
     - [RoomCreateReply](#roomService.RoomCreateReply)
     - [RoomCreateRequest](#roomService.RoomCreateRequest)
     - [RoomDestroyReply](#roomService.RoomDestroyReply)
@@ -173,7 +175,7 @@
   
   
   
-    - [roomService](#roomService.roomService)
+    - [RoomService](#roomService.RoomService)
   
 
 - [Scalar Value Types](#scalar-value-types)
@@ -273,6 +275,12 @@ this means that codes in this range do NOT indicate success NOR unrecoverable er
 | REQUEST_EMPTY | 1041 |  |
 | VERSION_OUTDATED | 1042 |  |
 | MAX_SIZE_EXCEEDED | 1043 | when a user supplied string is too large |
+| RESPONSE_EMPTY | 1044 |  |
+| NOT_FOUND | 1045 |  |
+| REMOTE_ERROR | 1046 |  |
+| TIMEOUT | 1047 |  |
+| CANCELED | 1048 |  |
+| QUOTA_EXCEEDED | 1060 | context dependent; on join room it is returned by engine when the room is full |
 | USER_ID_INVALID | 1010 |  |
 | USER_INVALID | 1011 |  |
 | USER_OFFLINE | 1012 |  |
@@ -290,8 +298,9 @@ this means that codes in this range do NOT indicate success NOR unrecoverable er
 | OUT_OF_SLOTS_AUDIO | 1032 |  |
 | OUT_OF_SLOTS_VIDEO | 1033 |  |
 | STREAM_ID_INVALID | 1050 |  |
-| HYDRA_STREAM_ASSOCIATED_OK | 103 | hydra is using 100-199 for ok and 1100-1199 for not ok |
-| HYDRA_STREAM_CLOSED | 104 |  |
+| STREAM_NOT_FOUND | 1051 |  |
+| STREAM_HOST_INVALID | 1052 |  |
+| HYDRA_STREAM_CLOSED | 104 | hydra is using 100-199 for ok and 1100-1199 for not ok |
 | HYDRA_STREAM_CREATED | 105 |  |
 | HYDRA_STREAM_TIMEOUT | 1100 |  |
 | HYDRA_STREAM_ERROR | 1101 |  |
@@ -1789,6 +1798,38 @@ Manages companies within our platform.
 
 
 
+<a name="roomService.CreateJoinLinkReply"/>
+
+### CreateJoinLinkReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| joinLink | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="roomService.CreateJoinLinkRequest"/>
+
+### CreateJoinLinkRequest
+CreateJoinLink
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| roomId | [string](#string) |  |  |
+
+
+
+
+
+
 <a name="roomService.RoomCreateReply"/>
 
 ### RoomCreateReply
@@ -1953,7 +1994,7 @@ room list
 <a name="roomService.RoomPermissionsRequest"/>
 
 ### RoomPermissionsRequest
-
+RoomPermissions
 
 
 | Field | Type | Label | Description |
@@ -2117,9 +2158,9 @@ update multiple rooms in one go
  
 
 
-<a name="roomService.roomService"/>
+<a name="roomService.RoomService"/>
 
-### roomService
+### RoomService
 
 
 | Method Name | Request Type | Response Type | Description |
@@ -2131,6 +2172,7 @@ update multiple rooms in one go
 | Destroy | [RoomDestroyRequest](#roomService.RoomDestroyRequest) | [RoomDestroyReply](#roomService.RoomDestroyRequest) | deletes room and kicks all users |
 | Status | [RoomStatusRequest](#roomService.RoomStatusRequest) | [RoomStatusReply](#roomService.RoomStatusRequest) | return mutable room information |
 | Permissions | [RoomPermissionsRequest](#roomService.RoomPermissionsRequest) | [RoomPermissionsReply](#roomService.RoomPermissionsRequest) | returns user permissions for a room |
+| CreateJoinLink | [CreateJoinLinkRequest](#roomService.CreateJoinLinkRequest) | [CreateJoinLinkReply](#roomService.CreateJoinLinkRequest) | creates a link to launch the client |
 
  
 
