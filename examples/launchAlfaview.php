@@ -13,6 +13,7 @@ use Alfatraining\Grpc\Common\User;
 use Alfatraining\Grpc\Common\UserProfile;
 use Alfatraining\Grpc\Common\Room;
 use Alfatraining\Grpc\Common\Permissions;
+use Alfatraining\Grpc\Room\CreateJoinLinkRequest;
 use Alfatraining\Grpc\Room\RoomCreateRequest;
 use Alfatraining\Grpc\Room\RoomListRequest;
 use Alfatraining\Grpc\Room\RoomServiceClient;
@@ -105,28 +106,20 @@ if ($roomUpdateReply === null) {
   die();
 }
 
-// create access token for alfaview launch url
+// create access token for alfaview join link
 $signAccessTokenRequest = new SignAccessTokenRequest();
 $signAccessTokenRequest->setAccessInfo($accessInfo);
 $accessToken = (new AccessToken())->setUserId($userCreateReply->getUserId())->setCompanyId($companyId)->setExpiresAt($authReply->getExpiresAt());
 $signAccessTokenRequest->setAccessToken($accessToken);
 list($signAccessTokenReply, $status) = $authClient->signAccessToken($signAccessTokenRequest)->wait();
 
-// verify room access for the new user
-$roomListRequest = new RoomListRequest();
-$roomListRequest->setAccessInfo((new AccessInfo())->setRequestId('verify-room-access-example-from-sdk')->setAccessToken($signAccessTokenReply->getAccessToken()));
-$roomListRequest->setFilterRoomIds(array($roomId));
-list($roomListReply, $status) = $roomClient->List($roomListRequest)->wait();
-foreach ($roomListReply->getRooms() as $roomID => $room) {
-  foreach ($room->getPermissions() as $userID => $permissions) {
-    if ($userID == $userId) {
-      print("User creation and room access successful.\n");
-    }
-  }
+// create the join link
+$createJoinLinkRequest = new CreateJoinLinkRequest();
+$createJoinLinkRequest->setAccessInfo((new AccessInfo())->setRequestId('verify-room-access-example-from-sdk')->setAccessToken($signAccessTokenReply->getAccessToken()));
+$createJoinLinkRequest->setRoomId($roomId);
+list($createJoinLinkReply, $status) = $roomClient->CreateJoinLink($createJoinLinkRequest)->wait();
+if ($createJoinLinkReply === null) {
+  print("Join link creation failed!");
+  die();
 }
-
-// token should preferably be base64 encoded because the result will be shorter
-// a base64 encoded token parameter must be named "token" instead of "tokenhex"
-// however this example uses bin2hex for availability reasons
-$alfaviewLaunchURL = $joinLinkScheme . '://' . $joinLinkHostname . '?companyId=' . $companyId . '&roomid=' . $roomId . '&tokenhex=' . bin2hex($signAccessTokenReply->getAccessToken());
-print("Point your browser to: " . $alfaviewLaunchURL . "\n");
+print("Point your browser to: " . $createJoinLinkReply->getJoinLink() . "\n");
