@@ -5,7 +5,11 @@
 # Example:
 # option php_namespace = "Alfatraining\\Grpc\\Authentication";
 
-.PHONY: protoc docs
+.PHONY: protoc docs setup
+
+setup:
+	@ -git clone -b public-alfaview-php-sdk git@git.alfa.sx:alfatraining/proto.git proto
+	@ cd proto ; git pull origin public-alfaview-php-sdk ; cd -
 
 protoc:
 	@ echo "Compiling proto files..."
