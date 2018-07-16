@@ -3,46 +3,14 @@
 
 ## Table of Contents
 
-- [accountStatus.proto](#accountStatus.proto)
+- [authentication/accountStatus.proto](#authentication/accountStatus.proto)
   
     - [AccountStatus](#authentication.AccountStatus)
   
   
   
 
-- [replyInfo.proto](#replyInfo.proto)
-    - [ReplyInfo](#common.ReplyInfo)
-  
-    - [ReplyStatusCode](#common.ReplyStatusCode)
-  
-  
-  
-
-- [accessInfo.proto](#accessInfo.proto)
-    - [AccessInfo](#common.AccessInfo)
-  
-  
-  
-  
-
-- [accessToken.proto](#accessToken.proto)
-    - [AccessToken](#common.AccessToken)
-    - [AccessToken.PermissionsEntry](#common.AccessToken.PermissionsEntry)
-  
-  
-  
-  
-
-- [user.proto](#user.proto)
-    - [User](#common.User)
-    - [User.MetadataEntry](#common.User.MetadataEntry)
-    - [UserProfile](#common.UserProfile)
-  
-  
-  
-  
-
-- [authenticationService.proto](#authenticationService.proto)
+- [authentication/authenticationService.proto](#authentication/authenticationService.proto)
     - [ActivationTokenCredentials](#authentication.ActivationTokenCredentials)
     - [AuthMethodInfoList](#authentication.AuthMethodInfoList)
     - [AuthenticationCreateReply](#authentication.AuthenticationCreateReply)
@@ -81,7 +49,38 @@
     - [AuthenticationService](#authentication.AuthenticationService)
   
 
-- [chat.proto](#chat.proto)
+- [businessLogicService/businessLogicService.proto](#businessLogicService/businessLogicService.proto)
+    - [CompanyPermissionGroupsListReply](#businessLogicService.CompanyPermissionGroupsListReply)
+    - [CompanyPermissionGroupsListReply.PermissionGroupsEntry](#businessLogicService.CompanyPermissionGroupsListReply.PermissionGroupsEntry)
+    - [CompanyPermissionGroupsListRequest](#businessLogicService.CompanyPermissionGroupsListRequest)
+    - [FavoritesListReply](#businessLogicService.FavoritesListReply)
+    - [FavoritesListRequest](#businessLogicService.FavoritesListRequest)
+    - [FavoritesUpdateReply](#businessLogicService.FavoritesUpdateReply)
+    - [FavoritesUpdateRequest](#businessLogicService.FavoritesUpdateRequest)
+    - [FavoritesUpdateRequest.RoomIdsEntry](#businessLogicService.FavoritesUpdateRequest.RoomIdsEntry)
+    - [PermissionGroup](#businessLogicService.PermissionGroup)
+  
+  
+  
+    - [BusinessLogicService](#businessLogicService.BusinessLogicService)
+  
+
+- [common/accessInfo.proto](#common/accessInfo.proto)
+    - [AccessInfo](#common.AccessInfo)
+  
+  
+  
+  
+
+- [common/accessToken.proto](#common/accessToken.proto)
+    - [AccessToken](#common.AccessToken)
+    - [AccessToken.PermissionsEntry](#common.AccessToken.PermissionsEntry)
+  
+  
+  
+  
+
+- [common/chat.proto](#common/chat.proto)
     - [ChatHistoryReply](#common.ChatHistoryReply)
     - [ChatHistoryRequest](#common.ChatHistoryRequest)
     - [ChatMessage](#common.ChatMessage)
@@ -92,7 +91,8 @@
   
   
 
-- [company.proto](#company.proto)
+- [common/company.proto](#common/company.proto)
+    - [Branding](#common.Branding)
     - [Company](#common.Company)
     - [Company.MetadataEntry](#common.Company.MetadataEntry)
   
@@ -100,7 +100,7 @@
   
   
 
-- [permissions.proto](#permissions.proto)
+- [common/permissions.proto](#common/permissions.proto)
     - [Permissions](#common.Permissions)
   
     - [BackendPermission](#common.BackendPermission)
@@ -109,33 +109,38 @@
   
   
 
-- [room.proto](#room.proto)
+- [common/replyInfo.proto](#common/replyInfo.proto)
+    - [ReplyInfo](#common.ReplyInfo)
+  
+    - [ReplyStatusCode](#common.ReplyStatusCode)
+  
+  
+  
+
+- [common/room.proto](#common/room.proto)
     - [Room](#common.Room)
     - [Room.MetadataEntry](#common.Room.MetadataEntry)
     - [Room.PermissionsEntry](#common.Room.PermissionsEntry)
     - [Room.SubRoomsEntry](#common.Room.SubRoomsEntry)
+    - [RoomQuotas](#common.RoomQuotas)
     - [SubRoom](#common.SubRoom)
   
   
   
   
 
-- [userService.proto](#userService.proto)
-    - [UserCreateReply](#user.UserCreateReply)
-    - [UserCreateRequest](#user.UserCreateRequest)
-    - [UserDestroyRequest](#user.UserDestroyRequest)
-    - [UserListReply](#user.UserListReply)
-    - [UserListReply.UsersEntry](#user.UserListReply.UsersEntry)
-    - [UserListRequest](#user.UserListRequest)
-    - [UserProfileUpdateRequest](#user.UserProfileUpdateRequest)
-    - [UserUpdateRequest](#user.UserUpdateRequest)
+- [common/user.proto](#common/user.proto)
+    - [User](#common.User)
+    - [User.MetadataEntry](#common.User.MetadataEntry)
+    - [UserProfile](#common.UserProfile)
   
   
   
-    - [UserService](#user.UserService)
   
 
-- [companyService.proto](#companyService.proto)
+- [companyService/companyService.proto](#companyService/companyService.proto)
+    - [CompanyAvailableReply](#companyService.CompanyAvailableReply)
+    - [CompanyAvailableRequest](#companyService.CompanyAvailableRequest)
     - [CompanyCreateReply](#companyService.CompanyCreateReply)
     - [CompanyCreateRequest](#companyService.CompanyCreateRequest)
     - [CompanyDestroyRequest](#companyService.CompanyDestroyRequest)
@@ -149,7 +154,7 @@
     - [CompanyService](#companyService.CompanyService)
   
 
-- [roomService.proto](#roomService.proto)
+- [roomService/roomService.proto](#roomService/roomService.proto)
     - [CreateJoinLinkReply](#roomService.CreateJoinLinkReply)
     - [CreateJoinLinkRequest](#roomService.CreateJoinLinkRequest)
     - [RoomCreateReply](#roomService.RoomCreateReply)
@@ -178,14 +183,29 @@
     - [RoomService](#roomService.RoomService)
   
 
+- [user/userService.proto](#user/userService.proto)
+    - [UserCreateReply](#user.UserCreateReply)
+    - [UserCreateRequest](#user.UserCreateRequest)
+    - [UserDestroyRequest](#user.UserDestroyRequest)
+    - [UserListReply](#user.UserListReply)
+    - [UserListReply.UsersEntry](#user.UserListReply.UsersEntry)
+    - [UserListRequest](#user.UserListRequest)
+    - [UserProfileUpdateRequest](#user.UserProfileUpdateRequest)
+    - [UserUpdateRequest](#user.UserUpdateRequest)
+  
+  
+  
+    - [UserService](#user.UserService)
+  
+
 - [Scalar Value Types](#scalar-value-types)
 
 
 
-<a name="accountStatus.proto"/>
+<a name="authentication/accountStatus.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## accountStatus.proto
+## authentication/accountStatus.proto
 
 
  
@@ -218,261 +238,10 @@ need handling on our end (think failed payments that lock company accounts).
 
 
 
-<a name="replyInfo.proto"/>
+<a name="authentication/authenticationService.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## replyInfo.proto
-
-
-
-<a name="common.ReplyInfo"/>
-
-### ReplyInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| requestId | [string](#string) |  |  |
-| statusCode | [ReplyStatusCode](#common.ReplyStatusCode) |  |  |
-| statusMessage | [string](#string) |  |  |
-
-
-
-
-
- 
-
-
-<a name="common.ReplyStatusCode"/>
-
-### ReplyStatusCode
-rational behind the status code values:
-there are status codes which do not indicate an error... those codes have a value LESS than 1000
-in contrast, any code with 1000 or more indicates an error of some sort
-[ks-03-2017]: alfatraining/proto#20: we decided that the range 500-999 is reserved for warnings
-this means that codes in this range do NOT indicate success NOR unrecoverable error
-
-| Name | Number | Description |
-| ---- | ------ | ----------- |
-| OK | 0 |  |
-| ACCEPTED | 3 |  |
-| WELCOME | 4 |  |
-| PING | 1 |  |
-| PONG | 2 |  |
-| PARTIAL_ERROR | 5 | for situations where multiple entities are transferred in one go, this status code can be used to indicate partial failures in replies |
-| INTERNAL_ERROR | 1000 |  |
-| AUTHENTICATION_ERROR | 1002 |  |
-| ACCOUNT_STATUS_ERROR | 1003 | used by the authentication service to indicate errors concerning the account status (deactivated, deleted, locked) |
-| PROTOCOL_ERROR | 1004 | used by hydra when a message is not formatted correctly, and maybe other services will have similar requirements |
-| NOT_IMPLEMENTED | 501 | returned when the action/event is not implemented by the service but it is not necessarily an invalid action |
-| ACTION_INVALID | 1005 |  |
-| INSUFFICIENT_PERMISSIONS | 1006 |  |
-| RANGE_ERROR | 1007 |  |
-| HOSTNAME_INVALID | 1008 |  |
-| REQUEST_ID_INVALID | 1009 |  |
-| ACCESS_INFO_MISSING | 1040 |  |
-| REQUEST_EMPTY | 1041 |  |
-| VERSION_OUTDATED | 1042 |  |
-| MAX_SIZE_EXCEEDED | 1043 | when a user supplied string is too large |
-| RESPONSE_EMPTY | 1044 |  |
-| NOT_FOUND | 1045 |  |
-| REMOTE_ERROR | 1046 |  |
-| TIMEOUT | 1047 |  |
-| CANCELED | 1048 |  |
-| QUOTA_EXCEEDED | 1060 | context dependent; on join room it is returned by engine when the room is full |
-| USER_ID_INVALID | 1010 |  |
-| USER_INVALID | 1011 |  |
-| USER_OFFLINE | 1012 |  |
-| OTHER_CLIENT_CONNECTED | 1013 | returned by engine to the currently connected client when a new client with the same userId joins the same room |
-| USER_UPDATE | 12 |  |
-| USER_LEAVE | 13 |  |
-| ROOM_ID_INVALID | 1020 |  |
-| ROOM_INVALID | 1021 |  |
-| ROOM_HOST_INVALID | 1022 |  |
-| ROOM_NOT_RUNNING | 1023 |  |
-| SUBROOM_INVALID | 500 | returned when the client tries to join a subroom that does not exist |
-| ROOM_NOT_FOUND | 1025 | used when the engine cannot find the room indicated via its room ID |
-| OUT_OF_SLOTS_ROOM | 1030 |  |
-| OUT_OF_SLOTS_USER | 1031 |  |
-| OUT_OF_SLOTS_AUDIO | 1032 |  |
-| OUT_OF_SLOTS_VIDEO | 1033 |  |
-| STREAM_ID_INVALID | 1050 |  |
-| STREAM_NOT_FOUND | 1051 |  |
-| STREAM_HOST_INVALID | 1052 |  |
-| HYDRA_STREAM_CLOSED | 104 | hydra is using 100-199 for ok and 1100-1199 for not ok |
-| HYDRA_STREAM_CREATED | 105 |  |
-| HYDRA_STREAM_TIMEOUT | 1100 |  |
-| HYDRA_STREAM_ERROR | 1101 |  |
-| HYDRA_CLIENT_TIMEOUT | 1102 | when client is disconnected because a specific amount of time passed without having any streams |
-
-
- 
-
- 
-
- 
-
-
-
-<a name="accessInfo.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## accessInfo.proto
-
-
-
-<a name="common.AccessInfo"/>
-
-### AccessInfo
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| requestId | [string](#string) |  |  |
-| accessToken | [bytes](#bytes) |  |  |
-| includeMetadata | [bool](#bool) |  |  |
-| returnObjectIdsOnly | [bool](#bool) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
- 
-
-
-
-<a name="accessToken.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## accessToken.proto
-
-
-
-<a name="common.AccessToken"/>
-
-### AccessToken
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| userId | [string](#string) |  |  |
-| companyId | [string](#string) |  |  |
-| expiresAt | [int64](#int64) |  |  |
-| permissions | [AccessToken.PermissionsEntry](#common.AccessToken.PermissionsEntry) | repeated | use common.BackendPermission enum values as keys and set the value to true |
-| isGuest | [bool](#bool) |  | map&lt;string, string&gt; metadata = 5; // key =&gt; value |
-| displayName | [string](#string) |  | used by services when isGuest is true |
-| basePermissionsId | [string](#string) |  | used for having shareable guest access credentials |
-| extensionDisallowed | [bool](#bool) |  | if true this access token cannot be used to sign another access token with an expiration date bigger than its own |
-
-
-
-
-
-
-<a name="common.AccessToken.PermissionsEntry"/>
-
-### AccessToken.PermissionsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [int32](#int32) |  |  |
-| value | [bool](#bool) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
- 
-
-
-
-<a name="user.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## user.proto
-
-
-
-<a name="common.User"/>
-
-### User
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| email | [string](#string) |  |  |
-| metadata | [User.MetadataEntry](#common.User.MetadataEntry) | repeated |  |
-| userProfile | [UserProfile](#common.UserProfile) |  |  |
-
-
-
-
-
-
-<a name="common.User.MetadataEntry"/>
-
-### User.MetadataEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="common.UserProfile"/>
-
-### UserProfile
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| firstname | [string](#string) |  |  |
-| lastname | [string](#string) |  |  |
-| title | [string](#string) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
- 
-
-
-
-<a name="authenticationService.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## authenticationService.proto
+## authentication/authenticationService.proto
 
 
 
@@ -482,15 +251,16 @@ this means that codes in this range do NOT indicate success NOR unrecoverable er
 ActivationTokenCredentials are used to provide a way of creating users on our
 platform that need to finish signing up for themselves. They are used alongside
 other credential messages and provide the following additional features:
-- issue short-lived temporary token (60 seconds or less) without any
-backend permissions in order to fetch information that&#39;s been added
-for them (most notably, their user profile or information about the
-company they are joining like the company&#39;s display name)
-- activate/create the authentication method they were assigned
-to be used with (like UsernamePasswordCredentials)
-- expire after a customizable amount of time (30 days by default)
-- can be deactivated/blocked before they expire (just like any other
-authentication method we have)
+  - issue short-lived temporary token (60 seconds or less) without any
+    backend permissions in order to fetch information that&#39;s been added
+    for them (most notably, their user profile or information about the
+    company they are joining like the company&#39;s display name)
+  - activate/create the authentication method they were assigned
+    to be used with (like UsernamePasswordCredentials)
+  - expire after a customizable amount of time (30 days by default)
+  - can be deactivated/blocked before they expire (just like any other
+    authentication method we have)
+  - when creating activation token credentials pass *expiry*, *keyType* and *principal*
 
 
 | Field | Type | Label | Description |
@@ -531,7 +301,7 @@ failure of the AuthenticationCreate operation.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#authentication..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | userId | [string](#string) |  |  |
 
 
@@ -550,7 +320,7 @@ by the authentication service, otherwise use the AuthenticationUpdateRequest.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | authenticationRequest | [AuthenticationRequest](#authentication.AuthenticationRequest) |  |  |
 
 
@@ -567,7 +337,7 @@ and their permissions.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#authentication..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | userId | [string](#string) |  |  |
 | permissions | [AuthenticationInformationReply.PermissionsEntry](#authentication.AuthenticationInformationReply.PermissionsEntry) | repeated | permissions of the user |
 | authenticationMethodInformation | [AuthenticationInformationReply.AuthenticationMethodInformationEntry](#authentication.AuthenticationInformationReply.AuthenticationMethodInformationEntry) | repeated | auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) =&gt; AuthenticationMethodInformation |
@@ -618,7 +388,7 @@ and their permissions.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | userId | [string](#string) |  |  |
 
 
@@ -687,7 +457,7 @@ AuthenticationReply contains information about the response.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#authentication..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | accessToken | [bytes](#bytes) |  |  |
 | expiresAt | [int64](#int64) |  | timestamp of token expiration |
 | refreshToken | [string](#string) |  | exchange for a new access token by using the refresh token grant |
@@ -782,7 +552,7 @@ on how to update a user&#39;s authentication methods.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | removeAll | [bool](#bool) |  | removes all the user&#39;s associated authentication methods |
 | userId | [string](#string) |  |  |
 | authenticationRequest | [AuthenticationRequest](#authentication.AuthenticationRequest) |  |  |
@@ -820,7 +590,7 @@ our platform. That&#39;s because they may need to be handled/monitored different
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#authentication..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | userId | [string](#string) |  |  |
 | companyId | [string](#string) |  |  |
 
@@ -839,8 +609,8 @@ as well as a user profile for that user.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
-| user | [.common.User](#authentication..common.User) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| user | [common.User](#common.User) |  |  |
 | authenticationRequest | [AuthenticationRequest](#authentication.AuthenticationRequest) |  |  |
 | companyId | [string](#string) |  |  |
 
@@ -898,6 +668,7 @@ A user ID is auto-generated upon creation of guest access credentials and no use
 Services that need to accept user IDs should also accept metadata maps where a display name can be added
 under the guest user&#39;s ID as the key. Guest users usually don&#39;t have a lot of backend permissions, although
 that&#39;s certainly possible.
+  - when creating guest access credentials for a particular guest in a particular room pass *email*, *roomId*, *displayName*, *expiry* and *shareable*
 
 
 | Field | Type | Label | Description |
@@ -905,7 +676,9 @@ that&#39;s certainly possible.
 | userId | [string](#string) |  | only pass when authenticating; auth service will not accept this when creating guest access credentials |
 | code | [string](#string) |  | password, should be something random |
 | companyId | [string](#string) |  |  |
-| email | [string](#string) |  | optional but recommended (see displayName field) |
+| email | [string](#string) |  | pass these when creating guest access credentials for a particular guest in a particular room
+
+/ optional but recommended (see displayName field) |
 | roomId | [string](#string) |  | for now this is required when creating guest access credentials (subject to change) |
 | displayName | [string](#string) |  | optional; the email address is used if not set or, if that&#39;s not set either, &#34;Unnamed guest&#34; is used, can also be used when authenticating; added to the access token |
 | expiry | [int64](#int64) |  | optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change) |
@@ -944,8 +717,8 @@ is set up it might not be necessary to pass all properties.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#authentication..common.ReplyInfo) |  |  |
-| maxOffset | [uint32](#uint32) |  | returns the maximum offset you can pass for the next page; you&#39;ve reached the end when the offset you passed in the request is equal to the max offset returned. |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| maxOffset | [uint32](#uint32) |  | returns the maximum offset you can pass for the next page; you&#39;ve reached the / end when the offset you passed in the request is equal to the max offset returned. |
 | results | [ListAuthenticationsReply.ResultsEntry](#authentication.ListAuthenticationsReply.ResultsEntry) | repeated | user ID =&gt; AuthMethodInfoList |
 
 
@@ -983,7 +756,7 @@ For normal users only their own authentication methods will be returned
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | limit | [uint32](#uint32) |  | default: 100 max: 1000 |
 | offset | [uint32](#uint32) |  | default: 0 |
 | principal | [string](#string) | repeated | filter by principals |
@@ -1006,7 +779,7 @@ For normal users only their own authentication methods will be returned
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#authentication..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | userId | [string](#string) |  |  |
 | passwordResetToken | [string](#string) |  |  |
 
@@ -1029,7 +802,7 @@ the password reset token itself.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | username | [string](#string) |  |  |
 | companyId | [string](#string) |  |  |
 
@@ -1068,8 +841,8 @@ SignAccessTokenRequest is used to sign credentials without authenticating.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#authentication..common.AccessInfo) |  |  |
-| accessToken | [.common.AccessToken](#authentication..common.AccessToken) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| accessToken | [common.AccessToken](#common.AccessToken) |  |  |
 
 
 
@@ -1112,11 +885,11 @@ update your authentication credentials upon user updates.
 | ----------- | ------------ | ------------- | ------------|
 | authenticate | [AuthenticationRequest](#authentication.AuthenticationRequest) | [AuthenticationReply](#authentication.AuthenticationRequest) |  |
 | signAccessToken | [SignAccessTokenRequest](#authentication.SignAccessTokenRequest) | [AuthenticationReply](#authentication.SignAccessTokenRequest) |  |
-| isAuthenticated | [common.AccessInfo](#common.AccessInfo) | [common.ReplyInfo](#common.AccessInfo) |  |
+| isAuthenticated | [.common.AccessInfo](#common.AccessInfo) | [.common.ReplyInfo](#common.AccessInfo) |  |
 | requestPasswordReset | [PasswordResetRequest](#authentication.PasswordResetRequest) | [PasswordResetReply](#authentication.PasswordResetRequest) |  |
 | listAuthentications | [ListAuthenticationsRequest](#authentication.ListAuthenticationsRequest) | [ListAuthenticationsReply](#authentication.ListAuthenticationsRequest) |  |
 | authenticationCreate | [AuthenticationCreateRequest](#authentication.AuthenticationCreateRequest) | [AuthenticationCreateReply](#authentication.AuthenticationCreateRequest) |  |
-| authenticationUpdate | [AuthenticationUpdateRequest](#authentication.AuthenticationUpdateRequest) | [common.ReplyInfo](#authentication.AuthenticationUpdateRequest) |  |
+| authenticationUpdate | [AuthenticationUpdateRequest](#authentication.AuthenticationUpdateRequest) | [.common.ReplyInfo](#authentication.AuthenticationUpdateRequest) |  |
 | authenticationInformation | [AuthenticationInformationRequest](#authentication.AuthenticationInformationRequest) | [AuthenticationInformationReply](#authentication.AuthenticationInformationRequest) |  |
 | companyCreate | [CompanyCreateRequest](#authentication.CompanyCreateRequest) | [CompanyCreateReply](#authentication.CompanyCreateRequest) |  |
 
@@ -1124,10 +897,270 @@ update your authentication credentials upon user updates.
 
 
 
-<a name="chat.proto"/>
+<a name="businessLogicService/businessLogicService.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## chat.proto
+## businessLogicService/businessLogicService.proto
+
+
+
+<a name="businessLogicService.CompanyPermissionGroupsListReply"/>
+
+### CompanyPermissionGroupsListReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| permissionGroups | [CompanyPermissionGroupsListReply.PermissionGroupsEntry](#businessLogicService.CompanyPermissionGroupsListReply.PermissionGroupsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="businessLogicService.CompanyPermissionGroupsListReply.PermissionGroupsEntry"/>
+
+### CompanyPermissionGroupsListReply.PermissionGroupsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [PermissionGroup](#businessLogicService.PermissionGroup) |  |  |
+
+
+
+
+
+
+<a name="businessLogicService.CompanyPermissionGroupsListRequest"/>
+
+### CompanyPermissionGroupsListRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+
+
+
+
+
+
+<a name="businessLogicService.FavoritesListReply"/>
+
+### FavoritesListReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| roomIds | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="businessLogicService.FavoritesListRequest"/>
+
+### FavoritesListRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| userId | [string](#string) |  | will default to the caller&#39;s user ID in the token if empty |
+
+
+
+
+
+
+<a name="businessLogicService.FavoritesUpdateReply"/>
+
+### FavoritesUpdateReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+
+
+
+
+
+
+<a name="businessLogicService.FavoritesUpdateRequest"/>
+
+### FavoritesUpdateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| userId | [string](#string) |  |  |
+| roomIds | [FavoritesUpdateRequest.RoomIdsEntry](#businessLogicService.FavoritesUpdateRequest.RoomIdsEntry) | repeated |  |
+
+
+
+
+
+
+<a name="businessLogicService.FavoritesUpdateRequest.RoomIdsEntry"/>
+
+### FavoritesUpdateRequest.RoomIdsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="businessLogicService.PermissionGroup"/>
+
+### PermissionGroup
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| name | [string](#string) |  |  |
+| order | [uint32](#uint32) |  |  |
+| permissions | [common.Permissions](#common.Permissions) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="businessLogicService.BusinessLogicService"/>
+
+### BusinessLogicService
+
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| favoritesList | [FavoritesListRequest](#businessLogicService.FavoritesListRequest) | [FavoritesListReply](#businessLogicService.FavoritesListRequest) |  |
+| favoritesUpdate | [FavoritesUpdateRequest](#businessLogicService.FavoritesUpdateRequest) | [FavoritesUpdateReply](#businessLogicService.FavoritesUpdateRequest) |  |
+| permissionGroupsList | [CompanyPermissionGroupsListRequest](#businessLogicService.CompanyPermissionGroupsListRequest) | [CompanyPermissionGroupsListReply](#businessLogicService.CompanyPermissionGroupsListRequest) |  |
+
+ 
+
+
+
+<a name="common/accessInfo.proto"/>
+<p align="right"><a href="#top">Top</a></p>
+
+## common/accessInfo.proto
+
+
+
+<a name="common.AccessInfo"/>
+
+### AccessInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| requestId | [string](#string) |  |  |
+| accessToken | [bytes](#bytes) |  |  |
+| includeMetadata | [bool](#bool) |  |  |
+| returnObjectIdsOnly | [bool](#bool) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+<a name="common/accessToken.proto"/>
+<p align="right"><a href="#top">Top</a></p>
+
+## common/accessToken.proto
+
+
+
+<a name="common.AccessToken"/>
+
+### AccessToken
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| userId | [string](#string) |  |  |
+| companyId | [string](#string) |  |  |
+| expiresAt | [int64](#int64) |  |  |
+| permissions | [AccessToken.PermissionsEntry](#common.AccessToken.PermissionsEntry) | repeated | use common.BackendPermission enum values as keys and set the value to true |
+| isGuest | [bool](#bool) |  |  |
+| displayName | [string](#string) |  | used by services when isGuest is true |
+| basePermissionsId | [string](#string) |  | used for having shareable guest access credentials |
+| extensionDisallowed | [bool](#bool) |  | if true this access token cannot be used to sign another access token with an expiration date bigger than its own |
+
+
+
+
+
+
+<a name="common.AccessToken.PermissionsEntry"/>
+
+### AccessToken.PermissionsEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [int32](#int32) |  |  |
+| value | [bool](#bool) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+ 
+
+
+
+<a name="common/chat.proto"/>
+<p align="right"><a href="#top">Top</a></p>
+
+## common/chat.proto
 
 
 
@@ -1226,10 +1259,31 @@ update your authentication credentials upon user updates.
 
 
 
-<a name="company.proto"/>
+<a name="common/company.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## company.proto
+## common/company.proto
+
+
+
+<a name="common.Branding"/>
+
+### Branding
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| title | [string](#string) |  | title is shown next to the logo inside the business app |
+| navbarBg | [string](#string) |  | background of the navigation bar |
+| logoURL | [string](#string) |  | url to a logo file (png only) |
+| logoHeight | [int64](#int64) |  | width of the logo |
+| logoWidth | [int64](#int64) |  | height of the logo |
+| enabled | [bool](#bool) |  | whether branding is enabled |
+| logoAlternativeURL | [string](#string) |  | url to an alternative logo file (used on login form, png only) |
+
+
+
 
 
 
@@ -1241,9 +1295,10 @@ update your authentication credentials upon user updates.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| displayName | [string](#string) |  |  |
-| ownerId | [string](#string) |  |  |
-| createdAt | [int64](#int64) |  |  |
+| displayName | [string](#string) |  | display name of a company (e.g. used inside the company dropdown) |
+| ownerId | [string](#string) |  | email of the user that created the company |
+| createdAt | [int64](#int64) |  | date of creation |
+| branding | [Branding](#common.Branding) |  | branding |
 | metadata | [Company.MetadataEntry](#common.Company.MetadataEntry) | repeated |  |
 
 
@@ -1276,10 +1331,10 @@ update your authentication credentials upon user updates.
 
 
 
-<a name="permissions.proto"/>
+<a name="common/permissions.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## permissions.proto
+## common/permissions.proto
 
 
 
@@ -1333,7 +1388,7 @@ update your authentication credentials upon user updates.
 | GRANT_PERMISSIONS | 6 |  |
 | COMPANY_CREATE | 7 |  |
 | COMPANY_LIST | 8 | list your own companies |
-| COMPANY_ADMIN | 9 | administrate all companies (alfatraining internal) |
+| COMPANY_ADMIN | 9 | administrate all companies (works for alfatraining-internal only) |
 | ROOM_CREATE | 10 |  |
 | ROOM_LIST | 13 |  |
 | ROOM_ADMIN | 15 |  |
@@ -1376,10 +1431,108 @@ update your authentication credentials upon user updates.
 
 
 
-<a name="room.proto"/>
+<a name="common/replyInfo.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## room.proto
+## common/replyInfo.proto
+
+
+
+<a name="common.ReplyInfo"/>
+
+### ReplyInfo
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| requestId | [string](#string) |  |  |
+| statusCode | [ReplyStatusCode](#common.ReplyStatusCode) |  |  |
+| statusMessage | [string](#string) |  |  |
+
+
+
+
+
+ 
+
+
+<a name="common.ReplyStatusCode"/>
+
+### ReplyStatusCode
+rational behind the status code values:
+there are status codes which do not indicate an error... those codes have a value LESS than 1000
+in contrast, any code with 1000 or more indicates an error of some sort
+[ks-03-2017]: alfatraining/proto#20: we decided that the range 500-999 is reserved for warnings
+this means that codes in this range do NOT indicate success NOR unrecoverable error
+
+| Name | Number | Description |
+| ---- | ------ | ----------- |
+| OK | 0 |  |
+| ACCEPTED | 3 |  |
+| WELCOME | 4 |  |
+| PING | 1 |  |
+| PONG | 2 |  |
+| PARTIAL_ERROR | 5 | for situations where multiple entities are transferred in one go, this status code can be used to indicate partial failures in replies |
+| INTERNAL_ERROR | 1000 |  |
+| AUTHENTICATION_ERROR | 1002 |  |
+| ACCOUNT_STATUS_ERROR | 1003 | used by the authentication service to indicate errors concerning the account status (deactivated, deleted, locked) |
+| PROTOCOL_ERROR | 1004 | used by hydra when a message is not formatted correctly, and maybe other services will have similar requirements |
+| NOT_IMPLEMENTED | 501 | returned when the action/event is not implemented by the service but it is not necessarily an invalid action |
+| ACTION_INVALID | 1005 |  |
+| INSUFFICIENT_PERMISSIONS | 1006 |  |
+| RANGE_ERROR | 1007 |  |
+| HOSTNAME_INVALID | 1008 |  |
+| REQUEST_ID_INVALID | 1009 |  |
+| ACCESS_INFO_MISSING | 1040 |  |
+| REQUEST_EMPTY | 1041 |  |
+| VERSION_OUTDATED | 1042 |  |
+| MAX_SIZE_EXCEEDED | 1043 | when a user supplied string is too large |
+| RESPONSE_EMPTY | 1044 |  |
+| NOT_FOUND | 1045 |  |
+| REMOTE_ERROR | 1046 |  |
+| TIMEOUT | 1047 |  |
+| CANCELED | 1048 |  |
+| TOKEN_OUTDATED | 1049 |  |
+| QUOTA_EXCEEDED | 1060 | context dependent; on join room it is returned by engine when the room is full |
+| USER_ID_INVALID | 1010 |  |
+| USER_INVALID | 1011 |  |
+| USER_OFFLINE | 1012 |  |
+| OTHER_CLIENT_CONNECTED | 1013 | returned by engine to the currently connected client when a new client with the same userId joins the same room |
+| USER_UPDATE | 12 |  |
+| USER_LEAVE | 13 |  |
+| ROOM_ID_INVALID | 1020 |  |
+| ROOM_INVALID | 1021 |  |
+| ROOM_HOST_INVALID | 1022 |  |
+| ROOM_NOT_RUNNING | 1023 |  |
+| SUBROOM_INVALID | 500 | returned when the client tries to join a subroom that does not exist |
+| ROOM_NOT_FOUND | 1025 | used when the engine cannot find the room indicated via its room ID |
+| OUT_OF_SLOTS_ROOM | 1030 |  |
+| OUT_OF_SLOTS_USER | 1031 |  |
+| OUT_OF_SLOTS_AUDIO | 1032 |  |
+| OUT_OF_SLOTS_VIDEO | 1033 |  |
+| STREAM_ID_INVALID | 1050 |  |
+| STREAM_NOT_FOUND | 1051 |  |
+| STREAM_HOST_INVALID | 1052 |  |
+| HYDRA_STREAM_CLOSED | 104 | hydra is using 100-199 for ok and 1100-1199 for not ok |
+| HYDRA_STREAM_CREATED | 105 |  |
+| HYDRA_STREAM_TIMEOUT | 1100 |  |
+| HYDRA_STREAM_ERROR | 1101 |  |
+| HYDRA_CLIENT_TIMEOUT | 1102 | when client is disconnected because a specific amount of time passed without having any streams |
+
+
+ 
+
+ 
+
+ 
+
+
+
+<a name="common/room.proto"/>
+<p align="right"><a href="#top">Top</a></p>
+
+## common/room.proto
 
 
 
@@ -1393,8 +1546,9 @@ update your authentication credentials upon user updates.
 | ----- | ---- | ----- | ----------- |
 | parentId | [string](#string) |  |  |
 | displayName | [string](#string) |  |  |
-| host | [string](#string) |  |  |
-| metadata | [Room.MetadataEntry](#common.Room.MetadataEntry) | repeated | K =&gt; v |
+| quotas | [RoomQuotas](#common.RoomQuotas) |  |  |
+| allowSpectators | [bool](#bool) |  |  |
+| metadata | [Room.MetadataEntry](#common.Room.MetadataEntry) | repeated | key =&gt; value |
 | permissions | [Room.PermissionsEntry](#common.Room.PermissionsEntry) | repeated | userid =&gt; permissions |
 | defaultPermissions | [Permissions](#common.Permissions) |  |  |
 | subRooms | [Room.SubRoomsEntry](#common.Room.SubRoomsEntry) | repeated |  |
@@ -1452,6 +1606,21 @@ update your authentication credentials upon user updates.
 
 
 
+<a name="common.RoomQuotas"/>
+
+### RoomQuotas
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| activeParticipants | [uint32](#uint32) |  |  |
+
+
+
+
+
+
 <a name="common.SubRoom"/>
 
 ### SubRoom
@@ -1478,140 +1647,57 @@ update your authentication credentials upon user updates.
 
 
 
-<a name="userService.proto"/>
+<a name="common/user.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## userService.proto
+## common/user.proto
 
 
 
-<a name="user.UserCreateReply"/>
+<a name="common.User"/>
 
-### UserCreateReply
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#user..common.ReplyInfo) |  |  |
-| userId | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="user.UserCreateRequest"/>
-
-### UserCreateRequest
+### User
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#user..common.AccessInfo) |  |  |
-| user | [.common.User](#user..common.User) |  |  |
-| authenticationRequest | [.authentication.AuthenticationRequest](#user..authentication.AuthenticationRequest) |  |  |
+| email | [string](#string) |  |  |
+| metadata | [User.MetadataEntry](#common.User.MetadataEntry) | repeated |  |
+| userProfile | [UserProfile](#common.UserProfile) |  |  |
 
 
 
 
 
 
-<a name="user.UserDestroyRequest"/>
+<a name="common.User.MetadataEntry"/>
 
-### UserDestroyRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#user..common.AccessInfo) |  |  |
-| userId | [string](#string) |  |  |
-
-
-
-
-
-
-<a name="user.UserListReply"/>
-
-### UserListReply
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#user..common.ReplyInfo) |  |  |
-| users | [UserListReply.UsersEntry](#user.UserListReply.UsersEntry) | repeated | userId =&gt; User |
-| userIdList | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="user.UserListReply.UsersEntry"/>
-
-### UserListReply.UsersEntry
+### User.MetadataEntry
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
-| value | [.common.User](#user..common.User) |  |  |
+| value | [string](#string) |  |  |
 
 
 
 
 
 
-<a name="user.UserListRequest"/>
+<a name="common.UserProfile"/>
 
-### UserListRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#user..common.AccessInfo) |  |  |
-| userIdList | [string](#string) | repeated | list of user IDs that you want to query for |
-
-
-
-
-
-
-<a name="user.UserProfileUpdateRequest"/>
-
-### UserProfileUpdateRequest
+### UserProfile
 
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#user..common.AccessInfo) |  |  |
-| userId | [string](#string) |  |  |
-| userProfile | [.common.UserProfile](#user..common.UserProfile) |  |  |
-
-
-
-
-
-
-<a name="user.UserUpdateRequest"/>
-
-### UserUpdateRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#user..common.AccessInfo) |  |  |
-| user | [.common.User](#user..common.User) |  |  |
-| userId | [string](#string) |  |  |
-| authenticationRequest | [.authentication.AuthenticationRequest](#user..authentication.AuthenticationRequest) |  |  |
+| firstname | [string](#string) |  |  |
+| lastname | [string](#string) |  |  |
+| title | [string](#string) |  |  |
 
 
 
@@ -1623,28 +1709,48 @@ update your authentication credentials upon user updates.
 
  
 
-
-<a name="user.UserService"/>
-
-### UserService
-Manages user as well as user profile information on our platform.
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| userList | [UserListRequest](#user.UserListRequest) | [UserListReply](#user.UserListRequest) |  |
-| userCreate | [UserCreateRequest](#user.UserCreateRequest) | [UserCreateReply](#user.UserCreateRequest) |  |
-| userUpdate | [UserUpdateRequest](#user.UserUpdateRequest) | [common.ReplyInfo](#user.UserUpdateRequest) |  |
-| userDestroy | [UserDestroyRequest](#user.UserDestroyRequest) | [common.ReplyInfo](#user.UserDestroyRequest) |  |
-| userProfileUpdate | [UserProfileUpdateRequest](#user.UserProfileUpdateRequest) | [common.ReplyInfo](#user.UserProfileUpdateRequest) |  |
-
  
 
 
 
-<a name="companyService.proto"/>
+<a name="companyService/companyService.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## companyService.proto
+## companyService/companyService.proto
+
+
+
+<a name="companyService.CompanyAvailableReply"/>
+
+### CompanyAvailableReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| companyId | [string](#string) |  |  |
+| available | [bool](#bool) |  |  |
+
+
+
+
+
+
+<a name="companyService.CompanyAvailableRequest"/>
+
+### CompanyAvailableRequest
+CompanyAvailableRequest can be used to check for the validity and availability of a company.
+The display name is transformed into a company ID when creating the company and there are
+some restrictions we apply (minimum length, no duplicates, some blacklisted IDs).
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| displayName | [string](#string) |  |  |
+
+
+
 
 
 
@@ -1656,7 +1762,7 @@ Manages user as well as user profile information on our platform.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#companyService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | companyId | [string](#string) |  |  |
 
 
@@ -1672,9 +1778,9 @@ Manages user as well as user profile information on our platform.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#companyService..common.AccessInfo) |  |  |
-| company | [.common.Company](#companyService..common.Company) |  |  |
-| userCreateRequest | [.user.UserCreateRequest](#companyService..user.UserCreateRequest) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| company | [common.Company](#common.Company) |  |  |
+| userCreateRequest | [user.UserCreateRequest](#user.UserCreateRequest) |  |  |
 
 
 
@@ -1689,7 +1795,7 @@ Manages user as well as user profile information on our platform.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#companyService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | companyId | [string](#string) |  |  |
 
 
@@ -1705,8 +1811,9 @@ Manages user as well as user profile information on our platform.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#companyService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | companies | [CompanyListReply.CompaniesEntry](#companyService.CompanyListReply.CompaniesEntry) | repeated | companyId =&gt; Company |
+| orderedCompanyIDs | [string](#string) | repeated |  |
 
 
 
@@ -1722,7 +1829,7 @@ Manages user as well as user profile information on our platform.
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
-| value | [.common.Company](#companyService..common.Company) |  |  |
+| value | [common.Company](#common.Company) |  |  |
 
 
 
@@ -1744,8 +1851,10 @@ own company which is returned in full (see above)).
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#companyService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | companyIdList | [string](#string) | repeated | list of company IDs that you want to query for |
+| companyIdFrom | [string](#string) |  |  |
+| limit | [uint32](#uint32) |  |  |
 
 
 
@@ -1760,8 +1869,8 @@ own company which is returned in full (see above)).
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#companyService..common.AccessInfo) |  |  |
-| company | [.common.Company](#companyService..common.Company) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| company | [common.Company](#common.Company) |  |  |
 | companyId | [string](#string) |  |  |
 
 
@@ -1784,17 +1893,18 @@ Manages companies within our platform.
 | ----------- | ------------ | ------------- | ------------|
 | companyList | [CompanyListRequest](#companyService.CompanyListRequest) | [CompanyListReply](#companyService.CompanyListRequest) |  |
 | companyCreate | [CompanyCreateRequest](#companyService.CompanyCreateRequest) | [CompanyCreateReply](#companyService.CompanyCreateRequest) |  |
-| companyUpdate | [CompanyUpdateRequest](#companyService.CompanyUpdateRequest) | [common.ReplyInfo](#companyService.CompanyUpdateRequest) |  |
-| companyDestroy | [CompanyDestroyRequest](#companyService.CompanyDestroyRequest) | [common.ReplyInfo](#companyService.CompanyDestroyRequest) |  |
+| companyUpdate | [CompanyUpdateRequest](#companyService.CompanyUpdateRequest) | [.common.ReplyInfo](#companyService.CompanyUpdateRequest) |  |
+| companyDestroy | [CompanyDestroyRequest](#companyService.CompanyDestroyRequest) | [.common.ReplyInfo](#companyService.CompanyDestroyRequest) |  |
+| companyAvailable | [CompanyAvailableRequest](#companyService.CompanyAvailableRequest) | [CompanyAvailableReply](#companyService.CompanyAvailableRequest) |  |
 
  
 
 
 
-<a name="roomService.proto"/>
+<a name="roomService/roomService.proto"/>
 <p align="right"><a href="#top">Top</a></p>
 
-## roomService.proto
+## roomService/roomService.proto
 
 
 
@@ -1806,7 +1916,7 @@ Manages companies within our platform.
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | joinLink | [string](#string) |  |  |
 
 
@@ -1822,7 +1932,7 @@ CreateJoinLink
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | roomId | [string](#string) |  |  |
 
 
@@ -1838,9 +1948,9 @@ CreateJoinLink
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | roomId | [string](#string) |  |  |
-| room | [.common.Room](#roomService..common.Room) |  |  |
+| room | [common.Room](#common.Room) |  |  |
 
 
 
@@ -1855,8 +1965,8 @@ room create
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
-| room | [.common.Room](#roomService..common.Room) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| room | [common.Room](#common.Room) |  |  |
 
 
 
@@ -1871,7 +1981,7 @@ room create
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 
 
 
@@ -1886,7 +1996,7 @@ room destroy
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | roomId | [string](#string) |  |  |
 
 
@@ -1933,7 +2043,7 @@ room destroy
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | rooms | [RoomListReply.RoomsEntry](#roomService.RoomListReply.RoomsEntry) | repeated | key is room-uuid |
 
 
@@ -1950,7 +2060,7 @@ room destroy
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
-| value | [.common.Room](#roomService..common.Room) |  |  |
+| value | [common.Room](#common.Room) |  |  |
 
 
 
@@ -1965,7 +2075,7 @@ room list
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | limit | [uint32](#uint32) |  | default:100 max:1000 |
 | offset | [uint32](#uint32) |  | default:0 |
 | filterRoomIds | [string](#string) | repeated | list of room IDs that you want to query for |
@@ -1983,8 +2093,8 @@ room list
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
-| permissions | [.common.Permissions](#roomService..common.Permissions) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| permissions | [common.Permissions](#common.Permissions) |  |  |
 
 
 
@@ -1999,7 +2109,7 @@ RoomPermissions
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | userId | [string](#string) |  |  |
 | roomId | [string](#string) |  |  |
 
@@ -2016,7 +2126,7 @@ RoomPermissions
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | rooms | [RoomStatusReply.RoomsEntry](#roomService.RoomStatusReply.RoomsEntry) | repeated | key is room-uuid |
 
 
@@ -2048,7 +2158,7 @@ room status
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | roomIds | [string](#string) | repeated |  |
 
 
@@ -2064,7 +2174,7 @@ room status
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 
 
 
@@ -2079,9 +2189,9 @@ room update
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | roomId | [string](#string) |  |  |
-| room | [.common.Room](#roomService..common.Room) |  |  |
+| room | [common.Room](#common.Room) |  |  |
 | removeDefaultPermissions | [bool](#bool) |  |  |
 
 
@@ -2092,12 +2202,12 @@ room update
 <a name="roomService.RoomsUpdateReply"/>
 
 ### RoomsUpdateReply
-
+reply for updating multiple rooms at once (deprecated, see RoomsUpdateRequest)
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| replyInfo | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 | updateReplies | [RoomsUpdateReply.UpdateRepliesEntry](#roomService.RoomsUpdateReply.UpdateRepliesEntry) | repeated | key is the room ID |
 
 
@@ -2114,7 +2224,7 @@ room update
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
 | key | [string](#string) |  |  |
-| value | [.common.ReplyInfo](#roomService..common.ReplyInfo) |  |  |
+| value | [common.ReplyInfo](#common.ReplyInfo) |  |  |
 
 
 
@@ -2124,12 +2234,12 @@ room update
 <a name="roomService.RoomsUpdateRequest"/>
 
 ### RoomsUpdateRequest
-update multiple rooms in one go
+update multiple rooms in one go (deprecated)
 
 
 | Field | Type | Label | Description |
 | ----- | ---- | ----- | ----------- |
-| accessInfo | [.common.AccessInfo](#roomService..common.AccessInfo) |  |  |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
 | roomsToUpdate | [RoomUpdateRequest](#roomService.RoomUpdateRequest) | repeated | access info should be ingnored in the individual RoomUpdateRequests |
 
 
@@ -2173,6 +2283,169 @@ update multiple rooms in one go
 | Status | [RoomStatusRequest](#roomService.RoomStatusRequest) | [RoomStatusReply](#roomService.RoomStatusRequest) | return mutable room information |
 | Permissions | [RoomPermissionsRequest](#roomService.RoomPermissionsRequest) | [RoomPermissionsReply](#roomService.RoomPermissionsRequest) | returns user permissions for a room |
 | CreateJoinLink | [CreateJoinLinkRequest](#roomService.CreateJoinLinkRequest) | [CreateJoinLinkReply](#roomService.CreateJoinLinkRequest) | creates a link to launch the client |
+
+ 
+
+
+
+<a name="user/userService.proto"/>
+<p align="right"><a href="#top">Top</a></p>
+
+## user/userService.proto
+
+
+
+<a name="user.UserCreateReply"/>
+
+### UserCreateReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| userId | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user.UserCreateRequest"/>
+
+### UserCreateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| user | [common.User](#common.User) |  |  |
+| authenticationRequest | [authentication.AuthenticationRequest](#authentication.AuthenticationRequest) |  |  |
+
+
+
+
+
+
+<a name="user.UserDestroyRequest"/>
+
+### UserDestroyRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| userId | [string](#string) |  |  |
+
+
+
+
+
+
+<a name="user.UserListReply"/>
+
+### UserListReply
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
+| users | [UserListReply.UsersEntry](#user.UserListReply.UsersEntry) | repeated | userId =&gt; User |
+| userIdList | [string](#string) | repeated |  |
+
+
+
+
+
+
+<a name="user.UserListReply.UsersEntry"/>
+
+### UserListReply.UsersEntry
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| key | [string](#string) |  |  |
+| value | [common.User](#common.User) |  |  |
+
+
+
+
+
+
+<a name="user.UserListRequest"/>
+
+### UserListRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| userIdList | [string](#string) | repeated | list of user IDs that you want to query for |
+
+
+
+
+
+
+<a name="user.UserProfileUpdateRequest"/>
+
+### UserProfileUpdateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| userId | [string](#string) |  |  |
+| userProfile | [common.UserProfile](#common.UserProfile) |  |  |
+
+
+
+
+
+
+<a name="user.UserUpdateRequest"/>
+
+### UserUpdateRequest
+
+
+
+| Field | Type | Label | Description |
+| ----- | ---- | ----- | ----------- |
+| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
+| user | [common.User](#common.User) |  |  |
+| userId | [string](#string) |  |  |
+| authenticationRequest | [authentication.AuthenticationRequest](#authentication.AuthenticationRequest) |  |  |
+
+
+
+
+
+ 
+
+ 
+
+ 
+
+
+<a name="user.UserService"/>
+
+### UserService
+Manages user as well as user profile information on our platform.
+
+| Method Name | Request Type | Response Type | Description |
+| ----------- | ------------ | ------------- | ------------|
+| userList | [UserListRequest](#user.UserListRequest) | [UserListReply](#user.UserListRequest) |  |
+| userCreate | [UserCreateRequest](#user.UserCreateRequest) | [UserCreateReply](#user.UserCreateRequest) |  |
+| userUpdate | [UserUpdateRequest](#user.UserUpdateRequest) | [.common.ReplyInfo](#user.UserUpdateRequest) |  |
+| userDestroy | [UserDestroyRequest](#user.UserDestroyRequest) | [.common.ReplyInfo](#user.UserDestroyRequest) |  |
+| userProfileUpdate | [UserProfileUpdateRequest](#user.UserProfileUpdateRequest) | [.common.ReplyInfo](#user.UserProfileUpdateRequest) |  |
 
  
 
