@@ -22,6 +22,6 @@ protoc:
 	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin user/userService.proto
 
 docs:
-	@ echo "Generating proto documentation..."
-	@ protoc --proto_path=proto --doc_out=./docs --doc_opt=html,index.html proto/**/*.proto
-	@ protoc --proto_path=proto --doc_out=./docs --doc_opt=markdown,README.md proto/**/*.proto
+	@ echo "Generating documentation..."
+	docker run --rm -v $(shell pwd)/proto:/protos -v $(shell pwd)/docs:/out --entrypoint="" pseudomuto/protoc-gen-doc:latest sh -c "protoc -I/protos --doc_out=/out --doc_opt=html,index.html /protos/**/*.proto"
+	docker run --rm -v $(shell pwd)/proto:/protos -v $(shell pwd)/docs:/out --entrypoint="" pseudomuto/protoc-gen-doc:latest sh -c "protoc -I/protos --doc_out=/out --doc_opt=markdown,README.md /protos/**/*.proto"
