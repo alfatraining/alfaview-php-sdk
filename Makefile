@@ -1,15 +1,8 @@
-# Note:
-# When compiling the protofiles make sure to
-# temporarily add the corresponding php namespace option.
-#
-# Example:
-# option php_namespace = "Alfatraining\\Grpc\\Authentication";
-
 .PHONY: protoc docs setup
 
 setup:
-	@ -git clone -b public-alfaview-php-sdk git@git.alfa.sx:alfatraining/proto.git proto
-	@ cd proto ; git pull origin public-alfaview-php-sdk ; cd -
+	@ -git clone -b add-php-namespace-option git@git.alfa.sx:alfatraining/proto.git proto
+	@ cd proto ; git pull origin add-php-namespace-option ; cd -
 
 protoc:
 	@ echo "Compiling proto files..."
