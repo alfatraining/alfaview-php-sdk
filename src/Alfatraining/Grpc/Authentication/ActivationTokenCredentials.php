@@ -22,6 +22,7 @@ use Google\Protobuf\Internal\GPBUtil;
  *   - expire after a customizable amount of time (30 days by default)
  *   - can be deactivated/blocked before they expire (just like any other
  *     authentication method we have)
+ *   - when creating activation token credentials pass *expiry*, *keyType* and *principal*
  *
  * Generated from protobuf message <code>authentication.ActivationTokenCredentials</code>
  */
@@ -32,7 +33,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
      */
     private $activationToken = '';
     /**
-     * password, should be something random
+     *&#47; password, should be something random
      *
      * Generated from protobuf field <code>string code = 2;</code>
      */
@@ -42,27 +43,45 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
+     *&#47; optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 4;</code>
      */
     private $expiry = 0;
     /**
-     * the key type to register this for (password, ldap, etc.)
+     *&#47; the key type to register this for (password, ldap, etc.)
      *
      * Generated from protobuf field <code>string keyType = 5;</code>
      */
     private $keyType = '';
     /**
-     * the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
+     *&#47; the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
      *
      * Generated from protobuf field <code>string principal = 6;</code>
      */
     private $principal = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $activationToken
+     *     @type string $code
+     *          &#47; password, should be something random
+     *     @type string $companyId
+     *     @type int|string $expiry
+     *          &#47; optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
+     *     @type string $keyType
+     *          &#47; the key type to register this for (password, ldap, etc.)
+     *     @type string $principal
+     *          &#47; the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -88,7 +107,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * password, should be something random
+     *&#47; password, should be something random
      *
      * Generated from protobuf field <code>string code = 2;</code>
      * @return string
@@ -99,7 +118,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * password, should be something random
+     *&#47; password, should be something random
      *
      * Generated from protobuf field <code>string code = 2;</code>
      * @param string $var
@@ -136,7 +155,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
+     *&#47; optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 4;</code>
      * @return int|string
@@ -147,7 +166,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
+     *&#47; optional, unix timestamp; will default to 30 days from the time the activation token credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 4;</code>
      * @param int|string $var
@@ -162,7 +181,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * the key type to register this for (password, ldap, etc.)
+     *&#47; the key type to register this for (password, ldap, etc.)
      *
      * Generated from protobuf field <code>string keyType = 5;</code>
      * @return string
@@ -173,7 +192,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * the key type to register this for (password, ldap, etc.)
+     *&#47; the key type to register this for (password, ldap, etc.)
      *
      * Generated from protobuf field <code>string keyType = 5;</code>
      * @param string $var
@@ -188,7 +207,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
+     *&#47; the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
      *
      * Generated from protobuf field <code>string principal = 6;</code>
      * @return string
@@ -199,7 +218,7 @@ class ActivationTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
+     *&#47; the principal for the key type above, for UsernamePasswordCredentials it's the username, for AuthorizationCodeCredentials it'd be the client ID
      *
      * Generated from protobuf field <code>string principal = 6;</code>
      * @param string $var

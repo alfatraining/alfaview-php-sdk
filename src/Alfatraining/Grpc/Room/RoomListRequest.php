@@ -20,27 +20,42 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
      */
     private $accessInfo = null;
     /**
-     * default:100 max:1000
+     *&#47; default:100 max:1000
      *
      * Generated from protobuf field <code>uint32 limit = 13;</code>
      */
     private $limit = 0;
     /**
-     * default:0
+     *&#47; default:0
      *
      * Generated from protobuf field <code>uint32 offset = 14;</code>
      */
     private $offset = 0;
     /**
-     * list of room IDs that you want to query for
+     *&#47; list of room IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string filterRoomIds = 50;</code>
      */
     private $filterRoomIds;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type int $limit
+     *          &#47; default:100 max:1000
+     *     @type int $offset
+     *          &#47; default:0
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $filterRoomIds
+     *          &#47; list of room IDs that you want to query for
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -66,7 +81,7 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default:100 max:1000
+     *&#47; default:100 max:1000
      *
      * Generated from protobuf field <code>uint32 limit = 13;</code>
      * @return int
@@ -77,7 +92,7 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default:100 max:1000
+     *&#47; default:100 max:1000
      *
      * Generated from protobuf field <code>uint32 limit = 13;</code>
      * @param int $var
@@ -92,7 +107,7 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default:0
+     *&#47; default:0
      *
      * Generated from protobuf field <code>uint32 offset = 14;</code>
      * @return int
@@ -103,7 +118,7 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default:0
+     *&#47; default:0
      *
      * Generated from protobuf field <code>uint32 offset = 14;</code>
      * @param int $var
@@ -118,7 +133,7 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * list of room IDs that you want to query for
+     *&#47; list of room IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string filterRoomIds = 50;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -129,7 +144,7 @@ class RoomListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * list of room IDs that you want to query for
+     *&#47; list of room IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string filterRoomIds = 50;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var

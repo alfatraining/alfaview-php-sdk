@@ -12,28 +12,28 @@ namespace Alfatraining\Grpc\Authentication;
  * There may be certain special states (like locked, see below) that cannot be reset from the outside and
  * need handling on our end (think failed payments that lock company accounts).
  *
- * Protobuf enum <code>Authentication\AccountStatus</code>
+ * Protobuf type <code>authentication.AccountStatus</code>
  */
 class AccountStatus
 {
     /**
      * Generated from protobuf enum <code>DEFAULT = 0;</code>
      */
-    const DEFAULT = 0;
+    const PBDEFAULT = 0;
     /**
-     * fully usable account
+     *&#47; fully usable account
      *
      * Generated from protobuf enum <code>ACTIVATED = 1;</code>
      */
     const ACTIVATED = 1;
     /**
-     * deactivated from the outside
+     *&#47; deactivated from the outside
      *
      * Generated from protobuf enum <code>DEACTIVATED = 2;</code>
      */
     const DEACTIVATED = 2;
     /**
-     * deactivated from the inside (password reset needed, payment pending, etc.)
+     *&#47; deactivated from the inside (password reset needed, payment pending, etc.)
      *
      * Generated from protobuf enum <code>LOCKED = 3;</code>
      */

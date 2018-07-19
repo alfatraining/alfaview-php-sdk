@@ -30,7 +30,7 @@ class AuthenticationMethodInformation extends \Google\Protobuf\Internal\Message
      */
     private $userId = '';
     /**
-     * permissions of the user
+     *&#47; permissions of the user
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      */
@@ -40,15 +40,32 @@ class AuthenticationMethodInformation extends \Google\Protobuf\Internal\Message
      */
     private $accountStatus = 0;
     /**
-     * returns metadata associated with the authentication method found for the authentication
+     *&#47; returns metadata associated with the authentication method found for the authentication
      *
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      */
     private $metadata;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $type
+     *     @type string $principal
+     *     @type string $companyId
+     *     @type string $userId
+     *     @type array|\Google\Protobuf\Internal\MapField $permissions
+     *          &#47; permissions of the user
+     *     @type int $accountStatus
+     *     @type array|\Google\Protobuf\Internal\MapField $metadata
+     *          &#47; returns metadata associated with the authentication method found for the authentication
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -140,7 +157,7 @@ class AuthenticationMethodInformation extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions of the user
+     *&#47; permissions of the user
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -151,7 +168,7 @@ class AuthenticationMethodInformation extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions of the user
+     *&#47; permissions of the user
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
@@ -188,7 +205,7 @@ class AuthenticationMethodInformation extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * returns metadata associated with the authentication method found for the authentication
+     *&#47; returns metadata associated with the authentication method found for the authentication
      *
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -199,7 +216,7 @@ class AuthenticationMethodInformation extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * returns metadata associated with the authentication method found for the authentication
+     *&#47; returns metadata associated with the authentication method found for the authentication
      *
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

@@ -26,9 +26,20 @@ class UserProfileUpdateRequest extends \Google\Protobuf\Internal\Message
      */
     private $userProfile = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type string $userId
+     *     @type \Alfatraining\Grpc\Common\UserProfile $userProfile
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\User\UserService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

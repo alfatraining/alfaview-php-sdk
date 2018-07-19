@@ -22,9 +22,19 @@ class UserDestroyRequest extends \Google\Protobuf\Internal\Message
      */
     private $userId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type string $userId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\User\UserService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

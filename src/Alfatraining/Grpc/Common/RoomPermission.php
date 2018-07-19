@@ -5,7 +5,7 @@
 namespace Alfatraining\Grpc\Common;
 
 /**
- * Protobuf enum <code>Common\RoomPermission</code>
+ * Protobuf type <code>common.RoomPermission</code>
  */
 class RoomPermission
 {

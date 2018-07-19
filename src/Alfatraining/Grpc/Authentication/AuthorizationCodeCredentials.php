@@ -18,43 +18,61 @@ use Google\Protobuf\Internal\GPBUtil;
 class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
 {
     /**
-     * identifier (synonymous with a username)
+     *&#47; identifier (synonymous with a username)
      *
      * Generated from protobuf field <code>string clientId = 1;</code>
      */
     private $clientId = '';
     /**
-     * API key or client secret
+     *&#47; API key or client secret
      *
      * Generated from protobuf field <code>string code = 2;</code>
      */
     private $code = '';
     /**
-     * company identifier
+     *&#47; company identifier
      *
      * Generated from protobuf field <code>string companyId = 3;</code>
      */
     private $companyId = '';
     /**
-     * optional, for future use
+     *&#47; optional, for future use
      *
      * Generated from protobuf field <code>string redirectUri = 4;</code>
      */
     private $redirectUri = '';
     /**
-     * To update an existing authorization code, pass it here.
+     *&#47; To update an existing authorization code, pass it here.
      *
      * Generated from protobuf field <code>string currentCode = 5;</code>
      */
     private $currentCode = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $clientId
+     *          &#47; identifier (synonymous with a username)
+     *     @type string $code
+     *          &#47; API key or client secret
+     *     @type string $companyId
+     *          &#47; company identifier
+     *     @type string $redirectUri
+     *          &#47; optional, for future use
+     *     @type string $currentCode
+     *          &#47; To update an existing authorization code, pass it here.
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
-     * identifier (synonymous with a username)
+     *&#47; identifier (synonymous with a username)
      *
      * Generated from protobuf field <code>string clientId = 1;</code>
      * @return string
@@ -65,7 +83,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * identifier (synonymous with a username)
+     *&#47; identifier (synonymous with a username)
      *
      * Generated from protobuf field <code>string clientId = 1;</code>
      * @param string $var
@@ -80,7 +98,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * API key or client secret
+     *&#47; API key or client secret
      *
      * Generated from protobuf field <code>string code = 2;</code>
      * @return string
@@ -91,7 +109,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * API key or client secret
+     *&#47; API key or client secret
      *
      * Generated from protobuf field <code>string code = 2;</code>
      * @param string $var
@@ -106,7 +124,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * company identifier
+     *&#47; company identifier
      *
      * Generated from protobuf field <code>string companyId = 3;</code>
      * @return string
@@ -117,7 +135,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * company identifier
+     *&#47; company identifier
      *
      * Generated from protobuf field <code>string companyId = 3;</code>
      * @param string $var
@@ -132,7 +150,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional, for future use
+     *&#47; optional, for future use
      *
      * Generated from protobuf field <code>string redirectUri = 4;</code>
      * @return string
@@ -143,7 +161,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional, for future use
+     *&#47; optional, for future use
      *
      * Generated from protobuf field <code>string redirectUri = 4;</code>
      * @param string $var
@@ -158,7 +176,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * To update an existing authorization code, pass it here.
+     *&#47; To update an existing authorization code, pass it here.
      *
      * Generated from protobuf field <code>string currentCode = 5;</code>
      * @return string
@@ -169,7 +187,7 @@ class AuthorizationCodeCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * To update an existing authorization code, pass it here.
+     *&#47; To update an existing authorization code, pass it here.
      *
      * Generated from protobuf field <code>string currentCode = 5;</code>
      * @param string $var

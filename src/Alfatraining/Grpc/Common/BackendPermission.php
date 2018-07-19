@@ -5,14 +5,14 @@
 namespace Alfatraining\Grpc\Common;
 
 /**
- * Protobuf enum <code>Common\BackendPermission</code>
+ * Protobuf type <code>common.BackendPermission</code>
  */
 class BackendPermission
 {
     /**
      * Generated from protobuf enum <code>UNSET = 0;</code>
      */
-    const UNSET = 0;
+    const PBUNSET = 0;
     /**
      * Generated from protobuf enum <code>USER_CREATE = 1;</code>
      */
@@ -42,13 +42,13 @@ class BackendPermission
      */
     const COMPANY_CREATE = 7;
     /**
-     * list your own companies
+     *&#47; list your own companies
      *
      * Generated from protobuf enum <code>COMPANY_LIST = 8;</code>
      */
     const COMPANY_LIST = 8;
     /**
-     * administrate all companies (alfatraining internal)
+     *&#47; administrate all companies (works for alfatraining-internal only)
      *
      * Generated from protobuf enum <code>COMPANY_ADMIN = 9;</code>
      */
@@ -66,7 +66,7 @@ class BackendPermission
      */
     const ROOM_ADMIN = 15;
     /**
-     * set this to strip access tokens of all their permissions
+     *&#47; set this to strip access tokens of all their permissions
      *
      * Generated from protobuf enum <code>NONE = 999;</code>
      */

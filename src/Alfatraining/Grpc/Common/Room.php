@@ -22,17 +22,21 @@ class Room extends \Google\Protobuf\Internal\Message
      */
     private $displayName = '';
     /**
-     * Generated from protobuf field <code>string host = 5;</code>
+     * Generated from protobuf field <code>.common.RoomQuotas quotas = 6;</code>
      */
-    private $host = '';
+    private $quotas = null;
     /**
-     * K => v
+     * Generated from protobuf field <code>bool allowSpectators = 7;</code>
+     */
+    private $allowSpectators = false;
+    /**
+     *&#47; key => value
      *
      * Generated from protobuf field <code>map<string, string> metadata = 10;</code>
      */
     private $metadata;
     /**
-     * userid => permissions
+     *&#47; userid => permissions
      *
      * Generated from protobuf field <code>map<string, .common.Permissions> permissions = 20;</code>
      */
@@ -46,9 +50,27 @@ class Room extends \Google\Protobuf\Internal\Message
      */
     private $subRooms;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $parentId
+     *     @type string $displayName
+     *     @type \Alfatraining\Grpc\Common\RoomQuotas $quotas
+     *     @type bool $allowSpectators
+     *     @type array|\Google\Protobuf\Internal\MapField $metadata
+     *          &#47; key => value
+     *     @type array|\Google\Protobuf\Internal\MapField $permissions
+     *          &#47; userid => permissions
+     *     @type \Alfatraining\Grpc\Common\Permissions $defaultPermissions
+     *     @type array|\Google\Protobuf\Internal\MapField $subRooms
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\Room::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -96,29 +118,51 @@ class Room extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Generated from protobuf field <code>string host = 5;</code>
-     * @return string
+     * Generated from protobuf field <code>.common.RoomQuotas quotas = 6;</code>
+     * @return \Alfatraining\Grpc\Common\RoomQuotas
      */
-    public function getHost()
+    public function getQuotas()
     {
-        return $this->host;
+        return $this->quotas;
     }
 
     /**
-     * Generated from protobuf field <code>string host = 5;</code>
-     * @param string $var
+     * Generated from protobuf field <code>.common.RoomQuotas quotas = 6;</code>
+     * @param \Alfatraining\Grpc\Common\RoomQuotas $var
      * @return $this
      */
-    public function setHost($var)
+    public function setQuotas($var)
     {
-        GPBUtil::checkString($var, True);
-        $this->host = $var;
+        GPBUtil::checkMessage($var, \Alfatraining\Grpc\Common\RoomQuotas::class);
+        $this->quotas = $var;
 
         return $this;
     }
 
     /**
-     * K => v
+     * Generated from protobuf field <code>bool allowSpectators = 7;</code>
+     * @return bool
+     */
+    public function getAllowSpectators()
+    {
+        return $this->allowSpectators;
+    }
+
+    /**
+     * Generated from protobuf field <code>bool allowSpectators = 7;</code>
+     * @param bool $var
+     * @return $this
+     */
+    public function setAllowSpectators($var)
+    {
+        GPBUtil::checkBool($var);
+        $this->allowSpectators = $var;
+
+        return $this;
+    }
+
+    /**
+     *&#47; key => value
      *
      * Generated from protobuf field <code>map<string, string> metadata = 10;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -129,7 +173,7 @@ class Room extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * K => v
+     *&#47; key => value
      *
      * Generated from protobuf field <code>map<string, string> metadata = 10;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
@@ -144,7 +188,7 @@ class Room extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * userid => permissions
+     *&#47; userid => permissions
      *
      * Generated from protobuf field <code>map<string, .common.Permissions> permissions = 20;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -155,7 +199,7 @@ class Room extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * userid => permissions
+     *&#47; userid => permissions
      *
      * Generated from protobuf field <code>map<string, .common.Permissions> permissions = 20;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

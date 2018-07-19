@@ -29,21 +29,36 @@ class UsernamePasswordCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * to update credentials pass the current password here
+     *&#47; to update credentials pass the current password here
      *
      * Generated from protobuf field <code>string current = 5;</code>
      */
     private $current = '';
     /**
-     * to reset the user's password pass a reset token here
+     *&#47; to reset the user's password pass a reset token here
      *
      * Generated from protobuf field <code>string passwordResetToken = 6;</code>
      */
     private $passwordResetToken = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $username
+     *     @type string $password
+     *     @type string $companyId
+     *     @type string $current
+     *          &#47; to update credentials pass the current password here
+     *     @type string $passwordResetToken
+     *          &#47; to reset the user's password pass a reset token here
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -113,7 +128,7 @@ class UsernamePasswordCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * to update credentials pass the current password here
+     *&#47; to update credentials pass the current password here
      *
      * Generated from protobuf field <code>string current = 5;</code>
      * @return string
@@ -124,7 +139,7 @@ class UsernamePasswordCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * to update credentials pass the current password here
+     *&#47; to update credentials pass the current password here
      *
      * Generated from protobuf field <code>string current = 5;</code>
      * @param string $var
@@ -139,7 +154,7 @@ class UsernamePasswordCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * to reset the user's password pass a reset token here
+     *&#47; to reset the user's password pass a reset token here
      *
      * Generated from protobuf field <code>string passwordResetToken = 6;</code>
      * @return string
@@ -150,7 +165,7 @@ class UsernamePasswordCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * to reset the user's password pass a reset token here
+     *&#47; to reset the user's password pass a reset token here
      *
      * Generated from protobuf field <code>string passwordResetToken = 6;</code>
      * @param string $var

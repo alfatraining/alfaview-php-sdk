@@ -18,7 +18,7 @@ class UserListReply extends \Google\Protobuf\Internal\Message
      */
     private $replyInfo = null;
     /**
-     * userId => User
+     *&#47; userId => User
      *
      * Generated from protobuf field <code>map<string, .common.User> users = 9;</code>
      */
@@ -28,9 +28,21 @@ class UserListReply extends \Google\Protobuf\Internal\Message
      */
     private $userIdList;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type array|\Google\Protobuf\Internal\MapField $users
+     *          &#47; userId => User
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $userIdList
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\User\UserService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -56,7 +68,7 @@ class UserListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * userId => User
+     *&#47; userId => User
      *
      * Generated from protobuf field <code>map<string, .common.User> users = 9;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -67,7 +79,7 @@ class UserListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * userId => User
+     *&#47; userId => User
      *
      * Generated from protobuf field <code>map<string, .common.User> users = 9;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

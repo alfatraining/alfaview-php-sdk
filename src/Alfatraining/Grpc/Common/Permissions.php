@@ -84,15 +84,43 @@ class Permissions extends \Google\Protobuf\Internal\Message
      */
     private $action = false;
     /**
-     * workaround for python's inability to handle maps with null-values
+     *&#47; workaround for python's inability to handle maps with null-values
      *
      * Generated from protobuf field <code>bool remove = 100;</code>
      */
     private $remove = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type bool $admin
+     *           default for bool is false
+     *     @type bool $voice
+     *     @type bool $video
+     *     @type bool $promote
+     *     @type bool $join
+     *     @type bool $screen
+     *     @type bool $vip
+     *     @type bool $subroomManage
+     *     @type bool $subroomCreatePublic
+     *     @type bool $subroomCreatePrivate
+     *     @type bool $chat
+     *     @type bool $chatBroadcast
+     *     @type bool $fileAdmin
+     *     @type bool $fileUpload
+     *     @type bool $fileList
+     *     @type bool $fairUse
+     *     @type bool $action
+     *     @type bool $remove
+     *          &#47; workaround for python's inability to handle maps with null-values
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\Permissions::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -474,7 +502,7 @@ class Permissions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * workaround for python's inability to handle maps with null-values
+     *&#47; workaround for python's inability to handle maps with null-values
      *
      * Generated from protobuf field <code>bool remove = 100;</code>
      * @return bool
@@ -485,7 +513,7 @@ class Permissions extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * workaround for python's inability to handle maps with null-values
+     *&#47; workaround for python's inability to handle maps with null-values
      *
      * Generated from protobuf field <code>bool remove = 100;</code>
      * @param bool $var

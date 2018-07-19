@@ -26,9 +26,20 @@ class CompanyUpdateRequest extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type \Alfatraining\Grpc\Common\Company $company
+     *     @type string $companyId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\CompanyService\CompanyService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

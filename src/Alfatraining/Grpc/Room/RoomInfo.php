@@ -14,19 +14,29 @@ use Google\Protobuf\Internal\GPBUtil;
 class RoomInfo extends \Google\Protobuf\Internal\Message
 {
     /**
-     * key is user-uuid
+     *&#47; key is user-uuid
      *
      * Generated from protobuf field <code>map<string, .roomService.UserInfo> users = 15;</code>
      */
     private $users;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type array|\Google\Protobuf\Internal\MapField $users
+     *          &#47; key is user-uuid
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
-     * key is user-uuid
+     *&#47; key is user-uuid
      *
      * Generated from protobuf field <code>map<string, .roomService.UserInfo> users = 15;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -37,7 +47,7 @@ class RoomInfo extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * key is user-uuid
+     *&#47; key is user-uuid
      *
      * Generated from protobuf field <code>map<string, .roomService.UserInfo> users = 15;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

@@ -18,43 +18,61 @@ use Google\Protobuf\Internal\GPBUtil;
 class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
 {
     /**
-     * external ID of the provider's user
+     *&#47; external ID of the provider's user
      *
      * Generated from protobuf field <code>string Oauth2Uid = 1;</code>
      */
     private $Oauth2Uid = '';
     /**
-     * provider to use for checking token validity (tbd)
+     *&#47; provider to use for checking token validity (tbd)
      *
      * Generated from protobuf field <code>string Oauth2Provider = 2;</code>
      */
     private $Oauth2Provider = '';
     /**
-     * access token (short-lived)
+     *&#47; access token (short-lived)
      *
      * Generated from protobuf field <code>string Oauth2Token = 3;</code>
      */
     private $Oauth2Token = '';
     /**
-     * refresh token (OAuth2 code flow, long-lived)
+     *&#47; refresh token (OAuth2 code flow, long-lived)
      *
      * Generated from protobuf field <code>string Oauth2Refresh = 4;</code>
      */
     private $Oauth2Refresh = '';
     /**
-     * Unix timestamp of access token expiration
+     *&#47; Unix timestamp of access token expiration
      *
      * Generated from protobuf field <code>int64 Oauth2Expiry = 5;</code>
      */
     private $Oauth2Expiry = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $Oauth2Uid
+     *          &#47; external ID of the provider's user
+     *     @type string $Oauth2Provider
+     *          &#47; provider to use for checking token validity (tbd)
+     *     @type string $Oauth2Token
+     *          &#47; access token (short-lived)
+     *     @type string $Oauth2Refresh
+     *          &#47; refresh token (OAuth2 code flow, long-lived)
+     *     @type int|string $Oauth2Expiry
+     *          &#47; Unix timestamp of access token expiration
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
-     * external ID of the provider's user
+     *&#47; external ID of the provider's user
      *
      * Generated from protobuf field <code>string Oauth2Uid = 1;</code>
      * @return string
@@ -65,7 +83,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * external ID of the provider's user
+     *&#47; external ID of the provider's user
      *
      * Generated from protobuf field <code>string Oauth2Uid = 1;</code>
      * @param string $var
@@ -80,7 +98,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * provider to use for checking token validity (tbd)
+     *&#47; provider to use for checking token validity (tbd)
      *
      * Generated from protobuf field <code>string Oauth2Provider = 2;</code>
      * @return string
@@ -91,7 +109,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * provider to use for checking token validity (tbd)
+     *&#47; provider to use for checking token validity (tbd)
      *
      * Generated from protobuf field <code>string Oauth2Provider = 2;</code>
      * @param string $var
@@ -106,7 +124,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * access token (short-lived)
+     *&#47; access token (short-lived)
      *
      * Generated from protobuf field <code>string Oauth2Token = 3;</code>
      * @return string
@@ -117,7 +135,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * access token (short-lived)
+     *&#47; access token (short-lived)
      *
      * Generated from protobuf field <code>string Oauth2Token = 3;</code>
      * @param string $var
@@ -132,7 +150,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * refresh token (OAuth2 code flow, long-lived)
+     *&#47; refresh token (OAuth2 code flow, long-lived)
      *
      * Generated from protobuf field <code>string Oauth2Refresh = 4;</code>
      * @return string
@@ -143,7 +161,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * refresh token (OAuth2 code flow, long-lived)
+     *&#47; refresh token (OAuth2 code flow, long-lived)
      *
      * Generated from protobuf field <code>string Oauth2Refresh = 4;</code>
      * @param string $var
@@ -158,7 +176,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Unix timestamp of access token expiration
+     *&#47; Unix timestamp of access token expiration
      *
      * Generated from protobuf field <code>int64 Oauth2Expiry = 5;</code>
      * @return int|string
@@ -169,7 +187,7 @@ class ExternalOauth2Credentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * Unix timestamp of access token expiration
+     *&#47; Unix timestamp of access token expiration
      *
      * Generated from protobuf field <code>int64 Oauth2Expiry = 5;</code>
      * @param int|string $var

@@ -18,15 +18,26 @@ class RoomListReply extends \Google\Protobuf\Internal\Message
      */
     private $replyInfo = null;
     /**
-     * key is room-uuid
+     *&#47; key is room-uuid
      *
      * Generated from protobuf field <code>map<string, .common.Room> rooms = 7;</code>
      */
     private $rooms;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type array|\Google\Protobuf\Internal\MapField $rooms
+     *          &#47; key is room-uuid
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -52,7 +63,7 @@ class RoomListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * key is room-uuid
+     *&#47; key is room-uuid
      *
      * Generated from protobuf field <code>map<string, .common.Room> rooms = 7;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -63,7 +74,7 @@ class RoomListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * key is room-uuid
+     *&#47; key is room-uuid
      *
      * Generated from protobuf field <code>map<string, .common.Room> rooms = 7;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

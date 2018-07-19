@@ -21,69 +21,98 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
      */
     private $requestId = '';
     /**
-     * password grant
+     *&#47; password grant
      *
      * Generated from protobuf field <code>.authentication.UsernamePasswordCredentials usernamePasswordCredentials = 6;</code>
      */
     private $usernamePasswordCredentials = null;
     /**
-     * authorization code grant
+     *&#47; authorization code grant
      *
      * Generated from protobuf field <code>.authentication.AuthorizationCodeCredentials authorizationCodeCredentials = 7;</code>
      */
     private $authorizationCodeCredentials = null;
     /**
-     * refresh token grant
+     *&#47; refresh token grant
      *
      * Generated from protobuf field <code>.authentication.RefreshTokenCredentials refreshTokenCredentials = 8;</code>
      */
     private $refreshTokenCredentials = null;
     /**
-     * external LDAP token grant
+     *&#47; external LDAP token grant
      *
      * Generated from protobuf field <code>.authentication.LdapCredentials ldapCredentials = 9;</code>
      */
     private $ldapCredentials = null;
     /**
-     * guest access token grant
+     *&#47; guest access token grant
      *
      * Generated from protobuf field <code>.authentication.GuestAccessCredentials guestAccessCredentials = 10;</code>
      */
     private $guestAccessCredentials = null;
     /**
-     * activation token grant
+     *&#47; activation token grant
      *
      * Generated from protobuf field <code>.authentication.ActivationTokenCredentials activationTokenCredentials = 11;</code>
      */
     private $activationTokenCredentials = null;
     /**
-     * company switch grant
+     *&#47; company switch grant
      *
      * Generated from protobuf field <code>.authentication.CompanySwitchCredentials companySwitchCredentials = 15;</code>
      */
     private $companySwitchCredentials = null;
     /**
-     * permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
+     *&#47; permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      */
     private $permissions;
     /**
-     * set to the desired account status (default is ignored)
+     *&#47; set to the desired account status (default is ignored)
      *
      * Generated from protobuf field <code>.authentication.AccountStatus accountStatus = 13;</code>
      */
     private $accountStatus = 0;
     /**
-     * use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
+     *&#47; use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
      *
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      */
     private $metadata;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $requestId
+     *     @type \Alfatraining\Grpc\Authentication\UsernamePasswordCredentials $usernamePasswordCredentials
+     *          &#47; password grant
+     *     @type \Alfatraining\Grpc\Authentication\AuthorizationCodeCredentials $authorizationCodeCredentials
+     *          &#47; authorization code grant
+     *     @type \Alfatraining\Grpc\Authentication\RefreshTokenCredentials $refreshTokenCredentials
+     *          &#47; refresh token grant
+     *     @type \Alfatraining\Grpc\Authentication\LdapCredentials $ldapCredentials
+     *          &#47; external LDAP token grant
+     *     @type \Alfatraining\Grpc\Authentication\GuestAccessCredentials $guestAccessCredentials
+     *          &#47; guest access token grant
+     *     @type \Alfatraining\Grpc\Authentication\ActivationTokenCredentials $activationTokenCredentials
+     *          &#47; activation token grant
+     *     @type \Alfatraining\Grpc\Authentication\CompanySwitchCredentials $companySwitchCredentials
+     *          &#47; company switch grant
+     *     @type array|\Google\Protobuf\Internal\MapField $permissions
+     *          &#47; permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
+     *     @type int $accountStatus
+     *          &#47; set to the desired account status (default is ignored)
+     *     @type array|\Google\Protobuf\Internal\MapField $metadata
+     *          &#47; use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -109,7 +138,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * password grant
+     *&#47; password grant
      *
      * Generated from protobuf field <code>.authentication.UsernamePasswordCredentials usernamePasswordCredentials = 6;</code>
      * @return \Alfatraining\Grpc\Authentication\UsernamePasswordCredentials
@@ -120,7 +149,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * password grant
+     *&#47; password grant
      *
      * Generated from protobuf field <code>.authentication.UsernamePasswordCredentials usernamePasswordCredentials = 6;</code>
      * @param \Alfatraining\Grpc\Authentication\UsernamePasswordCredentials $var
@@ -135,7 +164,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * authorization code grant
+     *&#47; authorization code grant
      *
      * Generated from protobuf field <code>.authentication.AuthorizationCodeCredentials authorizationCodeCredentials = 7;</code>
      * @return \Alfatraining\Grpc\Authentication\AuthorizationCodeCredentials
@@ -146,7 +175,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * authorization code grant
+     *&#47; authorization code grant
      *
      * Generated from protobuf field <code>.authentication.AuthorizationCodeCredentials authorizationCodeCredentials = 7;</code>
      * @param \Alfatraining\Grpc\Authentication\AuthorizationCodeCredentials $var
@@ -161,7 +190,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * refresh token grant
+     *&#47; refresh token grant
      *
      * Generated from protobuf field <code>.authentication.RefreshTokenCredentials refreshTokenCredentials = 8;</code>
      * @return \Alfatraining\Grpc\Authentication\RefreshTokenCredentials
@@ -172,7 +201,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * refresh token grant
+     *&#47; refresh token grant
      *
      * Generated from protobuf field <code>.authentication.RefreshTokenCredentials refreshTokenCredentials = 8;</code>
      * @param \Alfatraining\Grpc\Authentication\RefreshTokenCredentials $var
@@ -187,7 +216,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * external LDAP token grant
+     *&#47; external LDAP token grant
      *
      * Generated from protobuf field <code>.authentication.LdapCredentials ldapCredentials = 9;</code>
      * @return \Alfatraining\Grpc\Authentication\LdapCredentials
@@ -198,7 +227,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * external LDAP token grant
+     *&#47; external LDAP token grant
      *
      * Generated from protobuf field <code>.authentication.LdapCredentials ldapCredentials = 9;</code>
      * @param \Alfatraining\Grpc\Authentication\LdapCredentials $var
@@ -213,7 +242,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * guest access token grant
+     *&#47; guest access token grant
      *
      * Generated from protobuf field <code>.authentication.GuestAccessCredentials guestAccessCredentials = 10;</code>
      * @return \Alfatraining\Grpc\Authentication\GuestAccessCredentials
@@ -224,7 +253,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * guest access token grant
+     *&#47; guest access token grant
      *
      * Generated from protobuf field <code>.authentication.GuestAccessCredentials guestAccessCredentials = 10;</code>
      * @param \Alfatraining\Grpc\Authentication\GuestAccessCredentials $var
@@ -239,7 +268,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * activation token grant
+     *&#47; activation token grant
      *
      * Generated from protobuf field <code>.authentication.ActivationTokenCredentials activationTokenCredentials = 11;</code>
      * @return \Alfatraining\Grpc\Authentication\ActivationTokenCredentials
@@ -250,7 +279,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * activation token grant
+     *&#47; activation token grant
      *
      * Generated from protobuf field <code>.authentication.ActivationTokenCredentials activationTokenCredentials = 11;</code>
      * @param \Alfatraining\Grpc\Authentication\ActivationTokenCredentials $var
@@ -265,7 +294,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * company switch grant
+     *&#47; company switch grant
      *
      * Generated from protobuf field <code>.authentication.CompanySwitchCredentials companySwitchCredentials = 15;</code>
      * @return \Alfatraining\Grpc\Authentication\CompanySwitchCredentials
@@ -276,7 +305,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * company switch grant
+     *&#47; company switch grant
      *
      * Generated from protobuf field <code>.authentication.CompanySwitchCredentials companySwitchCredentials = 15;</code>
      * @param \Alfatraining\Grpc\Authentication\CompanySwitchCredentials $var
@@ -291,7 +320,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
+     *&#47; permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -302,7 +331,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
+     *&#47; permissions to assign to the user or access token (map to names using the common.BackendPermission enum keys)
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
@@ -317,7 +346,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * set to the desired account status (default is ignored)
+     *&#47; set to the desired account status (default is ignored)
      *
      * Generated from protobuf field <code>.authentication.AccountStatus accountStatus = 13;</code>
      * @return int
@@ -328,7 +357,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * set to the desired account status (default is ignored)
+     *&#47; set to the desired account status (default is ignored)
      *
      * Generated from protobuf field <code>.authentication.AccountStatus accountStatus = 13;</code>
      * @param int $var
@@ -343,7 +372,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
+     *&#47; use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
      *
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -354,7 +383,7 @@ class AuthenticationRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
+     *&#47; use and set only when this message is used for creating/updating authentication methods (ignored otherwise)
      *
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

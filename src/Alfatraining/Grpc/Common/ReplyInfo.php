@@ -26,9 +26,20 @@ class ReplyInfo extends \Google\Protobuf\Internal\Message
      */
     private $statusMessage = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $requestId
+     *     @type int $statusCode
+     *     @type string $statusMessage
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\ReplyInfo::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

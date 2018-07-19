@@ -21,7 +21,7 @@ class AuthenticationUpdateRequest extends \Google\Protobuf\Internal\Message
      */
     private $accessInfo = null;
     /**
-     * removes all the user's associated authentication methods
+     *&#47; removes all the user's associated authentication methods
      *
      * Generated from protobuf field <code>bool removeAll = 5;</code>
      */
@@ -35,9 +35,22 @@ class AuthenticationUpdateRequest extends \Google\Protobuf\Internal\Message
      */
     private $authenticationRequest = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type bool $removeAll
+     *          &#47; removes all the user's associated authentication methods
+     *     @type string $userId
+     *     @type \Alfatraining\Grpc\Authentication\AuthenticationRequest $authenticationRequest
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -63,7 +76,7 @@ class AuthenticationUpdateRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * removes all the user's associated authentication methods
+     *&#47; removes all the user's associated authentication methods
      *
      * Generated from protobuf field <code>bool removeAll = 5;</code>
      * @return bool
@@ -74,7 +87,7 @@ class AuthenticationUpdateRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * removes all the user's associated authentication methods
+     *&#47; removes all the user's associated authentication methods
      *
      * Generated from protobuf field <code>bool removeAll = 5;</code>
      * @param bool $var

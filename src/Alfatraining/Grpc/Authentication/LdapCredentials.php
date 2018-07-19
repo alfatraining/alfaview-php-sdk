@@ -30,21 +30,36 @@ class LdapCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * denotes the bind DN to use for authenticating (leave empty if in doubt)
+     *&#47; denotes the bind DN to use for authenticating (leave empty if in doubt)
      *
      * Generated from protobuf field <code>string bindDN = 4;</code>
      */
     private $bindDN = '';
     /**
-     * denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
+     *&#47; denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
      *
      * Generated from protobuf field <code>string searchDN = 6;</code>
      */
     private $searchDN = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $username
+     *     @type string $password
+     *     @type string $companyId
+     *     @type string $bindDN
+     *          &#47; denotes the bind DN to use for authenticating (leave empty if in doubt)
+     *     @type string $searchDN
+     *          &#47; denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -114,7 +129,7 @@ class LdapCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * denotes the bind DN to use for authenticating (leave empty if in doubt)
+     *&#47; denotes the bind DN to use for authenticating (leave empty if in doubt)
      *
      * Generated from protobuf field <code>string bindDN = 4;</code>
      * @return string
@@ -125,7 +140,7 @@ class LdapCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * denotes the bind DN to use for authenticating (leave empty if in doubt)
+     *&#47; denotes the bind DN to use for authenticating (leave empty if in doubt)
      *
      * Generated from protobuf field <code>string bindDN = 4;</code>
      * @param string $var
@@ -140,7 +155,7 @@ class LdapCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
+     *&#47; denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
      *
      * Generated from protobuf field <code>string searchDN = 6;</code>
      * @return string
@@ -151,7 +166,7 @@ class LdapCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
+     *&#47; denotes the search DN to use for re-authenticating with a refresh token/looking up profile information outside of an authentication context
      *
      * Generated from protobuf field <code>string searchDN = 6;</code>
      * @param string $var

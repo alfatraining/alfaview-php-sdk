@@ -27,9 +27,19 @@ class AuthenticationCreateRequest extends \Google\Protobuf\Internal\Message
      */
     private $authenticationRequest = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type \Alfatraining\Grpc\Authentication\AuthenticationRequest $authenticationRequest
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
