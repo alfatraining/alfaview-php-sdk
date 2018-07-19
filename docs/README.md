@@ -49,22 +49,6 @@
     - [AuthenticationService](#authentication.AuthenticationService)
   
 
-- [businessLogicService/businessLogicService.proto](#businessLogicService/businessLogicService.proto)
-    - [CompanyPermissionGroupsListReply](#businessLogicService.CompanyPermissionGroupsListReply)
-    - [CompanyPermissionGroupsListReply.PermissionGroupsEntry](#businessLogicService.CompanyPermissionGroupsListReply.PermissionGroupsEntry)
-    - [CompanyPermissionGroupsListRequest](#businessLogicService.CompanyPermissionGroupsListRequest)
-    - [FavoritesListReply](#businessLogicService.FavoritesListReply)
-    - [FavoritesListRequest](#businessLogicService.FavoritesListRequest)
-    - [FavoritesUpdateReply](#businessLogicService.FavoritesUpdateReply)
-    - [FavoritesUpdateRequest](#businessLogicService.FavoritesUpdateRequest)
-    - [FavoritesUpdateRequest.RoomIdsEntry](#businessLogicService.FavoritesUpdateRequest.RoomIdsEntry)
-    - [PermissionGroup](#businessLogicService.PermissionGroup)
-  
-  
-  
-    - [BusinessLogicService](#businessLogicService.BusinessLogicService)
-  
-
 - [common/accessInfo.proto](#common/accessInfo.proto)
     - [AccessInfo](#common.AccessInfo)
   
@@ -668,7 +652,7 @@ A user ID is auto-generated upon creation of guest access credentials and no use
 Services that need to accept user IDs should also accept metadata maps where a display name can be added
 under the guest user&#39;s ID as the key. Guest users usually don&#39;t have a lot of backend permissions, although
 that&#39;s certainly possible.
-  - when creating guest access credentials for a particular guest in a particular room pass *email*, *roomId*, *displayName*, *expiry* and *shareable*
+When creating guest access credentials for a particular guest in a particular room pass *email*, *roomId*, *displayName*, *expiry* and *shareable*
 
 
 | Field | Type | Label | Description |
@@ -676,10 +660,8 @@ that&#39;s certainly possible.
 | userId | [string](#string) |  | only pass when authenticating; auth service will not accept this when creating guest access credentials |
 | code | [string](#string) |  | password, should be something random |
 | companyId | [string](#string) |  |  |
-| email | [string](#string) |  | pass these when creating guest access credentials for a particular guest in a particular room
-
-/ optional but recommended (see displayName field) |
-| roomId | [string](#string) |  | for now this is required when creating guest access credentials (subject to change) |
+| email | [string](#string) |  | optional but recommended (see displayName field) |
+| roomId | [string](#string) |  | required; room to lock credentials to |
 | displayName | [string](#string) |  | optional; the email address is used if not set or, if that&#39;s not set either, &#34;Unnamed guest&#34; is used, can also be used when authenticating; added to the access token |
 | expiry | [int64](#int64) |  | optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change) |
 | shareable | [bool](#bool) |  | provides shareable guest access credentials to be used multiple times |
@@ -892,178 +874,6 @@ update your authentication credentials upon user updates.
 | authenticationUpdate | [AuthenticationUpdateRequest](#authentication.AuthenticationUpdateRequest) | [.common.ReplyInfo](#authentication.AuthenticationUpdateRequest) |  |
 | authenticationInformation | [AuthenticationInformationRequest](#authentication.AuthenticationInformationRequest) | [AuthenticationInformationReply](#authentication.AuthenticationInformationRequest) |  |
 | companyCreate | [CompanyCreateRequest](#authentication.CompanyCreateRequest) | [CompanyCreateReply](#authentication.CompanyCreateRequest) |  |
-
- 
-
-
-
-<a name="businessLogicService/businessLogicService.proto"/>
-<p align="right"><a href="#top">Top</a></p>
-
-## businessLogicService/businessLogicService.proto
-
-
-
-<a name="businessLogicService.CompanyPermissionGroupsListReply"/>
-
-### CompanyPermissionGroupsListReply
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
-| permissionGroups | [CompanyPermissionGroupsListReply.PermissionGroupsEntry](#businessLogicService.CompanyPermissionGroupsListReply.PermissionGroupsEntry) | repeated |  |
-
-
-
-
-
-
-<a name="businessLogicService.CompanyPermissionGroupsListReply.PermissionGroupsEntry"/>
-
-### CompanyPermissionGroupsListReply.PermissionGroupsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [PermissionGroup](#businessLogicService.PermissionGroup) |  |  |
-
-
-
-
-
-
-<a name="businessLogicService.CompanyPermissionGroupsListRequest"/>
-
-### CompanyPermissionGroupsListRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
-
-
-
-
-
-
-<a name="businessLogicService.FavoritesListReply"/>
-
-### FavoritesListReply
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
-| roomIds | [string](#string) | repeated |  |
-
-
-
-
-
-
-<a name="businessLogicService.FavoritesListRequest"/>
-
-### FavoritesListRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
-| userId | [string](#string) |  | will default to the caller&#39;s user ID in the token if empty |
-
-
-
-
-
-
-<a name="businessLogicService.FavoritesUpdateReply"/>
-
-### FavoritesUpdateReply
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| replyInfo | [common.ReplyInfo](#common.ReplyInfo) |  |  |
-
-
-
-
-
-
-<a name="businessLogicService.FavoritesUpdateRequest"/>
-
-### FavoritesUpdateRequest
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| accessInfo | [common.AccessInfo](#common.AccessInfo) |  |  |
-| userId | [string](#string) |  |  |
-| roomIds | [FavoritesUpdateRequest.RoomIdsEntry](#businessLogicService.FavoritesUpdateRequest.RoomIdsEntry) | repeated |  |
-
-
-
-
-
-
-<a name="businessLogicService.FavoritesUpdateRequest.RoomIdsEntry"/>
-
-### FavoritesUpdateRequest.RoomIdsEntry
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| key | [string](#string) |  |  |
-| value | [bool](#bool) |  |  |
-
-
-
-
-
-
-<a name="businessLogicService.PermissionGroup"/>
-
-### PermissionGroup
-
-
-
-| Field | Type | Label | Description |
-| ----- | ---- | ----- | ----------- |
-| name | [string](#string) |  |  |
-| order | [uint32](#uint32) |  |  |
-| permissions | [common.Permissions](#common.Permissions) |  |  |
-
-
-
-
-
- 
-
- 
-
- 
-
-
-<a name="businessLogicService.BusinessLogicService"/>
-
-### BusinessLogicService
-
-
-| Method Name | Request Type | Response Type | Description |
-| ----------- | ------------ | ------------- | ------------|
-| favoritesList | [FavoritesListRequest](#businessLogicService.FavoritesListRequest) | [FavoritesListReply](#businessLogicService.FavoritesListRequest) |  |
-| favoritesUpdate | [FavoritesUpdateRequest](#businessLogicService.FavoritesUpdateRequest) | [FavoritesUpdateReply](#businessLogicService.FavoritesUpdateRequest) |  |
-| permissionGroupsList | [CompanyPermissionGroupsListRequest](#businessLogicService.CompanyPermissionGroupsListRequest) | [CompanyPermissionGroupsListReply](#businessLogicService.CompanyPermissionGroupsListRequest) |  |
 
  
 

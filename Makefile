@@ -19,7 +19,6 @@ docs:
 	@ sed -i 's/service roomService/service RoomService/' proto/roomService/roomService.proto
 	docker run --rm -v $(shell pwd)/proto:/protos -v $(shell pwd)/docs:/out --entrypoint="" pseudomuto/protoc-gen-doc:latest sh -c "protoc -I/protos --doc_out=/out --doc_opt=html,index.html \
 		/protos/authentication/accountStatus.proto /protos/authentication/authenticationService.proto \
-		/protos/businessLogicService/businessLogicService.proto \
 		/protos/common/accessInfo.proto /protos/common/accessToken.proto /protos/common/chat.proto \
 		/protos/common/company.proto /protos/common/permissions.proto /protos/common/replyInfo.proto \
 		/protos/common/room.proto /protos/common/user.proto \
@@ -28,7 +27,6 @@ docs:
 		/protos/user/userService.proto"
 	docker run --rm -v $(shell pwd)/proto:/protos -v $(shell pwd)/docs:/out --entrypoint="" pseudomuto/protoc-gen-doc:latest sh -c "protoc -I/protos --doc_out=/out --doc_opt=markdown,README.md \
 		/protos/authentication/accountStatus.proto /protos/authentication/authenticationService.proto \
-		/protos/businessLogicService/businessLogicService.proto \
 		/protos/common/accessInfo.proto /protos/common/accessToken.proto /protos/common/chat.proto \
 		/protos/common/company.proto /protos/common/permissions.proto /protos/common/replyInfo.proto \
 		/protos/common/room.proto /protos/common/user.proto \
