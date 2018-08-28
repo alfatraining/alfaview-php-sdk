@@ -6,7 +6,7 @@ setup:
 
 docker-protoc:
 	@ echo "Compiling proto files in protobuf container..."
-	@ docker run --rm -v $(shell pwd):/alfaview-php-sdk -w /alfaview-php-sdk git-registry.alfa.sx:4567/alfatraining/docker/protobuf:php7-1.13.0-3.6.0 sh -c "make protoc"
+	@ docker run --rm -v $(shell pwd):/alfaview-php-sdk -w /alfaview-php-sdk git-registry.alfa.sx:4567/alfatraining/docker/protobuf:1.14.1-3.6.1 sh -c "make protoc"
 
 protoc:
 	@ echo "Compiling proto files..."
