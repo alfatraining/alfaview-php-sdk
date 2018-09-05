@@ -70,4 +70,17 @@ class CompanyServiceClient extends \Grpc\BaseStub {
         $metadata, $options);
     }
 
+    /**
+     * @param \Alfatraining\Grpc\Company\CompanyAvailableRequest $argument input argument
+     * @param array $metadata metadata
+     * @param array $options call options
+     */
+    public function companyAvailable(\Alfatraining\Grpc\Company\CompanyAvailableRequest $argument,
+      $metadata = [], $options = []) {
+        return $this->_simpleRequest('/companyService.CompanyService/companyAvailable',
+        $argument,
+        ['\Alfatraining\Grpc\Company\CompanyAvailableReply', 'decode'],
+        $metadata, $options);
+    }
+
 }

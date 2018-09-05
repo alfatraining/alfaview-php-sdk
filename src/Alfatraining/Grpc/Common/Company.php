@@ -14,28 +14,59 @@ use Google\Protobuf\Internal\GPBUtil;
 class Company extends \Google\Protobuf\Internal\Message
 {
     /**
+     *&#47; display name of a company (e.g. used inside the company dropdown)
+     *
      * Generated from protobuf field <code>string displayName = 1;</code>
      */
     private $displayName = '';
     /**
+     *&#47; email of the user that created the company
+     *
      * Generated from protobuf field <code>string ownerId = 2;</code>
      */
     private $ownerId = '';
     /**
+     *&#47; date of creation
+     *
      * Generated from protobuf field <code>int64 createdAt = 3;</code>
      */
     private $createdAt = 0;
+    /**
+     *&#47; branding
+     *
+     * Generated from protobuf field <code>.common.Branding branding = 4;</code>
+     */
+    private $branding = null;
     /**
      * Generated from protobuf field <code>map<string, string> metadata = 14;</code>
      */
     private $metadata;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $displayName
+     *          &#47; display name of a company (e.g. used inside the company dropdown)
+     *     @type string $ownerId
+     *          &#47; email of the user that created the company
+     *     @type int|string $createdAt
+     *          &#47; date of creation
+     *     @type \Alfatraining\Grpc\Common\Branding $branding
+     *          &#47; branding
+     *     @type array|\Google\Protobuf\Internal\MapField $metadata
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\Company::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
+     *&#47; display name of a company (e.g. used inside the company dropdown)
+     *
      * Generated from protobuf field <code>string displayName = 1;</code>
      * @return string
      */
@@ -45,6 +76,8 @@ class Company extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *&#47; display name of a company (e.g. used inside the company dropdown)
+     *
      * Generated from protobuf field <code>string displayName = 1;</code>
      * @param string $var
      * @return $this
@@ -58,6 +91,8 @@ class Company extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *&#47; email of the user that created the company
+     *
      * Generated from protobuf field <code>string ownerId = 2;</code>
      * @return string
      */
@@ -67,6 +102,8 @@ class Company extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *&#47; email of the user that created the company
+     *
      * Generated from protobuf field <code>string ownerId = 2;</code>
      * @param string $var
      * @return $this
@@ -80,6 +117,8 @@ class Company extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *&#47; date of creation
+     *
      * Generated from protobuf field <code>int64 createdAt = 3;</code>
      * @return int|string
      */
@@ -89,6 +128,8 @@ class Company extends \Google\Protobuf\Internal\Message
     }
 
     /**
+     *&#47; date of creation
+     *
      * Generated from protobuf field <code>int64 createdAt = 3;</code>
      * @param int|string $var
      * @return $this
@@ -97,6 +138,32 @@ class Company extends \Google\Protobuf\Internal\Message
     {
         GPBUtil::checkInt64($var);
         $this->createdAt = $var;
+
+        return $this;
+    }
+
+    /**
+     *&#47; branding
+     *
+     * Generated from protobuf field <code>.common.Branding branding = 4;</code>
+     * @return \Alfatraining\Grpc\Common\Branding
+     */
+    public function getBranding()
+    {
+        return $this->branding;
+    }
+
+    /**
+     *&#47; branding
+     *
+     * Generated from protobuf field <code>.common.Branding branding = 4;</code>
+     * @param \Alfatraining\Grpc\Common\Branding $var
+     * @return $this
+     */
+    public function setBranding($var)
+    {
+        GPBUtil::checkMessage($var, \Alfatraining\Grpc\Common\Branding::class);
+        $this->branding = $var;
 
         return $this;
     }

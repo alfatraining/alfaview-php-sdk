@@ -26,21 +26,35 @@ class AuthenticationInformationReply extends \Google\Protobuf\Internal\Message
      */
     private $userId = '';
     /**
-     * permissions of the user
+     *&#47; permissions of the user
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      */
     private $permissions;
     /**
-     * auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
+     *&#47; auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
      *
      * Generated from protobuf field <code>map<string, .authentication.AuthenticationMethodInformation> authenticationMethodInformation = 15;</code>
      */
     private $authenticationMethodInformation;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type string $userId
+     *     @type array|\Google\Protobuf\Internal\MapField $permissions
+     *          &#47; permissions of the user
+     *     @type array|\Google\Protobuf\Internal\MapField $authenticationMethodInformation
+     *          &#47; auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -88,7 +102,7 @@ class AuthenticationInformationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions of the user
+     *&#47; permissions of the user
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -99,7 +113,7 @@ class AuthenticationInformationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions of the user
+     *&#47; permissions of the user
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
@@ -114,7 +128,7 @@ class AuthenticationInformationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
+     *&#47; auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
      *
      * Generated from protobuf field <code>map<string, .authentication.AuthenticationMethodInformation> authenticationMethodInformation = 15;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -125,7 +139,7 @@ class AuthenticationInformationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
+     *&#47; auth type (password, ldap, refresh_token, password_reset, authorization_code etc.) => AuthenticationMethodInformation
      *
      * Generated from protobuf field <code>map<string, .authentication.AuthenticationMethodInformation> authenticationMethodInformation = 15;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

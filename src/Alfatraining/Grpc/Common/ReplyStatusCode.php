@@ -5,13 +5,14 @@
 namespace Alfatraining\Grpc\Common;
 
 /**
+ **
  * rational behind the status code values:
  * there are status codes which do not indicate an error... those codes have a value LESS than 1000
  * in contrast, any code with 1000 or more indicates an error of some sort
  * [ks-03-2017]: alfatraining/proto#20: we decided that the range 500-999 is reserved for warnings
  * this means that codes in this range do NOT indicate success NOR unrecoverable error
  *
- * Protobuf enum <code>Common\ReplyStatusCode</code>
+ * Protobuf type <code>common.ReplyStatusCode</code>
  */
 class ReplyStatusCode
 {
@@ -36,7 +37,7 @@ class ReplyStatusCode
      */
     const PONG = 2;
     /**
-     * for situations where multiple entities are transferred in one go, this status code can be used to indicate partial failures in replies
+     *&#47; for situations where multiple entities are transferred in one go, this status code can be used to indicate partial failures in replies
      *
      * Generated from protobuf enum <code>PARTIAL_ERROR = 5;</code>
      */
@@ -50,19 +51,19 @@ class ReplyStatusCode
      */
     const AUTHENTICATION_ERROR = 1002;
     /**
-     * used by the authentication service to indicate errors concerning the account status (deactivated, deleted, locked)
+     *&#47; used by the authentication service to indicate errors concerning the account status (deactivated, deleted, locked)
      *
      * Generated from protobuf enum <code>ACCOUNT_STATUS_ERROR = 1003;</code>
      */
     const ACCOUNT_STATUS_ERROR = 1003;
     /**
-     * used by hydra when a message is not formatted correctly, and maybe other services will have similar requirements
+     *&#47; used by hydra when a message is not formatted correctly, and maybe other services will have similar requirements
      *
      * Generated from protobuf enum <code>PROTOCOL_ERROR = 1004;</code>
      */
     const PROTOCOL_ERROR = 1004;
     /**
-     * returned when the action/event is not implemented by the service but it is not necessarily an invalid action
+     *&#47; returned when the action/event is not implemented by the service but it is not necessarily an invalid action
      *
      * Generated from protobuf enum <code>NOT_IMPLEMENTED = 501;</code>
      */
@@ -100,7 +101,7 @@ class ReplyStatusCode
      */
     const VERSION_OUTDATED = 1042;
     /**
-     * when a user supplied string is too large
+     *&#47; when a user supplied string is too large
      *
      * Generated from protobuf enum <code>MAX_SIZE_EXCEEDED = 1043;</code>
      */
@@ -126,7 +127,11 @@ class ReplyStatusCode
      */
     const CANCELED = 1048;
     /**
-     * context dependent; on join room it is returned by engine when the room is full
+     * Generated from protobuf enum <code>TOKEN_OUTDATED = 1049;</code>
+     */
+    const TOKEN_OUTDATED = 1049;
+    /**
+     *&#47; context dependent; on join room it is returned by engine when the room is full
      *
      * Generated from protobuf enum <code>QUOTA_EXCEEDED = 1060;</code>
      */
@@ -144,7 +149,7 @@ class ReplyStatusCode
      */
     const USER_OFFLINE = 1012;
     /**
-     * returned by engine to the currently connected client when a new client with the same userId joins the same room
+     *&#47; returned by engine to the currently connected client when a new client with the same userId joins the same room
      *
      * Generated from protobuf enum <code>OTHER_CLIENT_CONNECTED = 1013;</code>
      */
@@ -174,13 +179,13 @@ class ReplyStatusCode
      */
     const ROOM_NOT_RUNNING = 1023;
     /**
-     * returned when the client tries to join a subroom that does not exist
+     *&#47; returned when the client tries to join a subroom that does not exist
      *
      * Generated from protobuf enum <code>SUBROOM_INVALID = 500;</code>
      */
     const SUBROOM_INVALID = 500;
     /**
-     * used when the engine cannot find the room indicated via its room ID
+     *&#47; used when the engine cannot find the room indicated via its room ID
      *
      * Generated from protobuf enum <code>ROOM_NOT_FOUND = 1025;</code>
      */
@@ -214,7 +219,7 @@ class ReplyStatusCode
      */
     const STREAM_HOST_INVALID = 1052;
     /**
-     * hydra is using 100-199 for ok and 1100-1199 for not ok
+     *&#47; hydra is using 100-199 for ok and 1100-1199 for not ok
      *
      * Generated from protobuf enum <code>HYDRA_STREAM_CLOSED = 104;</code>
      */
@@ -232,7 +237,7 @@ class ReplyStatusCode
      */
     const HYDRA_STREAM_ERROR = 1101;
     /**
-     * when client is disconnected because a specific amount of time passed without having any streams
+     *&#47; when client is disconnected because a specific amount of time passed without having any streams
      *
      * Generated from protobuf enum <code>HYDRA_CLIENT_TIMEOUT = 1102;</code>
      */

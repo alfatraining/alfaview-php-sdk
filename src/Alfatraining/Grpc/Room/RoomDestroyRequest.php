@@ -24,9 +24,19 @@ class RoomDestroyRequest extends \Google\Protobuf\Internal\Message
      */
     private $roomId = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type string $roomId
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

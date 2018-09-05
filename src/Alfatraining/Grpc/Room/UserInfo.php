@@ -18,9 +18,18 @@ class UserInfo extends \Google\Protobuf\Internal\Message
      */
     private $online = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type bool $online
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

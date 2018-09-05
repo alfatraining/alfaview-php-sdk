@@ -4,15 +4,22 @@ setup:
 	@ -git clone -b add-php-namespace-option git@git.alfa.sx:alfatraining/proto.git proto
 	@ cd proto ; git pull origin add-php-namespace-option ; cd -
 
+docker-protoc:
+	@ echo "Compiling proto files in protobuf container..."
+	@ docker run --rm -v $(shell pwd):/alfaview-php-sdk -w /alfaview-php-sdk git-registry.alfa.sx:4567/alfatraining/docker/protobuf:1.14.1-3.6.1 sh -c "make protoc"
+
 protoc:
 	@ echo "Compiling proto files..."
 	@ mkdir -p src
-	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin authentication/accountStatus.proto
-	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin authentication/authenticationService.proto
-	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin common/accessInfo.proto common/accessToken.proto common/company.proto common/permissions.proto common/replyInfo.proto common/room.proto common/user.proto
-	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin companyService/companyService.proto
-	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin roomService/roomService.proto
-	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=bin/grpc_php_plugin user/userService.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) authentication/accountStatus.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) authentication/authenticationService.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) common/accessInfo.proto common/accessToken.proto common/company.proto common/permissions.proto common/replyInfo.proto common/room.proto common/user.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) companyService/companyService.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) roomService/roomService.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) user/userService.proto
+	@ protoc --proto_path=proto --php_out='src' --grpc_out='src' --plugin=protoc-gen-grpc=$(shell which grpc_php_plugin) google/api/annotations.proto google/api/http.proto
+	@
+	@ sed -i 's/class roomServiceClient/class RoomServiceClient/' src/Alfatraining/Grpc/Room/RoomServiceClient.php
 
 docs:
 	@ echo "Generating documentation..."

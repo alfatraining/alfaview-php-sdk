@@ -27,57 +27,82 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
      */
     private $accessInfo = null;
     /**
-     * default: 100 max: 1000
+     *&#47; default: 100 max: 1000
      *
      * Generated from protobuf field <code>uint32 limit = 2;</code>
      */
     private $limit = 0;
     /**
-     * default: 0
+     *&#47; default: 0
      *
      * Generated from protobuf field <code>uint32 offset = 3;</code>
      */
     private $offset = 0;
     /**
-     * filter by principals
+     *&#47; filter by principals
      *
      * Generated from protobuf field <code>repeated string principal = 10;</code>
      */
     private $principal;
     /**
-     * filter by list of user IDs
+     *&#47; filter by list of user IDs
      *
      * Generated from protobuf field <code>repeated string userIdList = 11;</code>
      */
     private $userIdList;
     /**
-     * filter by account status
+     *&#47; filter by account status
      *
      * Generated from protobuf field <code>repeated .authentication.AccountStatus accountStatus = 12;</code>
      */
     private $accountStatus;
     /**
-     * filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
+     *&#47; filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
      *
      * Generated from protobuf field <code>repeated string keyType = 13;</code>
      */
     private $keyType;
     /**
-     * filter by users in a company
+     *&#47; filter by users in a company
      *
      * Generated from protobuf field <code>repeated string companyId = 14;</code>
      */
     private $companyId;
     /**
-     * filter by those eligible for company switch
+     *&#47; filter by those eligible for company switch
      *
      * Generated from protobuf field <code>bool onlyEligibleForCompanySwitch = 15;</code>
      */
     private $onlyEligibleForCompanySwitch = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type int $limit
+     *          &#47; default: 100 max: 1000
+     *     @type int $offset
+     *          &#47; default: 0
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $principal
+     *          &#47; filter by principals
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $userIdList
+     *          &#47; filter by list of user IDs
+     *     @type int[]|\Google\Protobuf\Internal\RepeatedField $accountStatus
+     *          &#47; filter by account status
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $keyType
+     *          &#47; filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $companyId
+     *          &#47; filter by users in a company
+     *     @type bool $onlyEligibleForCompanySwitch
+     *          &#47; filter by those eligible for company switch
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -103,7 +128,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default: 100 max: 1000
+     *&#47; default: 100 max: 1000
      *
      * Generated from protobuf field <code>uint32 limit = 2;</code>
      * @return int
@@ -114,7 +139,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default: 100 max: 1000
+     *&#47; default: 100 max: 1000
      *
      * Generated from protobuf field <code>uint32 limit = 2;</code>
      * @param int $var
@@ -129,7 +154,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default: 0
+     *&#47; default: 0
      *
      * Generated from protobuf field <code>uint32 offset = 3;</code>
      * @return int
@@ -140,7 +165,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * default: 0
+     *&#47; default: 0
      *
      * Generated from protobuf field <code>uint32 offset = 3;</code>
      * @param int $var
@@ -155,7 +180,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by principals
+     *&#47; filter by principals
      *
      * Generated from protobuf field <code>repeated string principal = 10;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -166,7 +191,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by principals
+     *&#47; filter by principals
      *
      * Generated from protobuf field <code>repeated string principal = 10;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
@@ -181,7 +206,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by list of user IDs
+     *&#47; filter by list of user IDs
      *
      * Generated from protobuf field <code>repeated string userIdList = 11;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -192,7 +217,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by list of user IDs
+     *&#47; filter by list of user IDs
      *
      * Generated from protobuf field <code>repeated string userIdList = 11;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
@@ -207,7 +232,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by account status
+     *&#47; filter by account status
      *
      * Generated from protobuf field <code>repeated .authentication.AccountStatus accountStatus = 12;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -218,7 +243,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by account status
+     *&#47; filter by account status
      *
      * Generated from protobuf field <code>repeated .authentication.AccountStatus accountStatus = 12;</code>
      * @param int[]|\Google\Protobuf\Internal\RepeatedField $var
@@ -233,7 +258,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
+     *&#47; filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
      *
      * Generated from protobuf field <code>repeated string keyType = 13;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -244,7 +269,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
+     *&#47; filter by authentication type (password, ldap, refresh_token, password_reset, authorization_code etc.)
      *
      * Generated from protobuf field <code>repeated string keyType = 13;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
@@ -259,7 +284,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by users in a company
+     *&#47; filter by users in a company
      *
      * Generated from protobuf field <code>repeated string companyId = 14;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -270,7 +295,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by users in a company
+     *&#47; filter by users in a company
      *
      * Generated from protobuf field <code>repeated string companyId = 14;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
@@ -285,7 +310,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by those eligible for company switch
+     *&#47; filter by those eligible for company switch
      *
      * Generated from protobuf field <code>bool onlyEligibleForCompanySwitch = 15;</code>
      * @return bool
@@ -296,7 +321,7 @@ class ListAuthenticationsRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * filter by those eligible for company switch
+     *&#47; filter by those eligible for company switch
      *
      * Generated from protobuf field <code>bool onlyEligibleForCompanySwitch = 15;</code>
      * @param bool $var

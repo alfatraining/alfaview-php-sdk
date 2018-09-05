@@ -26,9 +26,20 @@ class User extends \Google\Protobuf\Internal\Message
      */
     private $userProfile = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $email
+     *     @type array|\Google\Protobuf\Internal\MapField $metadata
+     *     @type \Alfatraining\Grpc\Common\UserProfile $userProfile
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\User::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**

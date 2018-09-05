@@ -18,15 +18,31 @@ class CompanyListReply extends \Google\Protobuf\Internal\Message
      */
     private $replyInfo = null;
     /**
-     * companyId => Company
+     *&#47; companyId => Company
      *
      * Generated from protobuf field <code>map<string, .common.Company> companies = 9;</code>
      */
     private $companies;
+    /**
+     * Generated from protobuf field <code>repeated string orderedCompanyIDs = 10;</code>
+     */
+    private $orderedCompanyIDs;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type array|\Google\Protobuf\Internal\MapField $companies
+     *          &#47; companyId => Company
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $orderedCompanyIDs
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\CompanyService\CompanyService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -52,7 +68,7 @@ class CompanyListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * companyId => Company
+     *&#47; companyId => Company
      *
      * Generated from protobuf field <code>map<string, .common.Company> companies = 9;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -63,7 +79,7 @@ class CompanyListReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * companyId => Company
+     *&#47; companyId => Company
      *
      * Generated from protobuf field <code>map<string, .common.Company> companies = 9;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
@@ -73,6 +89,28 @@ class CompanyListReply extends \Google\Protobuf\Internal\Message
     {
         $arr = GPBUtil::checkMapField($var, \Google\Protobuf\Internal\GPBType::STRING, \Google\Protobuf\Internal\GPBType::MESSAGE, \Alfatraining\Grpc\Common\Company::class);
         $this->companies = $arr;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>repeated string orderedCompanyIDs = 10;</code>
+     * @return \Google\Protobuf\Internal\RepeatedField
+     */
+    public function getOrderedCompanyIDs()
+    {
+        return $this->orderedCompanyIDs;
+    }
+
+    /**
+     * Generated from protobuf field <code>repeated string orderedCompanyIDs = 10;</code>
+     * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
+     * @return $this
+     */
+    public function setOrderedCompanyIDs($var)
+    {
+        $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::STRING);
+        $this->orderedCompanyIDs = $arr;
 
         return $this;
     }

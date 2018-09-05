@@ -25,13 +25,13 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
      */
     private $accessToken = '';
     /**
-     * timestamp of token expiration
+     *&#47; timestamp of token expiration
      *
      * Generated from protobuf field <code>int64 expiresAt = 7;</code>
      */
     private $expiresAt = 0;
     /**
-     * exchange for a new access token by using the refresh token grant
+     *&#47; exchange for a new access token by using the refresh token grant
      *
      * Generated from protobuf field <code>string refreshToken = 8;</code>
      */
@@ -41,7 +41,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
      */
     private $userId = '';
     /**
-     * permissions of the access token (map to names using the common.BackendPermission enum keys)
+     *&#47; permissions of the access token (map to names using the common.BackendPermission enum keys)
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      */
@@ -51,9 +51,27 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
      */
     private $accountStatus = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type string $accessToken
+     *     @type int|string $expiresAt
+     *          &#47; timestamp of token expiration
+     *     @type string $refreshToken
+     *          &#47; exchange for a new access token by using the refresh token grant
+     *     @type string $userId
+     *     @type array|\Google\Protobuf\Internal\MapField $permissions
+     *          &#47; permissions of the access token (map to names using the common.BackendPermission enum keys)
+     *     @type int $accountStatus
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -101,7 +119,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * timestamp of token expiration
+     *&#47; timestamp of token expiration
      *
      * Generated from protobuf field <code>int64 expiresAt = 7;</code>
      * @return int|string
@@ -112,7 +130,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * timestamp of token expiration
+     *&#47; timestamp of token expiration
      *
      * Generated from protobuf field <code>int64 expiresAt = 7;</code>
      * @param int|string $var
@@ -127,7 +145,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * exchange for a new access token by using the refresh token grant
+     *&#47; exchange for a new access token by using the refresh token grant
      *
      * Generated from protobuf field <code>string refreshToken = 8;</code>
      * @return string
@@ -138,7 +156,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * exchange for a new access token by using the refresh token grant
+     *&#47; exchange for a new access token by using the refresh token grant
      *
      * Generated from protobuf field <code>string refreshToken = 8;</code>
      * @param string $var
@@ -175,7 +193,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions of the access token (map to names using the common.BackendPermission enum keys)
+     *&#47; permissions of the access token (map to names using the common.BackendPermission enum keys)
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -186,7 +204,7 @@ class AuthenticationReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * permissions of the access token (map to names using the common.BackendPermission enum keys)
+     *&#47; permissions of the access token (map to names using the common.BackendPermission enum keys)
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 12;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

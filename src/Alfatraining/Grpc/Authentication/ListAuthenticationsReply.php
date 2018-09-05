@@ -18,22 +18,36 @@ class ListAuthenticationsReply extends \Google\Protobuf\Internal\Message
      */
     private $replyInfo = null;
     /**
-     * returns the maximum offset you can pass for the next page; you've reached the
-     * end when the offset you passed in the request is equal to the max offset returned.
+     *&#47; returns the maximum offset you can pass for the next page; you've reached the
+     * / end when the offset you passed in the request is equal to the max offset returned.
      *
      * Generated from protobuf field <code>uint32 maxOffset = 2;</code>
      */
     private $maxOffset = 0;
     /**
-     * user ID => AuthMethodInfoList
+     *&#47; user ID => AuthMethodInfoList
      *
      * Generated from protobuf field <code>map<string, .authentication.AuthMethodInfoList> results = 15;</code>
      */
     private $results;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type int $maxOffset
+     *          &#47; returns the maximum offset you can pass for the next page; you've reached the
+     *          / end when the offset you passed in the request is equal to the max offset returned.
+     *     @type array|\Google\Protobuf\Internal\MapField $results
+     *          &#47; user ID => AuthMethodInfoList
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -59,8 +73,8 @@ class ListAuthenticationsReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * returns the maximum offset you can pass for the next page; you've reached the
-     * end when the offset you passed in the request is equal to the max offset returned.
+     *&#47; returns the maximum offset you can pass for the next page; you've reached the
+     * / end when the offset you passed in the request is equal to the max offset returned.
      *
      * Generated from protobuf field <code>uint32 maxOffset = 2;</code>
      * @return int
@@ -71,8 +85,8 @@ class ListAuthenticationsReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * returns the maximum offset you can pass for the next page; you've reached the
-     * end when the offset you passed in the request is equal to the max offset returned.
+     *&#47; returns the maximum offset you can pass for the next page; you've reached the
+     * / end when the offset you passed in the request is equal to the max offset returned.
      *
      * Generated from protobuf field <code>uint32 maxOffset = 2;</code>
      * @param int $var
@@ -87,7 +101,7 @@ class ListAuthenticationsReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * user ID => AuthMethodInfoList
+     *&#47; user ID => AuthMethodInfoList
      *
      * Generated from protobuf field <code>map<string, .authentication.AuthMethodInfoList> results = 15;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -98,7 +112,7 @@ class ListAuthenticationsReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * user ID => AuthMethodInfoList
+     *&#47; user ID => AuthMethodInfoList
      *
      * Generated from protobuf field <code>map<string, .authentication.AuthMethodInfoList> results = 15;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

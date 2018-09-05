@@ -28,15 +28,36 @@ class CompanyListRequest extends \Google\Protobuf\Internal\Message
      */
     private $accessInfo = null;
     /**
-     * list of company IDs that you want to query for
+     *&#47; list of company IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string companyIdList = 2;</code>
      */
     private $companyIdList;
+    /**
+     * Generated from protobuf field <code>string companyIdFrom = 3;</code>
+     */
+    private $companyIdFrom = '';
+    /**
+     * Generated from protobuf field <code>uint32 limit = 4;</code>
+     */
+    private $limit = 0;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $companyIdList
+     *          &#47; list of company IDs that you want to query for
+     *     @type string $companyIdFrom
+     *     @type int $limit
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\CompanyService\CompanyService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -62,7 +83,7 @@ class CompanyListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * list of company IDs that you want to query for
+     *&#47; list of company IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string companyIdList = 2;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -73,7 +94,7 @@ class CompanyListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * list of company IDs that you want to query for
+     *&#47; list of company IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string companyIdList = 2;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var
@@ -83,6 +104,50 @@ class CompanyListRequest extends \Google\Protobuf\Internal\Message
     {
         $arr = GPBUtil::checkRepeatedField($var, \Google\Protobuf\Internal\GPBType::STRING);
         $this->companyIdList = $arr;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>string companyIdFrom = 3;</code>
+     * @return string
+     */
+    public function getCompanyIdFrom()
+    {
+        return $this->companyIdFrom;
+    }
+
+    /**
+     * Generated from protobuf field <code>string companyIdFrom = 3;</code>
+     * @param string $var
+     * @return $this
+     */
+    public function setCompanyIdFrom($var)
+    {
+        GPBUtil::checkString($var, True);
+        $this->companyIdFrom = $var;
+
+        return $this;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint32 limit = 4;</code>
+     * @return int
+     */
+    public function getLimit()
+    {
+        return $this->limit;
+    }
+
+    /**
+     * Generated from protobuf field <code>uint32 limit = 4;</code>
+     * @param int $var
+     * @return $this
+     */
+    public function setLimit($var)
+    {
+        GPBUtil::checkUint32($var);
+        $this->limit = $var;
 
         return $this;
     }

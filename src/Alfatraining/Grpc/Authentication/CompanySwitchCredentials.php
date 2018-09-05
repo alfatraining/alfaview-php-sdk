@@ -19,37 +19,53 @@ use Google\Protobuf\Internal\GPBUtil;
 class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
 {
     /**
-     * a valid access token
+     *&#47; a valid access token
      *
      * Generated from protobuf field <code>bytes accessToken = 1;</code>
      */
     private $accessToken = '';
     /**
-     * a valid refresh token for the access token above
+     *&#47; a valid refresh token for the access token above
      *
      * Generated from protobuf field <code>string refreshToken = 2;</code>
      */
     private $refreshToken = '';
     /**
-     * the company to switch to
+     *&#47; the company to switch to
      *
      * Generated from protobuf field <code>string companyId = 3;</code>
      */
     private $companyId = '';
     /**
-     * identifier used to create the access/refresh token
+     *&#47; identifier used to create the access/refresh token
      *
      * Generated from protobuf field <code>string principal = 4;</code>
      */
     private $principal = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $accessToken
+     *          &#47; a valid access token
+     *     @type string $refreshToken
+     *          &#47; a valid refresh token for the access token above
+     *     @type string $companyId
+     *          &#47; the company to switch to
+     *     @type string $principal
+     *          &#47; identifier used to create the access/refresh token
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
-     * a valid access token
+     *&#47; a valid access token
      *
      * Generated from protobuf field <code>bytes accessToken = 1;</code>
      * @return string
@@ -60,7 +76,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * a valid access token
+     *&#47; a valid access token
      *
      * Generated from protobuf field <code>bytes accessToken = 1;</code>
      * @param string $var
@@ -75,7 +91,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * a valid refresh token for the access token above
+     *&#47; a valid refresh token for the access token above
      *
      * Generated from protobuf field <code>string refreshToken = 2;</code>
      * @return string
@@ -86,7 +102,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * a valid refresh token for the access token above
+     *&#47; a valid refresh token for the access token above
      *
      * Generated from protobuf field <code>string refreshToken = 2;</code>
      * @param string $var
@@ -101,7 +117,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * the company to switch to
+     *&#47; the company to switch to
      *
      * Generated from protobuf field <code>string companyId = 3;</code>
      * @return string
@@ -112,7 +128,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * the company to switch to
+     *&#47; the company to switch to
      *
      * Generated from protobuf field <code>string companyId = 3;</code>
      * @param string $var
@@ -127,7 +143,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * identifier used to create the access/refresh token
+     *&#47; identifier used to create the access/refresh token
      *
      * Generated from protobuf field <code>string principal = 4;</code>
      * @return string
@@ -138,7 +154,7 @@ class CompanySwitchCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * identifier used to create the access/refresh token
+     *&#47; identifier used to create the access/refresh token
      *
      * Generated from protobuf field <code>string principal = 4;</code>
      * @param string $var

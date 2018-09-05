@@ -4,12 +4,13 @@
   "license": "MIT",
   "require": {
     "php": ">=7.0.0",
-    "grpc/grpc": "^1.6",
-    "google/protobuf": "^3.4"
+    "grpc/grpc": "^1.13",
+    "google/protobuf": "^3.6"
   },
   "autoload": {
     "psr-4": {
       "Alfatraining\\": "src/Alfatraining",
+      "Google\\Api\\": "src/Google/Api",
       "GPBMetadata\\": "src/GPBMetadata"
     }
   },

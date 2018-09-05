@@ -9,7 +9,7 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
- * update multiple rooms in one go
+ *&#47; update multiple rooms in one go (deprecated)
  *
  * Generated from protobuf message <code>roomService.RoomsUpdateRequest</code>
  */
@@ -20,15 +20,26 @@ class RoomsUpdateRequest extends \Google\Protobuf\Internal\Message
      */
     private $accessInfo = null;
     /**
-     * access info should be ingnored in the individual RoomUpdateRequests
+     *&#47; access info should be ingnored in the individual RoomUpdateRequests
      *
      * Generated from protobuf field <code>repeated .roomService.RoomUpdateRequest roomsToUpdate = 2;</code>
      */
     private $roomsToUpdate;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type \Alfatraining\Grpc\Room\RoomUpdateRequest[]|\Google\Protobuf\Internal\RepeatedField $roomsToUpdate
+     *          &#47; access info should be ingnored in the individual RoomUpdateRequests
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -54,7 +65,7 @@ class RoomsUpdateRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * access info should be ingnored in the individual RoomUpdateRequests
+     *&#47; access info should be ingnored in the individual RoomUpdateRequests
      *
      * Generated from protobuf field <code>repeated .roomService.RoomUpdateRequest roomsToUpdate = 2;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -65,7 +76,7 @@ class RoomsUpdateRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * access info should be ingnored in the individual RoomUpdateRequests
+     *&#47; access info should be ingnored in the individual RoomUpdateRequests
      *
      * Generated from protobuf field <code>repeated .roomService.RoomUpdateRequest roomsToUpdate = 2;</code>
      * @param \Alfatraining\Grpc\Room\RoomUpdateRequest[]|\Google\Protobuf\Internal\RepeatedField $var

@@ -18,21 +18,34 @@ class SubRoom extends \Google\Protobuf\Internal\Message
      */
     private $displayName = '';
     /**
-     * custom sorting key to determine the order of subrooms in the UI
+     *&#47; custom sorting key to determine the order of subrooms in the UI
      *
      * Generated from protobuf field <code>uint32 sort = 4;</code>
      */
     private $sort = 0;
     /**
-     * workaround for python's inability to handle maps with null-values
+     *&#47; workaround for python's inability to handle maps with null-values
      *
      * Generated from protobuf field <code>bool remove = 5;</code>
      */
     private $remove = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $displayName
+     *     @type int $sort
+     *          &#47; custom sorting key to determine the order of subrooms in the UI
+     *     @type bool $remove
+     *          &#47; workaround for python's inability to handle maps with null-values
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\Room::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -58,7 +71,7 @@ class SubRoom extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * custom sorting key to determine the order of subrooms in the UI
+     *&#47; custom sorting key to determine the order of subrooms in the UI
      *
      * Generated from protobuf field <code>uint32 sort = 4;</code>
      * @return int
@@ -69,7 +82,7 @@ class SubRoom extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * custom sorting key to determine the order of subrooms in the UI
+     *&#47; custom sorting key to determine the order of subrooms in the UI
      *
      * Generated from protobuf field <code>uint32 sort = 4;</code>
      * @param int $var
@@ -84,7 +97,7 @@ class SubRoom extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * workaround for python's inability to handle maps with null-values
+     *&#47; workaround for python's inability to handle maps with null-values
      *
      * Generated from protobuf field <code>bool remove = 5;</code>
      * @return bool
@@ -95,7 +108,7 @@ class SubRoom extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * workaround for python's inability to handle maps with null-values
+     *&#47; workaround for python's inability to handle maps with null-values
      *
      * Generated from protobuf field <code>bool remove = 5;</code>
      * @param bool $var

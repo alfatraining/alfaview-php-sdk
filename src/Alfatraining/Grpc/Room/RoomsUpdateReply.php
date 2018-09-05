@@ -9,6 +9,8 @@ use Google\Protobuf\Internal\RepeatedField;
 use Google\Protobuf\Internal\GPBUtil;
 
 /**
+ *&#47; reply for updating multiple rooms at once (deprecated, see RoomsUpdateRequest)
+ *
  * Generated from protobuf message <code>roomService.RoomsUpdateReply</code>
  */
 class RoomsUpdateReply extends \Google\Protobuf\Internal\Message
@@ -18,15 +20,26 @@ class RoomsUpdateReply extends \Google\Protobuf\Internal\Message
      */
     private $replyInfo = null;
     /**
-     * key is the room ID
+     *&#47; key is the room ID
      *
      * Generated from protobuf field <code>map<string, .common.ReplyInfo> updateReplies = 2;</code>
      */
     private $updateReplies;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\ReplyInfo $replyInfo
+     *     @type array|\Google\Protobuf\Internal\MapField $updateReplies
+     *          &#47; key is the room ID
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\RoomService\RoomService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -52,7 +65,7 @@ class RoomsUpdateReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * key is the room ID
+     *&#47; key is the room ID
      *
      * Generated from protobuf field <code>map<string, .common.ReplyInfo> updateReplies = 2;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -63,7 +76,7 @@ class RoomsUpdateReply extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * key is the room ID
+     *&#47; key is the room ID
      *
      * Generated from protobuf field <code>map<string, .common.ReplyInfo> updateReplies = 2;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var

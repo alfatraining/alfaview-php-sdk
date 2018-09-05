@@ -18,15 +18,26 @@ class UserListRequest extends \Google\Protobuf\Internal\Message
      */
     private $accessInfo = null;
     /**
-     * list of user IDs that you want to query for
+     *&#47; list of user IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string userIdList = 9;</code>
      */
     private $userIdList;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type string[]|\Google\Protobuf\Internal\RepeatedField $userIdList
+     *          &#47; list of user IDs that you want to query for
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\User\UserService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -52,7 +63,7 @@ class UserListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * list of user IDs that you want to query for
+     *&#47; list of user IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string userIdList = 9;</code>
      * @return \Google\Protobuf\Internal\RepeatedField
@@ -63,7 +74,7 @@ class UserListRequest extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * list of user IDs that you want to query for
+     *&#47; list of user IDs that you want to query for
      *
      * Generated from protobuf field <code>repeated string userIdList = 9;</code>
      * @param string[]|\Google\Protobuf\Internal\RepeatedField $var

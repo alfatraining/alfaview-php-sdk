@@ -16,19 +16,20 @@ use Google\Protobuf\Internal\GPBUtil;
  * Services that need to accept user IDs should also accept metadata maps where a display name can be added
  * under the guest user's ID as the key. Guest users usually don't have a lot of backend permissions, although
  * that's certainly possible.
+ * When creating guest access credentials for a particular guest in a particular room pass *email*, *roomId*, *displayName*, *expiry* and *shareable*
  *
  * Generated from protobuf message <code>authentication.GuestAccessCredentials</code>
  */
 class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
 {
     /**
-     * only pass when authenticating; auth service will not accept this when creating guest access credentials
+     *&#47; only pass when authenticating; auth service will not accept this when creating guest access credentials
      *
      * Generated from protobuf field <code>string userId = 1;</code>
      */
     private $userId = '';
     /**
-     * password, should be something random
+     *&#47; password, should be something random
      *
      * Generated from protobuf field <code>string code = 2;</code>
      */
@@ -38,43 +39,66 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * optional but recommended (see displayName field)
+     *&#47; optional but recommended (see displayName field)
      *
      * Generated from protobuf field <code>string email = 4;</code>
      */
     private $email = '';
     /**
-     * for now this is required when creating guest access credentials (subject to change)
+     *&#47; required; room to lock credentials to
      *
      * Generated from protobuf field <code>string roomId = 5;</code>
      */
     private $roomId = '';
     /**
-     * optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
+     *&#47; optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
      *
      * Generated from protobuf field <code>string displayName = 6;</code>
      */
     private $displayName = '';
     /**
-     * optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
+     *&#47; optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 7;</code>
      */
     private $expiry = 0;
     /**
-     * provides shareable guest access credentials to be used multiple times
+     *&#47; provides shareable guest access credentials to be used multiple times
      *
      * Generated from protobuf field <code>bool shareable = 8;</code>
      */
     private $shareable = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $userId
+     *          &#47; only pass when authenticating; auth service will not accept this when creating guest access credentials
+     *     @type string $code
+     *          &#47; password, should be something random
+     *     @type string $companyId
+     *     @type string $email
+     *          &#47; optional but recommended (see displayName field)
+     *     @type string $roomId
+     *          &#47; required; room to lock credentials to
+     *     @type string $displayName
+     *          &#47; optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
+     *     @type int|string $expiry
+     *          &#47; optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
+     *     @type bool $shareable
+     *          &#47; provides shareable guest access credentials to be used multiple times
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
-     * only pass when authenticating; auth service will not accept this when creating guest access credentials
+     *&#47; only pass when authenticating; auth service will not accept this when creating guest access credentials
      *
      * Generated from protobuf field <code>string userId = 1;</code>
      * @return string
@@ -85,7 +109,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * only pass when authenticating; auth service will not accept this when creating guest access credentials
+     *&#47; only pass when authenticating; auth service will not accept this when creating guest access credentials
      *
      * Generated from protobuf field <code>string userId = 1;</code>
      * @param string $var
@@ -100,7 +124,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * password, should be something random
+     *&#47; password, should be something random
      *
      * Generated from protobuf field <code>string code = 2;</code>
      * @return string
@@ -111,7 +135,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * password, should be something random
+     *&#47; password, should be something random
      *
      * Generated from protobuf field <code>string code = 2;</code>
      * @param string $var
@@ -148,7 +172,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional but recommended (see displayName field)
+     *&#47; optional but recommended (see displayName field)
      *
      * Generated from protobuf field <code>string email = 4;</code>
      * @return string
@@ -159,7 +183,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional but recommended (see displayName field)
+     *&#47; optional but recommended (see displayName field)
      *
      * Generated from protobuf field <code>string email = 4;</code>
      * @param string $var
@@ -174,7 +198,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * for now this is required when creating guest access credentials (subject to change)
+     *&#47; required; room to lock credentials to
      *
      * Generated from protobuf field <code>string roomId = 5;</code>
      * @return string
@@ -185,7 +209,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * for now this is required when creating guest access credentials (subject to change)
+     *&#47; required; room to lock credentials to
      *
      * Generated from protobuf field <code>string roomId = 5;</code>
      * @param string $var
@@ -200,7 +224,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
+     *&#47; optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
      *
      * Generated from protobuf field <code>string displayName = 6;</code>
      * @return string
@@ -211,7 +235,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
+     *&#47; optional; the email address is used if not set or, if that's not set either, "Unnamed guest" is used, can also be used when authenticating; added to the access token
      *
      * Generated from protobuf field <code>string displayName = 6;</code>
      * @param string $var
@@ -226,7 +250,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
+     *&#47; optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 7;</code>
      * @return int|string
@@ -237,7 +261,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
+     *&#47; optional, unix timestamp; will default to 30 days from the time the guest access credentials are created, accepts something in the far future (subject to change)
      *
      * Generated from protobuf field <code>int64 expiry = 7;</code>
      * @param int|string $var
@@ -252,7 +276,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * provides shareable guest access credentials to be used multiple times
+     *&#47; provides shareable guest access credentials to be used multiple times
      *
      * Generated from protobuf field <code>bool shareable = 8;</code>
      * @return bool
@@ -263,7 +287,7 @@ class GuestAccessCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * provides shareable guest access credentials to be used multiple times
+     *&#47; provides shareable guest access credentials to be used multiple times
      *
      * Generated from protobuf field <code>bool shareable = 8;</code>
      * @param bool $var

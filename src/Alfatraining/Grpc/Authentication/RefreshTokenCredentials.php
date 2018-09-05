@@ -21,7 +21,7 @@ use Google\Protobuf\Internal\GPBUtil;
 class RefreshTokenCredentials extends \Google\Protobuf\Internal\Message
 {
     /**
-     * identifier used to create the access token
+     *&#47; identifier used to create the access token
      *
      * Generated from protobuf field <code>string principal = 1;</code>
      */
@@ -35,19 +35,33 @@ class RefreshTokenCredentials extends \Google\Protobuf\Internal\Message
      */
     private $companyId = '';
     /**
-     * an access token (is usually expired but doesn't have to be)
+     *&#47; an access token (is usually expired but doesn't have to be)
      *
      * Generated from protobuf field <code>bytes accessToken = 4;</code>
      */
     private $accessToken = '';
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $principal
+     *          &#47; identifier used to create the access token
+     *     @type string $refreshToken
+     *     @type string $companyId
+     *     @type string $accessToken
+     *          &#47; an access token (is usually expired but doesn't have to be)
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Authentication\AuthenticationService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
-     * identifier used to create the access token
+     *&#47; identifier used to create the access token
      *
      * Generated from protobuf field <code>string principal = 1;</code>
      * @return string
@@ -58,7 +72,7 @@ class RefreshTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * identifier used to create the access token
+     *&#47; identifier used to create the access token
      *
      * Generated from protobuf field <code>string principal = 1;</code>
      * @param string $var
@@ -117,7 +131,7 @@ class RefreshTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * an access token (is usually expired but doesn't have to be)
+     *&#47; an access token (is usually expired but doesn't have to be)
      *
      * Generated from protobuf field <code>bytes accessToken = 4;</code>
      * @return string
@@ -128,7 +142,7 @@ class RefreshTokenCredentials extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * an access token (is usually expired but doesn't have to be)
+     *&#47; an access token (is usually expired but doesn't have to be)
      *
      * Generated from protobuf field <code>bytes accessToken = 4;</code>
      * @param string $var

@@ -26,39 +26,57 @@ class AccessToken extends \Google\Protobuf\Internal\Message
      */
     private $expiresAt = 0;
     /**
-     * use common.BackendPermission enum values as keys and set the value to true
+     *&#47; use common.BackendPermission enum values as keys and set the value to true
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 4;</code>
      */
     private $permissions;
     /**
-     *map<string, string> metadata = 5; // key => value
-     *
      * Generated from protobuf field <code>bool isGuest = 6;</code>
      */
     private $isGuest = false;
     /**
-     * used by services when isGuest is true
+     *&#47; used by services when isGuest is true
      *
      * Generated from protobuf field <code>string displayName = 7;</code>
      */
     private $displayName = '';
     /**
-     * used for having shareable guest access credentials
+     *&#47; used for having shareable guest access credentials
      *
      * Generated from protobuf field <code>string basePermissionsId = 8;</code>
      */
     private $basePermissionsId = '';
     /**
-     * if true this access token cannot be used to sign another access token with an expiration date bigger than its own
+     *&#47; if true this access token cannot be used to sign another access token with an expiration date bigger than its own
      *
      * Generated from protobuf field <code>bool extensionDisallowed = 10;</code>
      */
     private $extensionDisallowed = false;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type string $userId
+     *     @type string $companyId
+     *     @type int|string $expiresAt
+     *     @type array|\Google\Protobuf\Internal\MapField $permissions
+     *          &#47; use common.BackendPermission enum values as keys and set the value to true
+     *     @type bool $isGuest
+     *     @type string $displayName
+     *          &#47; used by services when isGuest is true
+     *     @type string $basePermissionsId
+     *          &#47; used for having shareable guest access credentials
+     *     @type bool $extensionDisallowed
+     *          &#47; if true this access token cannot be used to sign another access token with an expiration date bigger than its own
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\Common\AccessToken::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
@@ -128,7 +146,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * use common.BackendPermission enum values as keys and set the value to true
+     *&#47; use common.BackendPermission enum values as keys and set the value to true
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 4;</code>
      * @return \Google\Protobuf\Internal\MapField
@@ -139,7 +157,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * use common.BackendPermission enum values as keys and set the value to true
+     *&#47; use common.BackendPermission enum values as keys and set the value to true
      *
      * Generated from protobuf field <code>map<int32, bool> permissions = 4;</code>
      * @param array|\Google\Protobuf\Internal\MapField $var
@@ -154,8 +172,6 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     *map<string, string> metadata = 5; // key => value
-     *
      * Generated from protobuf field <code>bool isGuest = 6;</code>
      * @return bool
      */
@@ -165,8 +181,6 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     *map<string, string> metadata = 5; // key => value
-     *
      * Generated from protobuf field <code>bool isGuest = 6;</code>
      * @param bool $var
      * @return $this
@@ -180,7 +194,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * used by services when isGuest is true
+     *&#47; used by services when isGuest is true
      *
      * Generated from protobuf field <code>string displayName = 7;</code>
      * @return string
@@ -191,7 +205,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * used by services when isGuest is true
+     *&#47; used by services when isGuest is true
      *
      * Generated from protobuf field <code>string displayName = 7;</code>
      * @param string $var
@@ -206,7 +220,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * used for having shareable guest access credentials
+     *&#47; used for having shareable guest access credentials
      *
      * Generated from protobuf field <code>string basePermissionsId = 8;</code>
      * @return string
@@ -217,7 +231,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * used for having shareable guest access credentials
+     *&#47; used for having shareable guest access credentials
      *
      * Generated from protobuf field <code>string basePermissionsId = 8;</code>
      * @param string $var
@@ -232,7 +246,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * if true this access token cannot be used to sign another access token with an expiration date bigger than its own
+     *&#47; if true this access token cannot be used to sign another access token with an expiration date bigger than its own
      *
      * Generated from protobuf field <code>bool extensionDisallowed = 10;</code>
      * @return bool
@@ -243,7 +257,7 @@ class AccessToken extends \Google\Protobuf\Internal\Message
     }
 
     /**
-     * if true this access token cannot be used to sign another access token with an expiration date bigger than its own
+     *&#47; if true this access token cannot be used to sign another access token with an expiration date bigger than its own
      *
      * Generated from protobuf field <code>bool extensionDisallowed = 10;</code>
      * @param bool $var

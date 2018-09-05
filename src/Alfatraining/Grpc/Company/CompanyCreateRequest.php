@@ -26,9 +26,20 @@ class CompanyCreateRequest extends \Google\Protobuf\Internal\Message
      */
     private $userCreateRequest = null;
 
-    public function __construct() {
+    /**
+     * Constructor.
+     *
+     * @param array $data {
+     *     Optional. Data for populating the Message object.
+     *
+     *     @type \Alfatraining\Grpc\Common\AccessInfo $accessInfo
+     *     @type \Alfatraining\Grpc\Common\Company $company
+     *     @type \Alfatraining\Grpc\User\UserCreateRequest $userCreateRequest
+     * }
+     */
+    public function __construct($data = NULL) {
         \GPBMetadata\CompanyService\CompanyService::initOnce();
-        parent::__construct();
+        parent::__construct($data);
     }
 
     /**
