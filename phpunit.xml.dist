@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<phpunit bootstrap="./vendor/autoload.php"
+         colors="true"
+         convertErrorsToExceptions="true"
+         convertNoticesToExceptions="true"
+         convertWarningsToExceptions="true"
+         stopOnFailure="false">
+    <php>
+        <!-- for local testing define api here -->
+        <env name="API_HOST"       value="test" />
+        <env name="API_CLIENT_ID"  value="test" />
+        <env name="API_CODE"       value="test" />
+        <env name="API_GUEST_CODE" value="test" />
+        <env name="API_COMPANY_ID" value="test" />
+    </php>
+    <testsuites>
+        <testsuite name="alfaview">
+            <directory>./test/Api</directory>
+            <directory>./test/Model</directory>
+        </testsuite>
+    </testsuites>
+
+    <filter>
+        <whitelist processUncoveredFilesFromWhitelist="true">
+            <directory suffix=".php">./src/Api</directory>
+            <directory suffix=".php">./src/Model</directory>
+        </whitelist>
+    </filter>
+</phpunit>
