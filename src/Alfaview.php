@@ -9,6 +9,7 @@ use Alfaview\Model\AuthenticationGuestAccessCredentials;
 use Alfaview\Model\AuthenticationUsernamePasswordCredentials;
 use Alfaview\Model\CommonAccessInfo;
 use Alfaview\Model\CommonAccessToken;
+use Alfaview\Model\CommonReplyStatusCode;
 use Alfaview\Model\RoomServiceCreateJoinLinkRequest;
 use Alfaview\Model\RoomServiceRoomCreateRequest;
 use Alfaview\Model\RoomServiceRoomDestroyRequest;
@@ -23,7 +24,7 @@ use Alfaview\Model\RoomServiceRoomUpdateRequest;
 
 class Alfaview
 {
-    const API_HOST                        = 'https://alfaview.com';
+    const API_HOST                        = 'https://apis.alfaview.com/json/v1';
     const AUTHENTICATION_SERVICE_ENDPOINT = '/authenticationService';
     const BUSINESS_LOGIC_ENDPOINT         = '/businessLogicService';
     const COMPANY_SERVICE_ENDPOINT        = '/companyService';
@@ -133,7 +134,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($authReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($authReply->getReplyInfo()->getStatusCode() != null &&  $authReply->getReplyInfo()->getStatusCode() !=CommonReplyStatusCode::OK) {
             return new Response(null, true, $authReply->getReplyInfo()->getStatusCode(), $authReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -174,7 +175,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomListReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($roomListReply->getReplyInfo()->getStatusCode() != null && $roomListReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $roomListReply->getReplyInfo()->getStatusCode(), $roomListReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -198,7 +199,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomStatusReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($roomStatusReply->getReplyInfo()->getStatusCode() != null && $roomStatusReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $roomStatusReply->getReplyInfo()->getStatusCode(), $roomStatusReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -222,7 +223,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomCreateReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($roomCreateReply->getReplyInfo()->getStatusCode() != null && $roomCreateReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $roomCreateReply->getReplyInfo()->getStatusCode(), $roomCreateReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -247,7 +248,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomUpdateReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($roomUpdateReply->getReplyInfo()->getStatusCode() != null && $roomUpdateReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $roomUpdateReply->getReplyInfo()->getStatusCode(), $roomUpdateReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -271,7 +272,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomDestroyReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($roomDestroyReply->getReplyInfo()->getStatusCode() != null && $roomDestroyReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $roomDestroyReply->getReplyInfo()->getStatusCode(), $roomDestroyReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -295,7 +296,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($authCreateReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($authCreateReply->getReplyInfo()->getStatusCode() != null && $authCreateReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $authCreateReply->getReplyInfo()->getStatusCode(), $authCreateReply->getReplyInfo()->getStatusMessage());
         }
 
@@ -319,7 +320,7 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($createJoinLinkReply->getReplyInfo()->getStatusCode() != 0) {
+        if ($createJoinLinkReply->getReplyInfo()->getStatusCode() != null && $createJoinLinkReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
             return new Response(null, true, $createJoinLinkReply->getReplyInfo()->getStatusCode(),  $createJoinLinkReply->getReplyInfo()->getStatusMessage());
         }
 
