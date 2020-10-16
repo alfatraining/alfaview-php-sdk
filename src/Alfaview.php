@@ -161,12 +161,14 @@ class Alfaview
     /**
      * @param $accessToken
      * @param null $filterRoomIds
+     * @param int $limit
      * @return Response
      */
-    public function roomList($accessToken, $filterRoomIds = null)
+    public function roomList($accessToken, $filterRoomIds = null, $limit = 1000)
     {
         $roomListRequest = new RoomServiceRoomListRequest();
         $roomListRequest->setFilterRoomIds($filterRoomIds);
+        $roomListRequest->setLimit($limit);
         $roomListRequest->setAccessInfo($this->composeAccessInfo($accessToken));
 
         try {
