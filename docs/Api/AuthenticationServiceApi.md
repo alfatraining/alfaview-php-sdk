@@ -1,18 +1,67 @@
 # Alfaview\AuthenticationServiceApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**accessTokenInformation**](AuthenticationServiceApi.md#accessTokenInformation) | **POST** /accessTokenInformation | 
 [**authenticate**](AuthenticationServiceApi.md#authenticate) | **POST** /authenticate | 
 [**authenticationCreate**](AuthenticationServiceApi.md#authenticationCreate) | **POST** /authenticationCreate | 
 [**authenticationInformation**](AuthenticationServiceApi.md#authenticationInformation) | **POST** /authenticationInformation | 
 [**authenticationUpdate**](AuthenticationServiceApi.md#authenticationUpdate) | **POST** /authenticationUpdate | 
 [**isAuthenticated**](AuthenticationServiceApi.md#isAuthenticated) | **POST** /isAuthenticated | 
 [**listAuthentications**](AuthenticationServiceApi.md#listAuthentications) | **POST** /listAuthentications | 
+[**listIdentityProviders**](AuthenticationServiceApi.md#listIdentityProviders) | **POST** /listIdentityProviders | 
 [**requestPasswordReset**](AuthenticationServiceApi.md#requestPasswordReset) | **POST** /requestPasswordReset | 
 [**signAccessToken**](AuthenticationServiceApi.md#signAccessToken) | **POST** /signAccessToken | 
 
+
+# **accessTokenInformation**
+> \Alfaview\Model\AuthenticationAuthenticationReply accessTokenInformation($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\AuthenticationServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\AuthenticationAccessTokenInformationRequest(); // \Alfaview\Model\AuthenticationAccessTokenInformationRequest | 
+
+try {
+    $result = $apiInstance->accessTokenInformation($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthenticationServiceApi->accessTokenInformation: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\AuthenticationAccessTokenInformationRequest**](../Model/AuthenticationAccessTokenInformationRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\AuthenticationAuthenticationReply**](../Model/AuthenticationAuthenticationReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **authenticate**
 > \Alfaview\Model\AuthenticationAuthenticationReply authenticate($body)
@@ -156,7 +205,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **authenticationUpdate**
-> \Alfaview\Model\CommonReplyInfo authenticationUpdate($body)
+> \Alfaview\Model\AuthenticationAuthenticationUpdateReply authenticationUpdate($body)
 
 
 
@@ -189,7 +238,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Alfaview\Model\CommonReplyInfo**](../Model/CommonReplyInfo.md)
+[**\Alfaview\Model\AuthenticationAuthenticationUpdateReply**](../Model/AuthenticationAuthenticationUpdateReply.md)
 
 ### Authorization
 
@@ -284,6 +333,53 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Alfaview\Model\AuthenticationListAuthenticationsReply**](../Model/AuthenticationListAuthenticationsReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **listIdentityProviders**
+> \Alfaview\Model\AuthenticationListIdentityProvidersReply listIdentityProviders($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\AuthenticationServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\AuthenticationListIdentityProvidersRequest(); // \Alfaview\Model\AuthenticationListIdentityProvidersRequest | 
+
+try {
+    $result = $apiInstance->listIdentityProviders($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthenticationServiceApi->listIdentityProviders: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\AuthenticationListIdentityProvidersRequest**](../Model/AuthenticationListIdentityProvidersRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\AuthenticationListIdentityProvidersReply**](../Model/AuthenticationListIdentityProvidersReply.md)
 
 ### Authorization
 

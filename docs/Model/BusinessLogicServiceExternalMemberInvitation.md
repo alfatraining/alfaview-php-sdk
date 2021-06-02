@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **locale** | **string** |  | [optional] 
 **permission_group_id** | **string** |  | [optional] 
 **send_email** | **bool** |  | [optional] 
+**valid_from** | **string** |  | [optional] 
 **external_member_id** | **string** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)

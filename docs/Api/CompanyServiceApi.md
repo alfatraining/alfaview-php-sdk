@@ -1,15 +1,64 @@
 # Alfaview\CompanyServiceApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**billingInformationUpdate**](CompanyServiceApi.md#billingInformationUpdate) | **POST** /billingInformationUpdate | 
 [**companyAvailable**](CompanyServiceApi.md#companyAvailable) | **POST** /available | 
 [**companyCreate**](CompanyServiceApi.md#companyCreate) | **POST** /create | 
 [**companyDestroy**](CompanyServiceApi.md#companyDestroy) | **POST** /destroy | 
 [**companyList**](CompanyServiceApi.md#companyList) | **POST** /list | 
+[**companySearch**](CompanyServiceApi.md#companySearch) | **POST** /search | 
 [**companyUpdate**](CompanyServiceApi.md#companyUpdate) | **POST** /update | 
 
+
+# **billingInformationUpdate**
+> \Alfaview\Model\CompanyServiceBillingInformationUpdateReply billingInformationUpdate($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\CompanyServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\CompanyServiceBillingInformationUpdateRequest(); // \Alfaview\Model\CompanyServiceBillingInformationUpdateRequest | 
+
+try {
+    $result = $apiInstance->billingInformationUpdate($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling CompanyServiceApi->billingInformationUpdate: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\CompanyServiceBillingInformationUpdateRequest**](../Model/CompanyServiceBillingInformationUpdateRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\CompanyServiceBillingInformationUpdateReply**](../Model/CompanyServiceBillingInformationUpdateReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **companyAvailable**
 > \Alfaview\Model\CompanyServiceCompanyAvailableReply companyAvailable($body)
@@ -106,7 +155,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **companyDestroy**
-> \Alfaview\Model\CommonReplyInfo companyDestroy($body)
+> \Alfaview\Model\CompanyServiceCompanyDestroyReply companyDestroy($body)
 
 
 
@@ -139,7 +188,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Alfaview\Model\CommonReplyInfo**](../Model/CommonReplyInfo.md)
+[**\Alfaview\Model\CompanyServiceCompanyDestroyReply**](../Model/CompanyServiceCompanyDestroyReply.md)
 
 ### Authorization
 
@@ -199,8 +248,55 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
+# **companySearch**
+> \Alfaview\Model\CompanyServiceCompanySearchReply companySearch($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\CompanyServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\CompanyServiceCompanySearchRequest(); // \Alfaview\Model\CompanyServiceCompanySearchRequest | 
+
+try {
+    $result = $apiInstance->companySearch($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling CompanyServiceApi->companySearch: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\CompanyServiceCompanySearchRequest**](../Model/CompanyServiceCompanySearchRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\CompanyServiceCompanySearchReply**](../Model/CompanyServiceCompanySearchReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
 # **companyUpdate**
-> \Alfaview\Model\CommonReplyInfo companyUpdate($body)
+> \Alfaview\Model\CompanyServiceCompanyUpdateReply companyUpdate($body)
 
 
 
@@ -233,7 +329,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Alfaview\Model\CommonReplyInfo**](../Model/CommonReplyInfo.md)
+[**\Alfaview\Model\CompanyServiceCompanyUpdateReply**](../Model/CompanyServiceCompanyUpdateReply.md)
 
 ### Authorization
 

@@ -1,16 +1,65 @@
 # Alfaview\UserServiceApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**userAcceptInvitation**](UserServiceApi.md#userAcceptInvitation) | **POST** /acceptInvitation | 
 [**userCreate**](UserServiceApi.md#userCreate) | **POST** /create | 
 [**userDestroy**](UserServiceApi.md#userDestroy) | **POST** /destroy | 
 [**userGetLocale**](UserServiceApi.md#userGetLocale) | **POST** /getLocale | 
+[**userInvite**](UserServiceApi.md#userInvite) | **POST** /invite | 
 [**userList**](UserServiceApi.md#userList) | **POST** /list | 
 [**userProfileUpdate**](UserServiceApi.md#userProfileUpdate) | **POST** /updateProfile | 
 [**userUpdate**](UserServiceApi.md#userUpdate) | **POST** /update | 
 
+
+# **userAcceptInvitation**
+> \Alfaview\Model\UserUserAcceptInvitationReply userAcceptInvitation($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\UserServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\UserUserAcceptInvitationRequest(); // \Alfaview\Model\UserUserAcceptInvitationRequest | 
+
+try {
+    $result = $apiInstance->userAcceptInvitation($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserServiceApi->userAcceptInvitation: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\UserUserAcceptInvitationRequest**](../Model/UserUserAcceptInvitationRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\UserUserAcceptInvitationReply**](../Model/UserUserAcceptInvitationReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **userCreate**
 > \Alfaview\Model\UserUserCreateReply userCreate($body)
@@ -141,6 +190,53 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Alfaview\Model\UserUserGetLocaleReply**](../Model/UserUserGetLocaleReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **userInvite**
+> \Alfaview\Model\UserUserInviteReply userInvite($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\UserServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\UserUserInviteRequest(); // \Alfaview\Model\UserUserInviteRequest | 
+
+try {
+    $result = $apiInstance->userInvite($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling UserServiceApi->userInvite: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\UserUserInviteRequest**](../Model/UserUserInviteRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\UserUserInviteReply**](../Model/UserUserInviteReply.md)
 
 ### Authorization
 
