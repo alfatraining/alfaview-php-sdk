@@ -1,9 +1,10 @@
 # Alfaview\RoomServiceApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**availableTypes**](RoomServiceApi.md#availableTypes) | **POST** /availableTypes | 
 [**callList**](RoomServiceApi.md#callList) | **POST** /list | 
 [**create**](RoomServiceApi.md#create) | **POST** /create | 
 [**createJoinLink**](RoomServiceApi.md#createJoinLink) | **POST** /createJoinLink | 
@@ -13,6 +14,53 @@ Method | HTTP request | Description
 [**status**](RoomServiceApi.md#status) | **POST** /status | 
 [**update**](RoomServiceApi.md#update) | **POST** /update | 
 
+
+# **availableTypes**
+> \Alfaview\Model\RoomServiceAvailableTypesReply availableTypes($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\RoomServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\RoomServiceAvailableTypesRequest(); // \Alfaview\Model\RoomServiceAvailableTypesRequest | 
+
+try {
+    $result = $apiInstance->availableTypes($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling RoomServiceApi->availableTypes: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\RoomServiceAvailableTypesRequest**](../Model/RoomServiceAvailableTypesRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\RoomServiceAvailableTypesReply**](../Model/RoomServiceAvailableTypesReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **callList**
 > \Alfaview\Model\RoomServiceRoomListReply callList($body)

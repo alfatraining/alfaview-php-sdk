@@ -1,18 +1,115 @@
 # Alfaview\BusinessLogicServiceApi
 
-All URIs are relative to *http://localhost*
+All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
+[**companyDestroy**](BusinessLogicServiceApi.md#companyDestroy) | **POST** /companies/destroy | 
+[**companySignup**](BusinessLogicServiceApi.md#companySignup) | **POST** /companies/signup | 
 [**createCompany**](BusinessLogicServiceApi.md#createCompany) | **POST** /companies/create | 
 [**externalMembersInvite**](BusinessLogicServiceApi.md#externalMembersInvite) | **POST** /inviteExternalMembers | 
 [**favoritesList**](BusinessLogicServiceApi.md#favoritesList) | **POST** /favorites/list | 
 [**favoritesUpdate**](BusinessLogicServiceApi.md#favoritesUpdate) | **POST** /favorites/update | 
 [**inviteUsers**](BusinessLogicServiceApi.md#inviteUsers) | **POST** /inviteUsers | 
 [**permissionGroupsList**](BusinessLogicServiceApi.md#permissionGroupsList) | **POST** /permissionGroups/list | 
+[**permissionGroupsUpdate**](BusinessLogicServiceApi.md#permissionGroupsUpdate) | **POST** /permissionGroups/update | 
 [**sendEmail**](BusinessLogicServiceApi.md#sendEmail) | **POST** /sendEmail | 
 [**streamTaskProgress**](BusinessLogicServiceApi.md#streamTaskProgress) | **POST** /streamTaskProgress | 
 
+
+# **companyDestroy**
+> \Alfaview\Model\BusinessLogicServiceCompanyDestroyReply companyDestroy($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest(); // \Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest | 
+
+try {
+    $result = $apiInstance->companyDestroy($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BusinessLogicServiceApi->companyDestroy: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest**](../Model/BusinessLogicServiceCompanyDestroyRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\BusinessLogicServiceCompanyDestroyReply**](../Model/BusinessLogicServiceCompanyDestroyReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **companySignup**
+> \Alfaview\Model\BusinessLogicServiceCompanySignupReply companySignup($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\BusinessLogicServiceCompanySignupRequest(); // \Alfaview\Model\BusinessLogicServiceCompanySignupRequest | 
+
+try {
+    $result = $apiInstance->companySignup($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BusinessLogicServiceApi->companySignup: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\BusinessLogicServiceCompanySignupRequest**](../Model/BusinessLogicServiceCompanySignupRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\BusinessLogicServiceCompanySignupReply**](../Model/BusinessLogicServiceCompanySignupReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **createCompany**
 > \Alfaview\Model\BusinessLogicServiceCompanyCreateReply createCompany($body)
@@ -296,6 +393,53 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
+# **permissionGroupsUpdate**
+> \Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsUpdateReply permissionGroupsUpdate($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsUpdateRequest(); // \Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsUpdateRequest | 
+
+try {
+    $result = $apiInstance->permissionGroupsUpdate($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling BusinessLogicServiceApi->permissionGroupsUpdate: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsUpdateRequest**](../Model/BusinessLogicServiceCompanyPermissionGroupsUpdateRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsUpdateReply**](../Model/BusinessLogicServiceCompanyPermissionGroupsUpdateReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
 # **sendEmail**
 > \Alfaview\Model\BusinessLogicServiceSendEmailReply sendEmail($body)
 
@@ -344,7 +488,7 @@ No authorization required
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
 # **streamTaskProgress**
-> \Alfaview\Model\XStreamDefinitionsBusinessLogicServiceTaskProgressReply streamTaskProgress($body)
+> \Alfaview\Model\StreamResultOfBusinessLogicServiceTaskProgressReply streamTaskProgress($body)
 
 
 
@@ -377,7 +521,7 @@ Name | Type | Description  | Notes
 
 ### Return type
 
-[**\Alfaview\Model\XStreamDefinitionsBusinessLogicServiceTaskProgressReply**](../Model/XStreamDefinitionsBusinessLogicServiceTaskProgressReply.md)
+[**\Alfaview\Model\StreamResultOfBusinessLogicServiceTaskProgressReply**](../Model/StreamResultOfBusinessLogicServiceTaskProgressReply.md)
 
 ### Authorization
 

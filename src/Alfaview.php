@@ -7,9 +7,12 @@ use Alfaview\Model\AuthenticationAuthenticationRequest;
 use Alfaview\Model\AuthenticationAuthorizationCodeCredentials;
 use Alfaview\Model\AuthenticationGuestAccessCredentials;
 use Alfaview\Model\AuthenticationUsernamePasswordCredentials;
+use Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsListRequest;
+use Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest;
 use Alfaview\Model\CommonAccessInfo;
 use Alfaview\Model\CommonAccessToken;
 use Alfaview\Model\CommonReplyStatusCode;
+use Alfaview\Model\RoomServiceAvailableTypesRequest;
 use Alfaview\Model\RoomServiceCreateJoinLinkRequest;
 use Alfaview\Model\RoomServiceRoomCreateRequest;
 use Alfaview\Model\RoomServiceRoomDestroyRequest;
@@ -234,6 +237,7 @@ class Alfaview
 
     /**
      * @param $accessToken
+     * @param $roomId
      * @param $room
      * @return Response
      */
@@ -328,5 +332,74 @@ class Alfaview
 
         return new Response($createJoinLinkReply, false);
     }
-}
 
+    /**
+     * @param $accessToken
+     * @return Response
+     */
+    public function listAvailableRoomTypes($accessToken)
+    {
+        $availableRoomTypesRequest = new RoomServiceAvailableTypesRequest();
+        $availableRoomTypesRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+
+        try {
+            $availableRoomTypesReply = $this->roomService->availableTypes($availableRoomTypesRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        if ($availableRoomTypesReply->getReplyInfo()->getStatusCode() != null && $availableRoomTypesReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(null, true, $availableRoomTypesReply->getReplyInfo()->getStatusCode(),  $availableRoomTypesReply->getReplyInfo()->getStatusMessage());
+        }
+
+        return new Response($availableRoomTypesReply, false);
+    }
+
+    /**
+     * @param $accessToken
+     * @return Response
+     */
+    public function listPermissionGroups($accessToken)
+    {
+        $permissionGroupsRequest = new BusinessLogicServiceCompanyPermissionGroupsListRequest();
+        $permissionGroupsRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+
+        try {
+            $permissionGroupsReply = $this->businessLogicService->permissionGroupsList($permissionGroupsRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        if ($permissionGroupsReply->getReplyInfo()->getStatusCode() != null && $permissionGroupsReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(null, true, $permissionGroupsReply->getReplyInfo()->getStatusCode(), $permissionGroupsReply->getReplyInfo()->getStatusMessage());
+        }
+
+        return new Response($permissionGroupsReply, false);
+    }
+
+    /**
+     * @param $accessToken
+     * @param $roomId
+     * @param $externalMembersInvitations
+     * @return Response
+     */
+    public function inviteExternalMembers($accessToken, $roomId, $externalMembersInvitations)
+    {
+        $inviteExternalMembersRequest = new BusinessLogicServiceInviteExternalMembersRequest();
+        $inviteExternalMembersRequest->setRoomId($roomId);
+        $inviteExternalMembersRequest->setInvitations($externalMembersInvitations);
+        $inviteExternalMembersRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+
+        try {
+            $inviteExternalMembersReply = $this->businessLogicService->externalMembersInvite($inviteExternalMembersRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        if ($inviteExternalMembersReply->getReplyInfo()->getStatusCode() != null && $inviteExternalMembersReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(null, true, $inviteExternalMembersReply->getReplyInfo()->getStatusCode(), $inviteExternalMembersReply->getReplyInfo()->getStatusMessage());
+        }
+
+        return new Response($inviteExternalMembersReply, false);
+    }
+}

@@ -27,6 +27,27 @@ Here is an example for authenticating with the API and retrieving a list of room
         var_dump($response->reply->getRooms());
 ```
 
+To create or update a room that differ from the default room quota:
+```
+'active_participants' => 50
+'passive_participants' => 0
+'sub_rooms' => 10
+```
+
+it is required to specify the `\Alfaview\Model\CommonRoomQuotas` when creating or updating a room.
+
+```php
+        $av = new Alfaview();
+        $room = new CommonRoom();
+        $quotas = new CommonRoomQuotas();
+
+        $room->setDisplayName("Meeting 1");
+        $room->setQuotas($quotas->setActiveParticipants(100));
+
+        $response = $av->createRoom($accessToken, $room);
+        var_dump($response->reply->getRoomId());
+```
+
 ### Advanced usage
 Not all use cases are covered in the convenience wrapper. However, the complete API functionality is yet available by directly accessing our API endpoints described in the documentation below. And if you are awesome, feel free to contribute!
 

@@ -3,6 +3,7 @@
 ## Properties
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
+**access_info** | [**\Alfaview\Model\CommonAccessInfo**](CommonAccessInfo.md) |  | [optional] 
 **request_id** | **string** |  | [optional] 
 **username_password_credentials** | [**\Alfaview\Model\AuthenticationUsernamePasswordCredentials**](AuthenticationUsernamePasswordCredentials.md) |  | [optional] 
 **authorization_code_credentials** | [**\Alfaview\Model\AuthenticationAuthorizationCodeCredentials**](AuthenticationAuthorizationCodeCredentials.md) |  | [optional] 

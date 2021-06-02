@@ -9,6 +9,7 @@ Name | Type | Description | Notes
 **user_permissions** | **map[string,bool]** |  | [optional] 
 **room** | [**\Alfaview\Model\CommonRoom**](CommonRoom.md) |  | [optional] 
 **finish_signup_url** | **string** |  | [optional] 
+**plan_id** | **string** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 
