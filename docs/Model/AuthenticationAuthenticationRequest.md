@@ -12,6 +12,7 @@ Name | Type | Description | Notes
 **guest_access_credentials** | [**\Alfaview\Model\AuthenticationGuestAccessCredentials**](AuthenticationGuestAccessCredentials.md) |  | [optional] 
 **activation_token_credentials** | [**\Alfaview\Model\AuthenticationActivationTokenCredentials**](AuthenticationActivationTokenCredentials.md) |  | [optional] 
 **company_switch_credentials** | [**\Alfaview\Model\AuthenticationCompanySwitchCredentials**](AuthenticationCompanySwitchCredentials.md) |  | [optional] 
+**magic_token_credentials** | [**\Alfaview\Model\AuthenticationMagicTokenCredentials**](AuthenticationMagicTokenCredentials.md) |  | [optional] 
 **permissions** | **map[string,bool]** |  | [optional] 
 **account_status** | [**\Alfaview\Model\AuthenticationAccountStatus**](AuthenticationAccountStatus.md) |  | [optional] 
 **metadata** | **map[string,string]** |  | [optional] 
