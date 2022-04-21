@@ -11,10 +11,14 @@ Name | Type | Description | Notes
 **permissions** | [**map[string,\Alfaview\Model\CommonPermissions]**](CommonPermissions.md) |  | [optional] 
 **default_permissions** | [**\Alfaview\Model\CommonPermissions**](CommonPermissions.md) |  | [optional] 
 **sub_rooms** | [**map[string,\Alfaview\Model\CommonSubRoom]**](CommonSubRoom.md) |  | [optional] 
+**features** | [**\Alfaview\Model\CommonRoomFeature[]**](CommonRoomFeature.md) |  | [optional] 
 **parent_id** | **string** |  | [optional] 
 **allow_spectators** | **bool** |  | [optional] 
 **sort** | **string** |  | [optional] 
 **my_permissions** | [**\Alfaview\Model\CommonPermissions**](CommonPermissions.md) |  | [optional] 
+**created_at** | [**\DateTime**](\DateTime.md) |  | [optional] 
+**created_by** | **string** |  | [optional] 
+**managed** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

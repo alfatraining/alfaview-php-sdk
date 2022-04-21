@@ -28,6 +28,8 @@
 
 namespace Alfaview;
 
+use PHPUnit\Framework\TestCase;
+
 use \Alfaview\Configuration;
 use \Alfaview\ApiException;
 use Alfaview\Model\AuthenticationAuthorizationCodeCredentials;
@@ -44,7 +46,7 @@ use \Alfaview\ObjectSerializer;
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
  */
-class RoomServiceApiTest extends \PHPUnit_Framework_TestCase
+class RoomServiceApiTest extends TestCase
 {
     /* @var Alfaview $av */
     protected static $av;
@@ -59,7 +61,7 @@ class RoomServiceApiTest extends \PHPUnit_Framework_TestCase
     /**
      * Setup before running any test cases
      */
-    public static function setUpBeforeClass()
+    public static function setUpBeforeClass() : void
     {
         self::$av = new Alfaview();
         self::$av->setHost(getenv('API_HOST'));
@@ -72,7 +74,7 @@ class RoomServiceApiTest extends \PHPUnit_Framework_TestCase
     /**
      * Setup before running each test case
      */
-    public function setUp()
+    public function setUp(): void
     {
         $response = self::$av->authenticate(self::$credentials);
         $this->assertFalse($response->hasError);
@@ -83,14 +85,14 @@ class RoomServiceApiTest extends \PHPUnit_Framework_TestCase
     /**
      * Clean up after running each test case
      */
-    public function tearDown()
+    public function tearDown(): void
     {
     }
 
     /**
      * Clean up after running all test cases
      */
-    public static function tearDownAfterClass()
+    public static function tearDownAfterClass(): void
     {
     }
 

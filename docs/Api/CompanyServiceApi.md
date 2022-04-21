@@ -5,7 +5,6 @@ All URIs are relative to *https://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**billingInformationUpdate**](CompanyServiceApi.md#billingInformationUpdate) | **POST** /billingInformationUpdate | 
-[**companyAvailable**](CompanyServiceApi.md#companyAvailable) | **POST** /available | 
 [**companyCreate**](CompanyServiceApi.md#companyCreate) | **POST** /create | 
 [**companyDestroy**](CompanyServiceApi.md#companyDestroy) | **POST** /destroy | 
 [**companyList**](CompanyServiceApi.md#companyList) | **POST** /list | 
@@ -48,53 +47,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Alfaview\Model\CompanyServiceBillingInformationUpdateReply**](../Model/CompanyServiceBillingInformationUpdateReply.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
-
-# **companyAvailable**
-> \Alfaview\Model\CompanyServiceCompanyAvailableReply companyAvailable($body)
-
-
-
-### Example
-```php
-<?php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$apiInstance = new Alfaview\Api\CompanyServiceApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
-);
-$body = new \Alfaview\Model\CompanyServiceCompanyAvailableRequest(); // \Alfaview\Model\CompanyServiceCompanyAvailableRequest | 
-
-try {
-    $result = $apiInstance->companyAvailable($body);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling CompanyServiceApi->companyAvailable: ', $e->getMessage(), PHP_EOL;
-}
-?>
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\CompanyServiceCompanyAvailableRequest**](../Model/CompanyServiceCompanyAvailableRequest.md)|  |
-
-### Return type
-
-[**\Alfaview\Model\CompanyServiceCompanyAvailableReply**](../Model/CompanyServiceCompanyAvailableReply.md)
 
 ### Authorization
 

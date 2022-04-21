@@ -12,6 +12,7 @@ use Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest;
 use Alfaview\Model\CommonAccessInfo;
 use Alfaview\Model\CommonAccessToken;
 use Alfaview\Model\CommonReplyStatusCode;
+use \Alfaview\Model\CommonRoomType;
 use Alfaview\Model\RoomServiceAvailableTypesRequest;
 use Alfaview\Model\RoomServiceCreateJoinLinkRequest;
 use Alfaview\Model\RoomServiceRoomCreateRequest;
@@ -171,6 +172,7 @@ class Alfaview
     {
         $roomListRequest = new RoomServiceRoomListRequest();
         $roomListRequest->setFilterRoomIds($filterRoomIds);
+        $roomListRequest->setFilterRoomTypes([CommonRoomType::DEPARTMENT, CommonRoomType::ROOM]);
         $roomListRequest->setLimit($limit);
         $roomListRequest->setAccessInfo($this->composeAccessInfo($accessToken));
 

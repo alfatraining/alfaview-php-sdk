@@ -9,6 +9,7 @@ Method | HTTP request | Description
 [**authenticationCreate**](AuthenticationServiceApi.md#authenticationCreate) | **POST** /authenticationCreate | 
 [**authenticationInformation**](AuthenticationServiceApi.md#authenticationInformation) | **POST** /authenticationInformation | 
 [**authenticationUpdate**](AuthenticationServiceApi.md#authenticationUpdate) | **POST** /authenticationUpdate | 
+[**createMagicToken**](AuthenticationServiceApi.md#createMagicToken) | **POST** /createMagicToken | 
 [**isAuthenticated**](AuthenticationServiceApi.md#isAuthenticated) | **POST** /isAuthenticated | 
 [**listAuthentications**](AuthenticationServiceApi.md#listAuthentications) | **POST** /listAuthentications | 
 [**listIdentityProviders**](AuthenticationServiceApi.md#listIdentityProviders) | **POST** /listIdentityProviders | 
@@ -239,6 +240,53 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Alfaview\Model\AuthenticationAuthenticationUpdateReply**](../Model/AuthenticationAuthenticationUpdateReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **createMagicToken**
+> \Alfaview\Model\AuthenticationCreateMagicTokenReply createMagicToken($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\AuthenticationServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\AuthenticationCreateMagicTokenRequest(); // \Alfaview\Model\AuthenticationCreateMagicTokenRequest | 
+
+try {
+    $result = $apiInstance->createMagicToken($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling AuthenticationServiceApi->createMagicToken: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\AuthenticationCreateMagicTokenRequest**](../Model/AuthenticationCreateMagicTokenRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\AuthenticationCreateMagicTokenReply**](../Model/AuthenticationCreateMagicTokenReply.md)
 
 ### Authorization
 
