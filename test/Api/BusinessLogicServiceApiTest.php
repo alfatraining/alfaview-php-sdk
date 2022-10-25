@@ -147,16 +147,14 @@ class BusinessLogicServiceApiTest extends TestCase
         $this->assertFalse($createRoomResponse->hasError);
         $this->assertNotEmpty($createRoomResponse->reply->getRoomId());
 
-        $listPermissionGroupsResponse = self::$av->listPermissionGroups(self::$accessToken);
-        $this->assertFalse($listPermissionGroupsResponse->hasError);
-        $this->assertNotEmpty($listPermissionGroupsResponse->reply->getPermissionGroups());
-        $permissionGroupIds = array_keys($listPermissionGroupsResponse->reply->getPermissionGroups());
+        $participantGroupId = self::$av->getPermissionGroupId(self::$accessToken, 'Participant');
+        $this->assertNotEmpty($participantGroupId);
 
         $invitation = new BusinessLogicServiceExternalMemberInvitation();
         $invitation->setDisplayName("Test User");
         $invitation->setEmail("test.user@alfaview.com");
         $invitation->setLocale("en-US");
-        $invitation->setPermissionGroupId($permissionGroupIds[0]);
+        $invitation->setPermissionGroupId($participantGroupId);
         $invitation->setSendEmail(false);
         $invitation->setExpiry(-1);
         $invitations [] = $invitation;

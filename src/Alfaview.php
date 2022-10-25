@@ -2,27 +2,33 @@
 
 namespace Alfaview;
 
+use Alfaview\Api\AuthenticationServiceApi;
+use Alfaview\Api\BusinessLogicServiceApi;
+use Alfaview\Api\CompanyServiceApi;
+use Alfaview\Api\GuestServiceApi;
+use Alfaview\Api\RoomServiceApi;
+use Alfaview\Api\UserServiceApi;
 use Alfaview\Model\AuthenticationAuthenticationCreateRequest;
 use Alfaview\Model\AuthenticationAuthenticationRequest;
 use Alfaview\Model\AuthenticationAuthorizationCodeCredentials;
-use Alfaview\Model\AuthenticationGuestAccessCredentials;
 use Alfaview\Model\AuthenticationUsernamePasswordCredentials;
 use Alfaview\Model\BusinessLogicServiceCompanyPermissionGroupsListRequest;
 use Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest;
 use Alfaview\Model\CommonAccessInfo;
 use Alfaview\Model\CommonAccessToken;
 use Alfaview\Model\CommonReplyStatusCode;
-use \Alfaview\Model\CommonRoomType;
+use Alfaview\Model\CommonRoomType;
+use Alfaview\Model\GuestServiceV2AuthenticateRequest;
+use Alfaview\Model\GuestServiceV2CreateGroupLinksRequest;
+use Alfaview\Model\GuestServiceV2CreateGuestLinksRequest;
+use Alfaview\Model\GuestServiceV2GetLinkRequest;
+use Alfaview\Model\GuestServiceV2ListGuestLinksRequest;
+use Alfaview\Model\GuestServiceV2ListGroupLinksRequest;
 use Alfaview\Model\RoomServiceAvailableTypesRequest;
 use Alfaview\Model\RoomServiceCreateJoinLinkRequest;
 use Alfaview\Model\RoomServiceRoomCreateRequest;
 use Alfaview\Model\RoomServiceRoomDestroyRequest;
 use Alfaview\Model\RoomServiceRoomListRequest;
-use Alfaview\Api\AuthenticationServiceApi;
-use Alfaview\Api\BusinessLogicServiceApi;
-use Alfaview\Api\CompanyServiceApi;
-use Alfaview\Api\RoomServiceApi;
-use Alfaview\Api\UserServiceApi;
 use Alfaview\Model\RoomServiceRoomStatusRequest;
 use Alfaview\Model\RoomServiceRoomUpdateRequest;
 
@@ -34,6 +40,7 @@ class Alfaview
     const COMPANY_SERVICE_ENDPOINT        = '/companyService';
     const ROOM_SERVICE_ENDPOINT           = '/roomService';
     const USER_SERVICE_ENDPOINT           = '/userService';
+    const GUEST_SERVICE_ENDPOINT          = '/guestService.v2';
 
     /* @var AuthenticationServiceApi $authenticationService */
     public $authenticationService;
@@ -50,6 +57,9 @@ class Alfaview
     /* @var UserServiceApi $userService */
     public $userService;
 
+    /* @var GuestServiceApi $guestService */
+    public $guestService;
+
     /**
      * Alfaview constructor.
      */
@@ -60,12 +70,15 @@ class Alfaview
         $this->companyService = new CompanyServiceApi();
         $this->roomService = new RoomServiceApi();
         $this->userService = new UserServiceApi();
+        $this->userService = new UserServiceApi();
+        $this->guestService = new GuestServiceApi();
 
         $this->setHost(self::API_HOST);
     }
 
     /**
      * Optional - defaults to production api host
+     *
      * @param string $apiHost
      */
     public function setHost($apiHost)
@@ -75,6 +88,7 @@ class Alfaview
         $this->companyService->getConfig()->setHost($apiHost . self::COMPANY_SERVICE_ENDPOINT);
         $this->roomService->getConfig()->setHost($apiHost . self::ROOM_SERVICE_ENDPOINT);
         $this->userService->getConfig()->setHost($apiHost . self::USER_SERVICE_ENDPOINT);
+        $this->guestService->getConfig()->setHost($apiHost . self::GUEST_SERVICE_ENDPOINT);
     }
 
     /**
@@ -94,7 +108,8 @@ class Alfaview
      * @param ApiException $apiException
      * @return Response - containing error code and error message obtained from the exception thrown from Service API
      */
-    private function handleException(ApiException $apiException) {
+    private function handleException(ApiException $apiException)
+    {
         $responseBody = json_decode($apiException->getResponseBody());
         $errorMessage = isset($responseBody) ? $responseBody->message : $apiException->getMessage();
         $errorCode = isset($responseBody) ? $responseBody->code : $apiException->getCode();
@@ -103,6 +118,8 @@ class Alfaview
     }
 
     /**
+     * Creates an authentication request for username-password or API credentials login
+     * For guest authentication \Alfaview\Alfaview::guestAuthenticate should be used
      * @param mixed $credentials
      * @return AuthenticationAuthenticationRequest
      */
@@ -115,9 +132,6 @@ class Alfaview
                 break;
             case AuthenticationUsernamePasswordCredentials::class:
                 $authRequest->setUsernamePasswordCredentials($credentials);
-                break;
-            case AuthenticationGuestAccessCredentials::class:
-                $authRequest->setGuestAccessCredentials($credentials);
                 break;
         }
 
@@ -138,8 +152,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($authReply->getReplyInfo()->getStatusCode() != null &&  $authReply->getReplyInfo()->getStatusCode() !=CommonReplyStatusCode::OK) {
-            return new Response(null, true, $authReply->getReplyInfo()->getStatusCode(), $authReply->getReplyInfo()->getStatusMessage());
+        if ($authReply->getReplyInfo()
+                ->getStatusCode() != null && $authReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $authReply->getReplyInfo()
+                    ->getStatusCode(),
+                $authReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($authReply);
@@ -182,8 +205,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomListReply->getReplyInfo()->getStatusCode() != null && $roomListReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $roomListReply->getReplyInfo()->getStatusCode(), $roomListReply->getReplyInfo()->getStatusMessage());
+        if ($roomListReply->getReplyInfo()
+                ->getStatusCode() != null && $roomListReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $roomListReply->getReplyInfo()
+                    ->getStatusCode(),
+                $roomListReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($roomListReply, false);
@@ -206,8 +238,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomStatusReply->getReplyInfo()->getStatusCode() != null && $roomStatusReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $roomStatusReply->getReplyInfo()->getStatusCode(), $roomStatusReply->getReplyInfo()->getStatusMessage());
+        if ($roomStatusReply->getReplyInfo()
+                ->getStatusCode() != null && $roomStatusReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $roomStatusReply->getReplyInfo()
+                    ->getStatusCode(),
+                $roomStatusReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($roomStatusReply, false);
@@ -230,8 +271,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomCreateReply->getReplyInfo()->getStatusCode() != null && $roomCreateReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $roomCreateReply->getReplyInfo()->getStatusCode(), $roomCreateReply->getReplyInfo()->getStatusMessage());
+        if ($roomCreateReply->getReplyInfo()
+                ->getStatusCode() != null && $roomCreateReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $roomCreateReply->getReplyInfo()
+                    ->getStatusCode(),
+                $roomCreateReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($roomCreateReply, false);
@@ -256,8 +306,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomUpdateReply->getReplyInfo()->getStatusCode() != null && $roomUpdateReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $roomUpdateReply->getReplyInfo()->getStatusCode(), $roomUpdateReply->getReplyInfo()->getStatusMessage());
+        if ($roomUpdateReply->getReplyInfo()
+                ->getStatusCode() != null && $roomUpdateReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $roomUpdateReply->getReplyInfo()
+                    ->getStatusCode(),
+                $roomUpdateReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($roomUpdateReply, false);
@@ -280,8 +339,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($roomDestroyReply->getReplyInfo()->getStatusCode() != null && $roomDestroyReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $roomDestroyReply->getReplyInfo()->getStatusCode(), $roomDestroyReply->getReplyInfo()->getStatusMessage());
+        if ($roomDestroyReply->getReplyInfo()
+                ->getStatusCode() != null && $roomDestroyReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $roomDestroyReply->getReplyInfo()
+                    ->getStatusCode(),
+                $roomDestroyReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($roomDestroyReply, false);
@@ -304,8 +372,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($authCreateReply->getReplyInfo()->getStatusCode() != null && $authCreateReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $authCreateReply->getReplyInfo()->getStatusCode(), $authCreateReply->getReplyInfo()->getStatusMessage());
+        if ($authCreateReply->getReplyInfo()
+                ->getStatusCode() != null && $authCreateReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $authCreateReply->getReplyInfo()
+                    ->getStatusCode(),
+                $authCreateReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($authCreateReply, false);
@@ -328,8 +405,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($createJoinLinkReply->getReplyInfo()->getStatusCode() != null && $createJoinLinkReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $createJoinLinkReply->getReplyInfo()->getStatusCode(),  $createJoinLinkReply->getReplyInfo()->getStatusMessage());
+        if ($createJoinLinkReply->getReplyInfo()
+                ->getStatusCode() != null && $createJoinLinkReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $createJoinLinkReply->getReplyInfo()
+                    ->getStatusCode(),
+                $createJoinLinkReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($createJoinLinkReply, false);
@@ -350,8 +436,17 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($availableRoomTypesReply->getReplyInfo()->getStatusCode() != null && $availableRoomTypesReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $availableRoomTypesReply->getReplyInfo()->getStatusCode(),  $availableRoomTypesReply->getReplyInfo()->getStatusMessage());
+        if ($availableRoomTypesReply->getReplyInfo()
+                ->getStatusCode() != null && $availableRoomTypesReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $availableRoomTypesReply->getReplyInfo()
+                    ->getStatusCode(),
+                $availableRoomTypesReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($availableRoomTypesReply, false);
@@ -372,14 +467,52 @@ class Alfaview
             return $this->handleException($apiException);
         }
 
-        if ($permissionGroupsReply->getReplyInfo()->getStatusCode() != null && $permissionGroupsReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $permissionGroupsReply->getReplyInfo()->getStatusCode(), $permissionGroupsReply->getReplyInfo()->getStatusMessage());
+        if ($permissionGroupsReply->getReplyInfo()
+                ->getStatusCode() != null && $permissionGroupsReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $permissionGroupsReply->getReplyInfo()
+                    ->getStatusCode(),
+                $permissionGroupsReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($permissionGroupsReply, false);
     }
 
     /**
+     * Goes through the permission group to return the id of the group with the name we want
+     *
+     * @param $accessToken
+     * @param $groupName
+     * @return String|null
+     * @throws \Alfaview\ApiException
+     */
+    public function getPermissionGroupId($accessToken, $groupName)
+    {
+        $listPermissionGroupsResponse = $this->listPermissionGroups($accessToken);
+
+        if ($listPermissionGroupsResponse->hasError) {
+            return null;
+        }
+
+        $permissionGroups = $listPermissionGroupsResponse->reply->getPermissionGroups();
+
+        /* @var \Alfaview\Model\BusinessLogicServicePermissionGroup $group */
+        foreach ($permissionGroups as $groupId => $group) {
+            if ($group->getName() === $groupName) {
+                return $groupId;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * @deprecated The new \Alfaview::createGuestLink function should be preferred instead
+     *
      * @param $accessToken
      * @param $roomId
      * @param $externalMembersInvitations
@@ -393,15 +526,159 @@ class Alfaview
         $inviteExternalMembersRequest->setAccessInfo($this->composeAccessInfo($accessToken));
 
         try {
-            $inviteExternalMembersReply = $this->businessLogicService->externalMembersInvite($inviteExternalMembersRequest);
+            $inviteExternalMembersReply = $this->businessLogicService->externalMembersInvite(
+                $inviteExternalMembersRequest
+            );
         } catch (ApiException $apiException) {
             return $this->handleException($apiException);
         }
 
-        if ($inviteExternalMembersReply->getReplyInfo()->getStatusCode() != null && $inviteExternalMembersReply->getReplyInfo()->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(null, true, $inviteExternalMembersReply->getReplyInfo()->getStatusCode(), $inviteExternalMembersReply->getReplyInfo()->getStatusMessage());
+        if ($inviteExternalMembersReply->getReplyInfo()
+                ->getStatusCode() != null && $inviteExternalMembersReply->getReplyInfo()
+                ->getStatusCode() != CommonReplyStatusCode::OK) {
+            return new Response(
+                null,
+                true,
+                $inviteExternalMembersReply->getReplyInfo()
+                    ->getStatusCode(),
+                $inviteExternalMembersReply->getReplyInfo()
+                    ->getStatusMessage()
+            );
         }
 
         return new Response($inviteExternalMembersReply, false);
+    }
+
+    /**
+     * @param $accessToken
+     * @param $roomId
+     * @param \Alfaview\Model\GuestServiceV2GroupLinkCreation[] $groupLinks
+     * @return \Alfaview\Response
+     */
+    public function createGroupLink($accessToken, $roomId, $groupLinks)
+    {
+        $createGroupLinksRequest = new GuestServiceV2CreateGroupLinksRequest();
+        $createGroupLinksRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+        $createGroupLinksRequest->setGroupLinkCreations($groupLinks);
+        $createGroupLinksRequest->setRoomId($roomId);
+
+        try {
+            $createGroupLinksReply = $this->guestService->createGroupLinks($createGroupLinksRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        return new Response($createGroupLinksReply, false);
+    }
+
+    /**
+     * @param $accessToken
+     * @param $roomId
+     * @param \Alfaview\Model\GuestServiceV2GuestLinkCreation[] $guestLinks
+     * @return \Alfaview\Response
+     */
+    public function createGuestLink($accessToken, $roomId, $guestLinks)
+    {
+        $createGuestLinksRequest = new GuestServiceV2CreateGuestLinksRequest();
+        $createGuestLinksRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+        $createGuestLinksRequest->setGuestLinkCreations($guestLinks);
+        $createGuestLinksRequest->setRoomId($roomId);
+
+        try {
+            $createGuestLinksReply = $this->guestService->createGuestLinks($createGuestLinksRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        return new Response($createGuestLinksReply, false);
+    }
+
+    /**
+     * @param $companyId
+     * @param $roomId
+     * @param $accessKey
+     * @param string $displayName
+     * @param string $externalId
+     * @return \Alfaview\Response
+     */
+    public function guestAuthenticate($companyId, $roomId, $accessKey, $displayName = '', $externalId = '')
+    {
+        $authenticateRequest = new GuestServiceV2AuthenticateRequest();
+        $authenticateRequest->setCompanyId($companyId);
+        $authenticateRequest->setRoomId($roomId);
+        $authenticateRequest->setAccessKey($accessKey);
+        $authenticateRequest->setDisplayName($displayName);
+        $authenticateRequest->setExternalId($externalId);
+
+        try {
+            $authenticateReply = $this->guestService->authenticate($authenticateRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        return new Response($authenticateReply, false);
+    }
+
+    /**
+     * Lists the guest links for a specific room or the whole company if no $roomId is passed
+     *
+     * @param $accessToken
+     * @param string $roomId
+     * @return \Alfaview\Response
+     */
+    public function listGuestLinks($accessToken, $roomId = '') {
+        $listGuestLinksRequest = new GuestServiceV2ListGuestLinksRequest();
+        $listGuestLinksRequest->setRoomId($roomId);
+        $listGuestLinksRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+
+        try {
+            $listGuestLinksReply = $this->guestService->listGuestLinks($listGuestLinksRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        return new Response($listGuestLinksReply, false);
+    }
+
+    /**
+     * Lists the group links for a specific room or the whole company if no $roomId is passed
+     *
+     * @param $accessToken
+     * @param string $roomId
+     * @return \Alfaview\Response
+     */
+    public function listGroupLinks($accessToken, $roomId = '') {
+        $listGroupLinksRequest = new GuestServiceV2ListGroupLinksRequest();
+        $listGroupLinksRequest->setRoomId($roomId);
+        $listGroupLinksRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+
+        try {
+            $listGroupLinksReply = $this->guestService->listGroupLinks($listGroupLinksRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        return new Response($listGroupLinksReply, false);
+    }
+
+    /**
+     * Returns a guest or a group link with the given $id
+     *
+     * @param $accessToken
+     * @param $id
+     * @return \Alfaview\Response
+     */
+    public function getLink($accessToken, $id) {
+        $getLinkRequest = new GuestServiceV2GetLinkRequest();
+        $getLinkRequest->setId($id);
+        $getLinkRequest->setAccessInfo($this->composeAccessInfo($accessToken));
+
+        try {
+            $getLinkReply = $this->guestService->getLink($getLinkRequest);
+        } catch (ApiException $apiException) {
+            return $this->handleException($apiException);
+        }
+
+        return new Response($getLinkReply, false);
     }
 }

@@ -4,7 +4,8 @@
          convertErrorsToExceptions="true"
          convertNoticesToExceptions="true"
          convertWarningsToExceptions="true"
-         stopOnFailure="false">
+         stopOnFailure="false"
+         beStrictAboutTestsThatDoNotTestAnything="false">
     <php>
         <!-- for local testing define api here -->
         <env name="API_HOST"       value="test" />
