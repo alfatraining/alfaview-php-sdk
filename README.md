@@ -4,7 +4,7 @@ A PHP library for the alfaview APIs. This SDK is the successor of the previous v
 
 ### Getting started
 - Signup for an alfaview account on [alfaview.com](https://alfaview.com)
-- Obtain your API credentials via our friendly support@alfaview.com
+- Create your API credentials in the [Account Management](https://app.alfaview.com/#/settings) of your alfaview account
 - Include this SDK via Composer and take it for a spin
 
 ### Convenient usage
@@ -28,6 +28,7 @@ Here is an example for authenticating with the API and retrieving a list of room
 ```
 
 To create or update a room that differ from the default room quota:
+
 ```
 'active_participants' => 50
 'passive_participants' => 0
@@ -48,6 +49,44 @@ it is required to specify the `\Alfaview\Model\CommonRoomQuotas` when creating o
         var_dump($response->reply->getRoomId());
 ```
 
+Assuming you already have an `$accessToken` from the API authentication above,
+To create a personal guest or group link in a room:
+```php
+        $av = new Alfaview();
+        // optionally validity end date, if not set the links are always valid
+        $validUntil = new \DateTime("next week today");
+        $roomId = 'YOUR_ROOM_ID'
+
+        // Get the `Participant` permission group id to use in our group link, or any other permission group you want
+        $participantGroupId = $av->getPermissionGroupId($accessToken, 'Participant');
+
+        $groupLink = new GuestServiceV2GroupLinkCreation();
+        $groupLink->setPermissionGroupId($participantGroupId);
+        $groupLink->setDescription("created by alfaview-php-sdk testCreateGroupLinks");
+        $groupLink->setValidUntil($validUntil);
+
+        $response = $av->createGroupLink($accessToken, $roomId, [$groupLink]);
+
+        /* @var \Alfaview\Model\GuestServiceV2CreateGroupLinksReply $reply */
+        $createGroupLinkReply = $response->reply;
+
+        // Depending on how many you created a list is returned, in this example only one
+        $groupLink = $createGroupLinkReply->getGroupLinks()[0];
+
+        // optionally you can use an externalId for your group link authentication to ensure only one person is authenticating from your system
+        $externalId = md5("unique-external-id-value-for-group-link");
+        $response = $av->guestAuthenticate(
+            'YOUR_API_COMPANY_ID',
+            $roomId,
+            $groupLink->getAccessKey(),
+            'John Doe',
+            $externalId
+        );
+
+```
+
+
+
 ### Advanced usage
 Not all use cases are covered in the convenience wrapper. However, the complete API functionality is yet available by directly accessing our API endpoints described in the documentation below. And if you are awesome, feel free to contribute!
 
@@ -57,3 +96,5 @@ Not all use cases are covered in the convenience wrapper. However, the complete 
 - [Company Service](docs/Api/CompanyServiceApi.md)
 - [Room Service](docs/Api/RoomServiceApi.md)
 - [User Service](docs/Api/UserServiceApi.md)
+- [QuotaService Service](docs/Api/QuotaServiceApi.md)
+- [GuestServiceV2 Service](docs/Api/GuestServiceApi.md)

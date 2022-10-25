@@ -127,59 +127,6 @@ class AuthenticationServiceApiTest extends TestCase
      */
     public function testAuthenticationServiceAuthenticationCreate()
     {
-        $quotas = new CommonRoomQuotas();
-        $quotas->setActiveParticipants(50);
-        $quotas->setPassiveParticipants(0);
-        $quotas->setSubRooms(10);
-
-        $room = new CommonRoom();
-        $room->setDisplayName('created by php sdk authentication service test');
-        $room->setQuotas($quotas);
-
-        $response = self::$av->createRoom(self::$accessToken, $room);
-        $this->assertFalse($response->hasError);
-
-        $roomId = $response->reply->getRoomId();
-
-        $guestAccessCredentials = new AuthenticationGuestAccessCredentials();
-        $guestAccessCredentials->setDisplayName("shareable guest created by api");
-        $guestAccessCredentials->setShareable(true);
-        $guestAccessCredentials->setExpiry(strval(time() + (7 * 24 * 60 * 60)));
-        $guestAccessCredentials->setRoomId($response->reply->getRoomId());
-        $guestAccessCredentials->setCompanyId(getenv('API_COMPANY_ID'));
-        $guestAccessCredentials->setCode(getenv('API_GUEST_CODE'));
-
-        $response = self::$av->createAuthentication(self::$accessToken, $guestAccessCredentials);
-        $this->assertFalse($response->hasError);
-
-        $guestId = $response->reply->getUserId();
-
-        $guestPermissions = new CommonPermissions();
-        $guestPermissions->setVoice(true);
-        $guestPermissions->setVideo(true);
-        $guestPermissions->setJoin(true);
-        $guestPermissions->setAction(true);
-
-        $room = new CommonRoom();
-        $room->setPermissions(array($guestId => $guestPermissions));
-
-        $response = self::$av->updateRoom(self::$accessToken, $roomId, $room);
-        $this->assertFalse($response->hasError);
-
-        $credentials = new AuthenticationGuestAccessCredentials();
-        $credentials->setUserId($guestId);
-        $credentials->setRoomId($roomId);
-        $credentials->setDisplayName("Donald Duck");
-        $credentials->setCode(getenv('API_GUEST_CODE'));
-        $credentials->setCompanyId(getenv('API_COMPANY_ID'));
-
-        $response = self::$av->authenticate($credentials);
-        $this->assertFalse($response->hasError);
-        $this->assertNotEmpty($response->reply->getAccessToken());
-
-        $response = self::$av->createJoinLink($response->reply->getAccessToken(), $roomId);
-        $this->assertFalse($response->hasError);
-
     }
 
     /**
