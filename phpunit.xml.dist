@@ -1,30 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit bootstrap="./vendor/autoload.php"
-         colors="true"
-         convertErrorsToExceptions="true"
-         convertNoticesToExceptions="true"
-         convertWarningsToExceptions="true"
-         stopOnFailure="false"
-         beStrictAboutTestsThatDoNotTestAnything="false">
-    <php>
-        <!-- for local testing define api here -->
-        <env name="API_HOST"       value="test" />
-        <env name="API_CLIENT_ID"  value="test" />
-        <env name="API_CODE"       value="test" />
-        <env name="API_GUEST_CODE" value="test" />
-        <env name="API_COMPANY_ID" value="test" />
-    </php>
-    <testsuites>
-        <testsuite name="alfaview">
-            <directory>./test/Api</directory>
-            <directory>./test/Model</directory>
-        </testsuite>
-    </testsuites>
-
-    <filter>
-        <whitelist processUncoveredFilesFromWhitelist="true">
-            <directory suffix=".php">./src/Api</directory>
-            <directory suffix=".php">./src/Model</directory>
-        </whitelist>
-    </filter>
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="./vendor/autoload.php" colors="true" stopOnFailure="false"
+         beStrictAboutTestsThatDoNotTestAnything="false"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/10.4/phpunit.xsd"
+         cacheResult="false">
+<coverage/>
+<php>
+    <!-- for local testing define api here -->
+    <env name="API_HOST"       value="test" />
+    <env name="API_CLIENT_ID"  value="test" />
+    <env name="API_CODE"       value="test" />
+    <env name="API_GUEST_CODE" value="test" />
+    <env name="API_COMPANY_ID" value="test" />
+</php>
+<testsuites>
+    <testsuite name="alfaview">
+        <directory>./test/Api</directory>
+        <directory>./test/Model</directory>
+    </testsuite>
+</testsuites>
+<source>
+    <include>
+        <directory suffix=".php">./src/Api</directory>
+        <directory suffix=".php">./src/Model</directory>
+    </include>
+</source>
 </phpunit>
