@@ -11,6 +11,7 @@ Name | Type | Description | Notes
 **send_email** | **bool** |  | [optional] 
 **permission_group_id** | **string** |  | [optional] 
 **skip_room_permissions_update** | **bool** |  | [optional] 
+**allow_dial_in** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

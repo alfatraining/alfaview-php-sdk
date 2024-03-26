@@ -7,7 +7,7 @@ Name | Type | Description | Notes
 **state** | [**\Alfaview\Model\BusinessLogicServiceState**](BusinessLogicServiceState.md) |  | [optional] 
 **execution** | **int** |  | [optional] 
 **max_retries** | **int** |  | [optional] 
-**next_run** | **string** |  | [optional] 
+**next_run** | **string** | unix timestamp in seconds; optional, use it if non-empty; denotes timestamp after which execution will take place. | [optional] 
 **metadata** | **map[string,string]** |  | [optional] 
 **progress** | **float** |  | [optional] 
 

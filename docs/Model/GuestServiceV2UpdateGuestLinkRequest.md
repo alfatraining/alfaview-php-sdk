@@ -7,6 +7,8 @@ Name | Type | Description | Notes
 **guest_link** | [**\Alfaview\Model\GuestServiceV2GuestLink**](GuestServiceV2GuestLink.md) |  | [optional] 
 **send_email** | **bool** |  | [optional] 
 **skip_room_permissions_update** | **bool** |  | [optional] 
+**timezone** | **string** |  | [optional] 
+**allow_dial_in** | **bool** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

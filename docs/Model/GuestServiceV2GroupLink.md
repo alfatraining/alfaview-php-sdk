@@ -13,6 +13,10 @@ Name | Type | Description | Notes
 **created_at** | [**\DateTime**](\DateTime.md) |  | [optional] 
 **join_link** | **string** |  | [optional] 
 **access_key** | **string** |  | [optional] 
+**managed** | **bool** |  | [optional] 
+**origin** | **string** |  | [optional] 
+**dial_in_allowed** | **bool** |  | [optional] 
+**dial_in_code** | **string** |  | [optional] 
 
 [[Back to Model list]](../README.md#documentation-for-models) [[Back to API list]](../README.md#documentation-for-api-endpoints) [[Back to README]](../README.md)
 

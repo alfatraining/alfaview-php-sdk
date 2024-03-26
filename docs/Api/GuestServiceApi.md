@@ -14,6 +14,7 @@ Method | HTTP request | Description
 [**listGroupLinks**](GuestServiceApi.md#listGroupLinks) | **POST** /listGroupLinks | 
 [**listGuestLinks**](GuestServiceApi.md#listGuestLinks) | **POST** /listGuestLinks | 
 [**resendGuestLinkEmail**](GuestServiceApi.md#resendGuestLinkEmail) | **POST** /resendGuestLinkEmail | 
+[**streamTaskProgress**](GuestServiceApi.md#streamTaskProgress) | **POST** /streamTaskProgress | 
 [**updateGroupLink**](GuestServiceApi.md#updateGroupLink) | **POST** /updateGroupLink | 
 [**updateGuestLink**](GuestServiceApi.md#updateGuestLink) | **POST** /updateGuestLink | 
 
@@ -476,6 +477,53 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Alfaview\Model\GuestServiceV2ResendGuestLinkEmailReply**](../Model/GuestServiceV2ResendGuestLinkEmailReply.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+ - **Content-Type**: application/json
+ - **Accept**: application/json
+
+[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
+
+# **streamTaskProgress**
+> \Alfaview\Model\StreamResultOfGuestServiceV2TaskProgressReply streamTaskProgress($body)
+
+
+
+### Example
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+$apiInstance = new Alfaview\Api\GuestServiceApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$body = new \Alfaview\Model\GuestServiceV2TaskProgressRequest(); // \Alfaview\Model\GuestServiceV2TaskProgressRequest | 
+
+try {
+    $result = $apiInstance->streamTaskProgress($body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling GuestServiceApi->streamTaskProgress: ', $e->getMessage(), PHP_EOL;
+}
+?>
+```
+
+### Parameters
+
+Name | Type | Description  | Notes
+------------- | ------------- | ------------- | -------------
+ **body** | [**\Alfaview\Model\GuestServiceV2TaskProgressRequest**](../Model/GuestServiceV2TaskProgressRequest.md)|  |
+
+### Return type
+
+[**\Alfaview\Model\StreamResultOfGuestServiceV2TaskProgressReply**](../Model/StreamResultOfGuestServiceV2TaskProgressReply.md)
 
 ### Authorization
 

@@ -4,21 +4,21 @@ All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**availableTypes**](RoomServiceApi.md#availableTypes) | **POST** /availableTypes | 
-[**callList**](RoomServiceApi.md#callList) | **POST** /list | 
-[**create**](RoomServiceApi.md#create) | **POST** /create | 
-[**createJoinLink**](RoomServiceApi.md#createJoinLink) | **POST** /createJoinLink | 
-[**destroy**](RoomServiceApi.md#destroy) | **POST** /destroy | 
-[**permissions**](RoomServiceApi.md#permissions) | **POST** /permissions | 
-[**sort**](RoomServiceApi.md#sort) | **POST** /sort | 
-[**status**](RoomServiceApi.md#status) | **POST** /status | 
-[**update**](RoomServiceApi.md#update) | **POST** /update | 
+[**availableTypes**](RoomServiceApi.md#availableTypes) | **POST** /availableTypes | changes the sorting of rooms
+[**callList**](RoomServiceApi.md#callList) | **POST** /list | list all rooms which are accessible by the current user
+[**create**](RoomServiceApi.md#create) | **POST** /create | creates or replaces all values
+[**createJoinLink**](RoomServiceApi.md#createJoinLink) | **POST** /createJoinLink | creates a link to launch the client
+[**destroy**](RoomServiceApi.md#destroy) | **POST** /destroy | deletes room and kicks all users
+[**permissions**](RoomServiceApi.md#permissions) | **POST** /permissions | deprecated - use &#39;Permissions&#39; call in the roomStateService
+[**sort**](RoomServiceApi.md#sort) | **POST** /sort | changes the sorting of rooms
+[**status**](RoomServiceApi.md#status) | **POST** /status | deprecated - use &#39;Status&#39; call in the roomStateService
+[**update**](RoomServiceApi.md#update) | **POST** /update | adds or overwrites all values
 
 
 # **availableTypes**
 > \Alfaview\Model\RoomServiceAvailableTypesReply availableTypes($body)
 
-
+changes the sorting of rooms
 
 ### Example
 ```php
@@ -65,7 +65,7 @@ No authorization required
 # **callList**
 > \Alfaview\Model\RoomServiceRoomListReply callList($body)
 
-
+list all rooms which are accessible by the current user
 
 ### Example
 ```php
@@ -112,7 +112,7 @@ No authorization required
 # **create**
 > \Alfaview\Model\RoomServiceRoomCreateReply create($body)
 
-
+creates or replaces all values
 
 ### Example
 ```php
@@ -159,7 +159,7 @@ No authorization required
 # **createJoinLink**
 > \Alfaview\Model\RoomServiceCreateJoinLinkReply createJoinLink($body)
 
-
+creates a link to launch the client
 
 ### Example
 ```php
@@ -206,7 +206,7 @@ No authorization required
 # **destroy**
 > \Alfaview\Model\RoomServiceRoomDestroyReply destroy($body)
 
-
+deletes room and kicks all users
 
 ### Example
 ```php
@@ -253,7 +253,7 @@ No authorization required
 # **permissions**
 > \Alfaview\Model\RoomServiceRoomPermissionsReply permissions($body)
 
-
+deprecated - use 'Permissions' call in the roomStateService
 
 ### Example
 ```php
@@ -300,7 +300,7 @@ No authorization required
 # **sort**
 > \Alfaview\Model\RoomServiceRoomSortReply sort($body)
 
-
+changes the sorting of rooms
 
 ### Example
 ```php
@@ -347,7 +347,7 @@ No authorization required
 # **status**
 > \Alfaview\Model\RoomServiceRoomStatusReply status($body)
 
-
+deprecated - use 'Status' call in the roomStateService
 
 ### Example
 ```php
@@ -394,7 +394,7 @@ No authorization required
 # **update**
 > \Alfaview\Model\RoomServiceRoomUpdateReply update($body)
 
-
+adds or overwrites all values
 
 ### Example
 ```php
