@@ -4,6 +4,7 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **email** | **string** |  | [optional] 
+**managed** | **bool** |  | [optional] 
 **metadata** | **map[string,string]** |  | [optional] 
 **user_profile** | [**\Alfaview\Model\CommonUserProfile**](CommonUserProfile.md) |  | [optional] 
 **locale** | [**\Alfaview\Model\CommonLocale**](CommonLocale.md) |  | [optional] 

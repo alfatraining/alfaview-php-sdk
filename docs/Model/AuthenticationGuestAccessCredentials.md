@@ -6,7 +6,7 @@ Name | Type | Description | Notes
 **user_id** | **string** |  | [optional] 
 **code** | **string** |  | [optional] 
 **company_id** | **string** |  | [optional] 
-**email** | **string** |  | [optional] 
+**email** | **string** | optional but recommended (see displayName field) | [optional] 
 **room_id** | **string** |  | [optional] 
 **display_name** | **string** |  | [optional] 
 **expiry** | **string** |  | [optional] 

@@ -7,13 +7,12 @@ Method | HTTP request | Description
 [**companyDestroy**](BusinessLogicServiceApi.md#companyDestroy) | **POST** /companies/destroy | 
 [**companySignup**](BusinessLogicServiceApi.md#companySignup) | **POST** /companies/signup | 
 [**createCompany**](BusinessLogicServiceApi.md#createCompany) | **POST** /companies/create | 
-[**externalMembersInvite**](BusinessLogicServiceApi.md#externalMembersInvite) | **POST** /inviteExternalMembers | 
+[**externalMembersInvite**](BusinessLogicServiceApi.md#externalMembersInvite) | **POST** /inviteExternalMembers | This endpoint is deprecated. Please use the guest service v2 instead.
 [**favoritesList**](BusinessLogicServiceApi.md#favoritesList) | **POST** /favorites/list | 
 [**favoritesUpdate**](BusinessLogicServiceApi.md#favoritesUpdate) | **POST** /favorites/update | 
 [**inviteUsers**](BusinessLogicServiceApi.md#inviteUsers) | **POST** /inviteUsers | 
 [**permissionGroupsList**](BusinessLogicServiceApi.md#permissionGroupsList) | **POST** /permissionGroups/list | 
 [**permissionGroupsUpdate**](BusinessLogicServiceApi.md#permissionGroupsUpdate) | **POST** /permissionGroups/update | 
-[**sendEmail**](BusinessLogicServiceApi.md#sendEmail) | **POST** /sendEmail | 
 [**streamTaskProgress**](BusinessLogicServiceApi.md#streamTaskProgress) | **POST** /streamTaskProgress | 
 
 
@@ -32,7 +31,7 @@ $apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest(); // \Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest | 
+$body = new \Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest(); // \Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest | * CompanyDestroyRequest is used to completely destroy a company and all associated data via a gokju task.
 
 try {
     $result = $apiInstance->companyDestroy($body);
@@ -47,7 +46,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest**](../Model/BusinessLogicServiceCompanyDestroyRequest.md)|  |
+ **body** | [**\Alfaview\Model\BusinessLogicServiceCompanyDestroyRequest**](../Model/BusinessLogicServiceCompanyDestroyRequest.md)| * CompanyDestroyRequest is used to completely destroy a company and all associated data via a gokju task. |
 
 ### Return type
 
@@ -79,7 +78,7 @@ $apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\BusinessLogicServiceCompanySignupRequest(); // \Alfaview\Model\BusinessLogicServiceCompanySignupRequest | 
+$body = new \Alfaview\Model\BusinessLogicServiceCompanySignupRequest(); // \Alfaview\Model\BusinessLogicServiceCompanySignupRequest | * Use CompanySignupRequest for signing up.
 
 try {
     $result = $apiInstance->companySignup($body);
@@ -94,7 +93,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceCompanySignupRequest**](../Model/BusinessLogicServiceCompanySignupRequest.md)|  |
+ **body** | [**\Alfaview\Model\BusinessLogicServiceCompanySignupRequest**](../Model/BusinessLogicServiceCompanySignupRequest.md)| * Use CompanySignupRequest for signing up. |
 
 ### Return type
 
@@ -126,7 +125,7 @@ $apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\BusinessLogicServiceCompanyCreateRequest(); // \Alfaview\Model\BusinessLogicServiceCompanyCreateRequest | 
+$body = new \Alfaview\Model\BusinessLogicServiceCompanyCreateRequest(); // \Alfaview\Model\BusinessLogicServiceCompanyCreateRequest | * Use CompanyCreateRequest to create a company with a user profile and a single room attached to it.
 
 try {
     $result = $apiInstance->createCompany($body);
@@ -141,7 +140,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceCompanyCreateRequest**](../Model/BusinessLogicServiceCompanyCreateRequest.md)|  |
+ **body** | [**\Alfaview\Model\BusinessLogicServiceCompanyCreateRequest**](../Model/BusinessLogicServiceCompanyCreateRequest.md)| * Use CompanyCreateRequest to create a company with a user profile and a single room attached to it. |
 
 ### Return type
 
@@ -161,7 +160,7 @@ No authorization required
 # **externalMembersInvite**
 > \Alfaview\Model\BusinessLogicServiceInviteExternalMembersReply externalMembersInvite($body)
 
-
+This endpoint is deprecated. Please use the guest service v2 instead.
 
 ### Example
 ```php
@@ -173,7 +172,7 @@ $apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest(); // \Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest | 
+$body = new \Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest(); // \Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest | * Use InviteExternalMembersRequest to invite a list of external members to a room and assign them their permissions. Deprecated: use guest service v2 instead.
 
 try {
     $result = $apiInstance->externalMembersInvite($body);
@@ -188,7 +187,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest**](../Model/BusinessLogicServiceInviteExternalMembersRequest.md)|  |
+ **body** | [**\Alfaview\Model\BusinessLogicServiceInviteExternalMembersRequest**](../Model/BusinessLogicServiceInviteExternalMembersRequest.md)| * Use InviteExternalMembersRequest to invite a list of external members to a room and assign them their permissions. Deprecated: use guest service v2 instead. |
 
 ### Return type
 
@@ -314,7 +313,7 @@ $apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\BusinessLogicServiceInviteUsersRequest(); // \Alfaview\Model\BusinessLogicServiceInviteUsersRequest | 
+$body = new \Alfaview\Model\BusinessLogicServiceInviteUsersRequest(); // \Alfaview\Model\BusinessLogicServiceInviteUsersRequest | * Use InviteUsersRequest to invite a list of users and assign them their permissions.
 
 try {
     $result = $apiInstance->inviteUsers($body);
@@ -329,7 +328,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceInviteUsersRequest**](../Model/BusinessLogicServiceInviteUsersRequest.md)|  |
+ **body** | [**\Alfaview\Model\BusinessLogicServiceInviteUsersRequest**](../Model/BusinessLogicServiceInviteUsersRequest.md)| * Use InviteUsersRequest to invite a list of users and assign them their permissions. |
 
 ### Return type
 
@@ -440,53 +439,6 @@ No authorization required
 
 [[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
 
-# **sendEmail**
-> \Alfaview\Model\BusinessLogicServiceSendEmailReply sendEmail($body)
-
-
-
-### Example
-```php
-<?php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
-);
-$body = new \Alfaview\Model\BusinessLogicServiceSendEmailRequest(); // \Alfaview\Model\BusinessLogicServiceSendEmailRequest | 
-
-try {
-    $result = $apiInstance->sendEmail($body);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling BusinessLogicServiceApi->sendEmail: ', $e->getMessage(), PHP_EOL;
-}
-?>
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceSendEmailRequest**](../Model/BusinessLogicServiceSendEmailRequest.md)|  |
-
-### Return type
-
-[**\Alfaview\Model\BusinessLogicServiceSendEmailReply**](../Model/BusinessLogicServiceSendEmailReply.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
-
 # **streamTaskProgress**
 > \Alfaview\Model\StreamResultOfBusinessLogicServiceTaskProgressReply streamTaskProgress($body)
 
@@ -502,7 +454,7 @@ $apiInstance = new Alfaview\Api\BusinessLogicServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\BusinessLogicServiceTaskProgressRequest(); // \Alfaview\Model\BusinessLogicServiceTaskProgressRequest | 
+$body = new \Alfaview\Model\BusinessLogicServiceTaskProgressRequest(); // \Alfaview\Model\BusinessLogicServiceTaskProgressRequest | * Use TaskProgressRequest to request the progress report of a task by its ID.
 
 try {
     $result = $apiInstance->streamTaskProgress($body);
@@ -517,7 +469,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\BusinessLogicServiceTaskProgressRequest**](../Model/BusinessLogicServiceTaskProgressRequest.md)|  |
+ **body** | [**\Alfaview\Model\BusinessLogicServiceTaskProgressRequest**](../Model/BusinessLogicServiceTaskProgressRequest.md)| * Use TaskProgressRequest to request the progress report of a task by its ID. |
 
 ### Return type
 
