@@ -511,45 +511,6 @@ class Alfaview
     }
 
     /**
-     * @deprecated The new \Alfaview::createGuestLink function should be preferred instead
-     *
-     * @param $accessToken
-     * @param $roomId
-     * @param $externalMembersInvitations
-     * @return Response
-     */
-    public function inviteExternalMembers($accessToken, $roomId, $externalMembersInvitations)
-    {
-        $inviteExternalMembersRequest = new BusinessLogicServiceInviteExternalMembersRequest();
-        $inviteExternalMembersRequest->setRoomId($roomId);
-        $inviteExternalMembersRequest->setInvitations($externalMembersInvitations);
-        $inviteExternalMembersRequest->setAccessInfo($this->composeAccessInfo($accessToken));
-
-        try {
-            $inviteExternalMembersReply = $this->businessLogicService->externalMembersInvite(
-                $inviteExternalMembersRequest
-            );
-        } catch (ApiException $apiException) {
-            return $this->handleException($apiException);
-        }
-
-        if ($inviteExternalMembersReply->getReplyInfo()
-                ->getStatusCode() != null && $inviteExternalMembersReply->getReplyInfo()
-                ->getStatusCode() != CommonReplyStatusCode::OK) {
-            return new Response(
-                null,
-                true,
-                $inviteExternalMembersReply->getReplyInfo()
-                    ->getStatusCode(),
-                $inviteExternalMembersReply->getReplyInfo()
-                    ->getStatusMessage()
-            );
-        }
-
-        return new Response($inviteExternalMembersReply, false);
-    }
-
-    /**
      * @param $accessToken
      * @param $roomId
      * @param \Alfaview\Model\GuestServiceV2GroupLinkCreation[] $groupLinks

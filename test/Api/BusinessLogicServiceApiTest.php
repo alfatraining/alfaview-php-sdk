@@ -33,7 +33,6 @@ use PHPUnit\Framework\TestCase;
 use \Alfaview\Configuration;
 use \Alfaview\ApiException;
 use Alfaview\Model\AuthenticationAuthorizationCodeCredentials;
-use Alfaview\Model\BusinessLogicServiceExternalMemberInvitation;
 use Alfaview\Model\CommonAccessToken;
 use Alfaview\Model\CommonRoom;
 use Alfaview\Model\CommonRoomQuotas;
@@ -124,44 +123,6 @@ class BusinessLogicServiceApiTest extends TestCase
      */
     public function testBusinessLogicServiceCreateCompany()
     {
-    }
-
-    /**
-     * Test case for businessLogicServiceExternalMembersInvite
-     *
-     * .
-     *
-     */
-    public function testBusinessLogicServiceExternalMembersInvite()
-    {
-        $quotas = new CommonRoomQuotas();
-        $quotas->setActiveParticipants(50);
-        $quotas->setPassiveParticipants(0);
-        $quotas->setSubRooms(10);
-
-        $room = new CommonRoom();
-        $room->setDisplayName('created by php sdk room service test');
-        $room->setQuotas($quotas);
-
-        $createRoomResponse = self::$av->createRoom(self::$accessToken, $room);
-        $this->assertFalse($createRoomResponse->hasError);
-        $this->assertNotEmpty($createRoomResponse->reply->getRoomId());
-
-        $participantGroupId = self::$av->getPermissionGroupId(self::$accessToken, 'Participant');
-        $this->assertNotEmpty($participantGroupId);
-
-        $invitation = new BusinessLogicServiceExternalMemberInvitation();
-        $invitation->setDisplayName("Test User");
-        $invitation->setEmail("test.user@alfaview.com");
-        $invitation->setLocale("en-US");
-        $invitation->setPermissionGroupId($participantGroupId);
-        $invitation->setSendEmail(false);
-        $invitation->setExpiry(-1);
-        $invitations [] = $invitation;
-
-        $inviteExternalMembersResponse = self::$av->inviteExternalMembers(self::$accessToken, $createRoomResponse->reply->getRoomId(), $invitations);
-        $this->assertFalse($inviteExternalMembersResponse->hasError);
-        $this->assertNotEmpty($inviteExternalMembersResponse->reply->getTrackingInfo());
     }
 
     /**
