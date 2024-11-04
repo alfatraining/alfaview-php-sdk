@@ -36,6 +36,8 @@ use \Alfaview\ObjectSerializer;
  * UserUserInviteRequest Class Doc Comment
  *
  * @category Class
+ * @deprecated use businessLogicService.InviteUsers RPC instead.
+ * @description Deprecated: use businessLogicService.InviteUsers RPC instead.
  * @package  Alfaview
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
@@ -59,7 +61,8 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
     protected static $swaggerTypes = [
         'access_info' => '\Alfaview\Model\CommonAccessInfo',
         'email' => 'string',
-        'user_profile' => '\Alfaview\Model\CommonUserProfile'
+        'user_profile' => '\Alfaview\Model\CommonUserProfile',
+        'locale' => '\Alfaview\Model\CommonLocale'
     ];
 
     /**
@@ -70,7 +73,8 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
     protected static $swaggerFormats = [
         'access_info' => null,
         'email' => null,
-        'user_profile' => null
+        'user_profile' => null,
+        'locale' => null
     ];
 
     /**
@@ -102,7 +106,8 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
     protected static $attributeMap = [
         'access_info' => 'accessInfo',
         'email' => 'email',
-        'user_profile' => 'userProfile'
+        'user_profile' => 'userProfile',
+        'locale' => 'locale'
     ];
 
     /**
@@ -113,7 +118,8 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
     protected static $setters = [
         'access_info' => 'setAccessInfo',
         'email' => 'setEmail',
-        'user_profile' => 'setUserProfile'
+        'user_profile' => 'setUserProfile',
+        'locale' => 'setLocale'
     ];
 
     /**
@@ -124,7 +130,8 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
     protected static $getters = [
         'access_info' => 'getAccessInfo',
         'email' => 'getEmail',
-        'user_profile' => 'getUserProfile'
+        'user_profile' => 'getUserProfile',
+        'locale' => 'getLocale'
     ];
 
     /**
@@ -190,6 +197,7 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
         $this->container['access_info'] = isset($data['access_info']) ? $data['access_info'] : null;
         $this->container['email'] = isset($data['email']) ? $data['email'] : null;
         $this->container['user_profile'] = isset($data['user_profile']) ? $data['user_profile'] : null;
+        $this->container['locale'] = isset($data['locale']) ? $data['locale'] : null;
     }
 
     /**
@@ -284,6 +292,30 @@ class UserUserInviteRequest implements ModelInterface, ArrayAccess
     public function setUserProfile($user_profile)
     {
         $this->container['user_profile'] = $user_profile;
+
+        return $this;
+    }
+
+    /**
+     * Gets locale
+     *
+     * @return \Alfaview\Model\CommonLocale
+     */
+    public function getLocale()
+    {
+        return $this->container['locale'];
+    }
+
+    /**
+     * Sets locale
+     *
+     * @param \Alfaview\Model\CommonLocale $locale locale
+     *
+     * @return $this
+     */
+    public function setLocale($locale)
+    {
+        $this->container['locale'] = $locale;
 
         return $this;
     }
