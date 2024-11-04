@@ -8,7 +8,6 @@ Name | Type | Description | Notes
 **company** | **string** |  | [optional] 
 **account_name** | **string** |  | [optional] 
 **user** | [**\Alfaview\Model\CommonUser**](CommonUser.md) |  | [optional] 
-**finish_signup_url** | **string** |  | [optional] 
 **agreed_to_terms** | **bool** |  | [optional] 
 **agreed_to_privacy_policy** | **bool** |  | [optional] 
 **plan_id** | **string** |  | [optional] 

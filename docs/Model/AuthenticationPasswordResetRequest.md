@@ -4,7 +4,6 @@
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
 **access_info** | [**\Alfaview\Model\CommonAccessInfo**](CommonAccessInfo.md) |  | [optional] 
-**reset_url** | **string** |  | [optional] 
 **username** | **string** |  | [optional] 
 **company_id** | **string** |  | [optional] 
 

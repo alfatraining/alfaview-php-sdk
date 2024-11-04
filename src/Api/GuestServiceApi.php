@@ -2770,6 +2770,8 @@ class GuestServiceApi
     /**
      * Operation streamTaskProgress
      *
+     * streamTaskProgress is deprecated: services may return status NOT_IMPLEMENTED at some point in the future.
+     *
      * @param  \Alfaview\Model\GuestServiceV2TaskProgressRequest $body body (required)
      *
      * @throws \Alfaview\ApiException on non-2xx response
@@ -2784,6 +2786,8 @@ class GuestServiceApi
 
     /**
      * Operation streamTaskProgressWithHttpInfo
+     *
+     * streamTaskProgress is deprecated: services may return status NOT_IMPLEMENTED at some point in the future.
      *
      * @param  \Alfaview\Model\GuestServiceV2TaskProgressRequest $body (required)
      *
@@ -2866,7 +2870,7 @@ class GuestServiceApi
     /**
      * Operation streamTaskProgressAsync
      *
-     * 
+     * streamTaskProgress is deprecated: services may return status NOT_IMPLEMENTED at some point in the future.
      *
      * @param  \Alfaview\Model\GuestServiceV2TaskProgressRequest $body (required)
      *
@@ -2886,7 +2890,7 @@ class GuestServiceApi
     /**
      * Operation streamTaskProgressAsyncWithHttpInfo
      *
-     * 
+     * streamTaskProgress is deprecated: services may return status NOT_IMPLEMENTED at some point in the future.
      *
      * @param  \Alfaview\Model\GuestServiceV2TaskProgressRequest $body (required)
      *

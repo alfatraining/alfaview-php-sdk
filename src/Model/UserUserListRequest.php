@@ -58,7 +58,8 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'access_info' => '\Alfaview\Model\CommonAccessInfo',
-        'user_id_list' => 'string[]'
+        'user_id_list' => 'string[]',
+        'return_user_ids_only' => 'bool'
     ];
 
     /**
@@ -68,7 +69,8 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'access_info' => null,
-        'user_id_list' => null
+        'user_id_list' => null,
+        'return_user_ids_only' => null
     ];
 
     /**
@@ -99,7 +101,8 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'access_info' => 'accessInfo',
-        'user_id_list' => 'userIdList'
+        'user_id_list' => 'userIdList',
+        'return_user_ids_only' => 'returnUserIdsOnly'
     ];
 
     /**
@@ -109,7 +112,8 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'access_info' => 'setAccessInfo',
-        'user_id_list' => 'setUserIdList'
+        'user_id_list' => 'setUserIdList',
+        'return_user_ids_only' => 'setReturnUserIdsOnly'
     ];
 
     /**
@@ -119,7 +123,8 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'access_info' => 'getAccessInfo',
-        'user_id_list' => 'getUserIdList'
+        'user_id_list' => 'getUserIdList',
+        'return_user_ids_only' => 'getReturnUserIdsOnly'
     ];
 
     /**
@@ -184,6 +189,7 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
     {
         $this->container['access_info'] = isset($data['access_info']) ? $data['access_info'] : null;
         $this->container['user_id_list'] = isset($data['user_id_list']) ? $data['user_id_list'] : null;
+        $this->container['return_user_ids_only'] = isset($data['return_user_ids_only']) ? $data['return_user_ids_only'] : null;
     }
 
     /**
@@ -254,6 +260,30 @@ class UserUserListRequest implements ModelInterface, ArrayAccess
     public function setUserIdList($user_id_list)
     {
         $this->container['user_id_list'] = $user_id_list;
+
+        return $this;
+    }
+
+    /**
+     * Gets return_user_ids_only
+     *
+     * @return bool
+     */
+    public function getReturnUserIdsOnly()
+    {
+        return $this->container['return_user_ids_only'];
+    }
+
+    /**
+     * Sets return_user_ids_only
+     *
+     * @param bool $return_user_ids_only return_user_ids_only
+     *
+     * @return $this
+     */
+    public function setReturnUserIdsOnly($return_user_ids_only)
+    {
+        $this->container['return_user_ids_only'] = $return_user_ids_only;
 
         return $this;
     }

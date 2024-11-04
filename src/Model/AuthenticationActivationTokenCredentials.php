@@ -63,7 +63,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
         'expiry' => 'string',
         'key_type' => 'string',
         'principal' => 'string',
-        'finish_signup_url' => 'string',
         'resend_invitation' => 'bool'
     ];
 
@@ -79,7 +78,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
         'expiry' => 'int64',
         'key_type' => null,
         'principal' => null,
-        'finish_signup_url' => null,
         'resend_invitation' => null
     ];
 
@@ -116,7 +114,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
         'expiry' => 'expiry',
         'key_type' => 'keyType',
         'principal' => 'principal',
-        'finish_signup_url' => 'finishSignupURL',
         'resend_invitation' => 'resendInvitation'
     ];
 
@@ -132,7 +129,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
         'expiry' => 'setExpiry',
         'key_type' => 'setKeyType',
         'principal' => 'setPrincipal',
-        'finish_signup_url' => 'setFinishSignupUrl',
         'resend_invitation' => 'setResendInvitation'
     ];
 
@@ -148,7 +144,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
         'expiry' => 'getExpiry',
         'key_type' => 'getKeyType',
         'principal' => 'getPrincipal',
-        'finish_signup_url' => 'getFinishSignupUrl',
         'resend_invitation' => 'getResendInvitation'
     ];
 
@@ -218,7 +213,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
         $this->container['expiry'] = isset($data['expiry']) ? $data['expiry'] : null;
         $this->container['key_type'] = isset($data['key_type']) ? $data['key_type'] : null;
         $this->container['principal'] = isset($data['principal']) ? $data['principal'] : null;
-        $this->container['finish_signup_url'] = isset($data['finish_signup_url']) ? $data['finish_signup_url'] : null;
         $this->container['resend_invitation'] = isset($data['resend_invitation']) ? $data['resend_invitation'] : null;
     }
 
@@ -386,30 +380,6 @@ class AuthenticationActivationTokenCredentials implements ModelInterface, ArrayA
     public function setPrincipal($principal)
     {
         $this->container['principal'] = $principal;
-
-        return $this;
-    }
-
-    /**
-     * Gets finish_signup_url
-     *
-     * @return string
-     */
-    public function getFinishSignupUrl()
-    {
-        return $this->container['finish_signup_url'];
-    }
-
-    /**
-     * Sets finish_signup_url
-     *
-     * @param string $finish_signup_url finish_signup_url
-     *
-     * @return $this
-     */
-    public function setFinishSignupUrl($finish_signup_url)
-    {
-        $this->container['finish_signup_url'] = $finish_signup_url;
 
         return $this;
     }

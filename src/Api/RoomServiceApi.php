@@ -90,7 +90,7 @@ class RoomServiceApi
     /**
      * Operation availableTypes
      *
-     * changes the sorting of rooms
+     * lists all possible room types and calculates their current availability by evaluating quota consumption
      *
      * @param  \Alfaview\Model\RoomServiceAvailableTypesRequest $body body (required)
      *
@@ -107,7 +107,7 @@ class RoomServiceApi
     /**
      * Operation availableTypesWithHttpInfo
      *
-     * changes the sorting of rooms
+     * lists all possible room types and calculates their current availability by evaluating quota consumption
      *
      * @param  \Alfaview\Model\RoomServiceAvailableTypesRequest $body (required)
      *
@@ -190,7 +190,7 @@ class RoomServiceApi
     /**
      * Operation availableTypesAsync
      *
-     * changes the sorting of rooms
+     * lists all possible room types and calculates their current availability by evaluating quota consumption
      *
      * @param  \Alfaview\Model\RoomServiceAvailableTypesRequest $body (required)
      *
@@ -210,7 +210,7 @@ class RoomServiceApi
     /**
      * Operation availableTypesAsyncWithHttpInfo
      *
-     * changes the sorting of rooms
+     * lists all possible room types and calculates their current availability by evaluating quota consumption
      *
      * @param  \Alfaview\Model\RoomServiceAvailableTypesRequest $body (required)
      *
@@ -1450,7 +1450,7 @@ class RoomServiceApi
     /**
      * Operation permissions
      *
-     * deprecated - use 'Permissions' call in the roomStateService
+     * Deprecated: use 'Permissions' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomPermissionsRequest $body body (required)
      *
@@ -1467,7 +1467,7 @@ class RoomServiceApi
     /**
      * Operation permissionsWithHttpInfo
      *
-     * deprecated - use 'Permissions' call in the roomStateService
+     * Deprecated: use 'Permissions' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomPermissionsRequest $body (required)
      *
@@ -1550,7 +1550,7 @@ class RoomServiceApi
     /**
      * Operation permissionsAsync
      *
-     * deprecated - use 'Permissions' call in the roomStateService
+     * Deprecated: use 'Permissions' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomPermissionsRequest $body (required)
      *
@@ -1570,7 +1570,7 @@ class RoomServiceApi
     /**
      * Operation permissionsAsyncWithHttpInfo
      *
-     * deprecated - use 'Permissions' call in the roomStateService
+     * Deprecated: use 'Permissions' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomPermissionsRequest $body (required)
      *
@@ -1994,7 +1994,7 @@ class RoomServiceApi
     /**
      * Operation status
      *
-     * deprecated - use 'Status' call in the roomStateService
+     * Deprecated: use 'Status' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomStatusRequest $body body (required)
      *
@@ -2011,7 +2011,7 @@ class RoomServiceApi
     /**
      * Operation statusWithHttpInfo
      *
-     * deprecated - use 'Status' call in the roomStateService
+     * Deprecated: use 'Status' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomStatusRequest $body (required)
      *
@@ -2094,7 +2094,7 @@ class RoomServiceApi
     /**
      * Operation statusAsync
      *
-     * deprecated - use 'Status' call in the roomStateService
+     * Deprecated: use 'Status' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomStatusRequest $body (required)
      *
@@ -2114,7 +2114,7 @@ class RoomServiceApi
     /**
      * Operation statusAsyncWithHttpInfo
      *
-     * deprecated - use 'Status' call in the roomStateService
+     * Deprecated: use 'Status' call in the roomStateService
      *
      * @param  \Alfaview\Model\RoomServiceRoomStatusRequest $body (required)
      *

@@ -36,7 +36,7 @@ use \Alfaview\ObjectSerializer;
  * BusinessLogicServiceCompanyCreateRequest Class Doc Comment
  *
  * @category Class
- * @description * Use CompanyCreateRequest to create a company with a user profile and a single room attached to it.
+ * @description * A CompanyCreateRequest is used internally via the admin web app to create a company with a user profile and a single room attached to it. It requires the COMPANY_ADMIN backend permission.
  * @package  Alfaview
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
@@ -63,7 +63,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
         'user' => '\Alfaview\Model\CommonUser',
         'user_permissions' => 'map[string,bool]',
         'room' => '\Alfaview\Model\CommonRoom',
-        'finish_signup_url' => 'string',
         'plan_id' => 'string'
     ];
 
@@ -78,7 +77,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
         'user' => null,
         'user_permissions' => null,
         'room' => null,
-        'finish_signup_url' => null,
         'plan_id' => null
     ];
 
@@ -114,7 +112,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
         'user' => 'user',
         'user_permissions' => 'userPermissions',
         'room' => 'room',
-        'finish_signup_url' => 'finishSignupURL',
         'plan_id' => 'planId'
     ];
 
@@ -129,7 +126,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
         'user' => 'setUser',
         'user_permissions' => 'setUserPermissions',
         'room' => 'setRoom',
-        'finish_signup_url' => 'setFinishSignupUrl',
         'plan_id' => 'setPlanId'
     ];
 
@@ -144,7 +140,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
         'user' => 'getUser',
         'user_permissions' => 'getUserPermissions',
         'room' => 'getRoom',
-        'finish_signup_url' => 'getFinishSignupUrl',
         'plan_id' => 'getPlanId'
     ];
 
@@ -213,7 +208,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
         $this->container['user'] = isset($data['user']) ? $data['user'] : null;
         $this->container['user_permissions'] = isset($data['user_permissions']) ? $data['user_permissions'] : null;
         $this->container['room'] = isset($data['room']) ? $data['room'] : null;
-        $this->container['finish_signup_url'] = isset($data['finish_signup_url']) ? $data['finish_signup_url'] : null;
         $this->container['plan_id'] = isset($data['plan_id']) ? $data['plan_id'] : null;
     }
 
@@ -357,30 +351,6 @@ class BusinessLogicServiceCompanyCreateRequest implements ModelInterface, ArrayA
     public function setRoom($room)
     {
         $this->container['room'] = $room;
-
-        return $this;
-    }
-
-    /**
-     * Gets finish_signup_url
-     *
-     * @return string
-     */
-    public function getFinishSignupUrl()
-    {
-        return $this->container['finish_signup_url'];
-    }
-
-    /**
-     * Sets finish_signup_url
-     *
-     * @param string $finish_signup_url finish_signup_url
-     *
-     * @return $this
-     */
-    public function setFinishSignupUrl($finish_signup_url)
-    {
-        $this->container['finish_signup_url'] = $finish_signup_url;
 
         return $this;
     }

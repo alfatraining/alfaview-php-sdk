@@ -14,7 +14,7 @@ Method | HTTP request | Description
 [**listGroupLinks**](GuestServiceApi.md#listGroupLinks) | **POST** /listGroupLinks | 
 [**listGuestLinks**](GuestServiceApi.md#listGuestLinks) | **POST** /listGuestLinks | 
 [**resendGuestLinkEmail**](GuestServiceApi.md#resendGuestLinkEmail) | **POST** /resendGuestLinkEmail | 
-[**streamTaskProgress**](GuestServiceApi.md#streamTaskProgress) | **POST** /streamTaskProgress | 
+[**streamTaskProgress**](GuestServiceApi.md#streamTaskProgress) | **POST** /streamTaskProgress | streamTaskProgress is deprecated: services may return status NOT_IMPLEMENTED at some point in the future.
 [**updateGroupLink**](GuestServiceApi.md#updateGroupLink) | **POST** /updateGroupLink | 
 [**updateGuestLink**](GuestServiceApi.md#updateGuestLink) | **POST** /updateGuestLink | 
 
@@ -492,7 +492,7 @@ No authorization required
 # **streamTaskProgress**
 > \Alfaview\Model\StreamResultOfGuestServiceV2TaskProgressReply streamTaskProgress($body)
 
-
+streamTaskProgress is deprecated: services may return status NOT_IMPLEMENTED at some point in the future.
 
 ### Example
 ```php

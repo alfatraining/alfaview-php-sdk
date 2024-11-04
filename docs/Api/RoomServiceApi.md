@@ -4,21 +4,21 @@ All URIs are relative to *https://localhost*
 
 Method | HTTP request | Description
 ------------- | ------------- | -------------
-[**availableTypes**](RoomServiceApi.md#availableTypes) | **POST** /availableTypes | changes the sorting of rooms
+[**availableTypes**](RoomServiceApi.md#availableTypes) | **POST** /availableTypes | lists all possible room types and calculates their current availability by evaluating quota consumption
 [**callList**](RoomServiceApi.md#callList) | **POST** /list | list all rooms which are accessible by the current user
 [**create**](RoomServiceApi.md#create) | **POST** /create | creates or replaces all values
 [**createJoinLink**](RoomServiceApi.md#createJoinLink) | **POST** /createJoinLink | creates a link to launch the client
 [**destroy**](RoomServiceApi.md#destroy) | **POST** /destroy | deletes room and kicks all users
-[**permissions**](RoomServiceApi.md#permissions) | **POST** /permissions | deprecated - use &#39;Permissions&#39; call in the roomStateService
+[**permissions**](RoomServiceApi.md#permissions) | **POST** /permissions | Deprecated: use &#39;Permissions&#39; call in the roomStateService
 [**sort**](RoomServiceApi.md#sort) | **POST** /sort | changes the sorting of rooms
-[**status**](RoomServiceApi.md#status) | **POST** /status | deprecated - use &#39;Status&#39; call in the roomStateService
+[**status**](RoomServiceApi.md#status) | **POST** /status | Deprecated: use &#39;Status&#39; call in the roomStateService
 [**update**](RoomServiceApi.md#update) | **POST** /update | adds or overwrites all values
 
 
 # **availableTypes**
 > \Alfaview\Model\RoomServiceAvailableTypesReply availableTypes($body)
 
-changes the sorting of rooms
+lists all possible room types and calculates their current availability by evaluating quota consumption
 
 ### Example
 ```php
@@ -253,7 +253,7 @@ No authorization required
 # **permissions**
 > \Alfaview\Model\RoomServiceRoomPermissionsReply permissions($body)
 
-deprecated - use 'Permissions' call in the roomStateService
+Deprecated: use 'Permissions' call in the roomStateService
 
 ### Example
 ```php
@@ -347,7 +347,7 @@ No authorization required
 # **status**
 > \Alfaview\Model\RoomServiceRoomStatusReply status($body)
 
-deprecated - use 'Status' call in the roomStateService
+Deprecated: use 'Status' call in the roomStateService
 
 ### Example
 ```php

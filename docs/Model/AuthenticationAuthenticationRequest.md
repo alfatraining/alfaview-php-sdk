@@ -9,7 +9,6 @@ Name | Type | Description | Notes
 **authorization_code_credentials** | [**\Alfaview\Model\AuthenticationAuthorizationCodeCredentials**](AuthenticationAuthorizationCodeCredentials.md) |  | [optional] 
 **refresh_token_credentials** | [**\Alfaview\Model\AuthenticationRefreshTokenCredentials**](AuthenticationRefreshTokenCredentials.md) |  | [optional] 
 **ldap_credentials** | [**\Alfaview\Model\AuthenticationLdapCredentials**](AuthenticationLdapCredentials.md) |  | [optional] 
-**guest_access_credentials** | [**\Alfaview\Model\AuthenticationGuestAccessCredentials**](AuthenticationGuestAccessCredentials.md) |  | [optional] 
 **activation_token_credentials** | [**\Alfaview\Model\AuthenticationActivationTokenCredentials**](AuthenticationActivationTokenCredentials.md) |  | [optional] 
 **company_switch_credentials** | [**\Alfaview\Model\AuthenticationCompanySwitchCredentials**](AuthenticationCompanySwitchCredentials.md) |  | [optional] 
 **magic_token_credentials** | [**\Alfaview\Model\AuthenticationMagicTokenCredentials**](AuthenticationMagicTokenCredentials.md) |  | [optional] 
