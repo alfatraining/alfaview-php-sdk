@@ -36,7 +36,7 @@ use \Alfaview\ObjectSerializer;
  * BusinessLogicServiceCompanySignupRequest Class Doc Comment
  *
  * @category Class
- * @description * Use CompanySignupRequest for signing up.
+ * @description * A CompanySignupRequest is used for regular sign-ups. It can be called by anyone and does not require an access token.
  * @package  Alfaview
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
@@ -63,7 +63,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
         'company' => 'string',
         'account_name' => 'string',
         'user' => '\Alfaview\Model\CommonUser',
-        'finish_signup_url' => 'string',
         'agreed_to_terms' => 'bool',
         'agreed_to_privacy_policy' => 'bool',
         'plan_id' => 'string'
@@ -80,7 +79,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
         'company' => null,
         'account_name' => null,
         'user' => null,
-        'finish_signup_url' => null,
         'agreed_to_terms' => null,
         'agreed_to_privacy_policy' => null,
         'plan_id' => null
@@ -118,7 +116,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
         'company' => 'company',
         'account_name' => 'accountName',
         'user' => 'user',
-        'finish_signup_url' => 'finishSignupURL',
         'agreed_to_terms' => 'agreedToTerms',
         'agreed_to_privacy_policy' => 'agreedToPrivacyPolicy',
         'plan_id' => 'planId'
@@ -135,7 +132,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
         'company' => 'setCompany',
         'account_name' => 'setAccountName',
         'user' => 'setUser',
-        'finish_signup_url' => 'setFinishSignupUrl',
         'agreed_to_terms' => 'setAgreedToTerms',
         'agreed_to_privacy_policy' => 'setAgreedToPrivacyPolicy',
         'plan_id' => 'setPlanId'
@@ -152,7 +148,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
         'company' => 'getCompany',
         'account_name' => 'getAccountName',
         'user' => 'getUser',
-        'finish_signup_url' => 'getFinishSignupUrl',
         'agreed_to_terms' => 'getAgreedToTerms',
         'agreed_to_privacy_policy' => 'getAgreedToPrivacyPolicy',
         'plan_id' => 'getPlanId'
@@ -223,7 +218,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
         $this->container['company'] = isset($data['company']) ? $data['company'] : null;
         $this->container['account_name'] = isset($data['account_name']) ? $data['account_name'] : null;
         $this->container['user'] = isset($data['user']) ? $data['user'] : null;
-        $this->container['finish_signup_url'] = isset($data['finish_signup_url']) ? $data['finish_signup_url'] : null;
         $this->container['agreed_to_terms'] = isset($data['agreed_to_terms']) ? $data['agreed_to_terms'] : null;
         $this->container['agreed_to_privacy_policy'] = isset($data['agreed_to_privacy_policy']) ? $data['agreed_to_privacy_policy'] : null;
         $this->container['plan_id'] = isset($data['plan_id']) ? $data['plan_id'] : null;
@@ -369,30 +363,6 @@ class BusinessLogicServiceCompanySignupRequest implements ModelInterface, ArrayA
     public function setUser($user)
     {
         $this->container['user'] = $user;
-
-        return $this;
-    }
-
-    /**
-     * Gets finish_signup_url
-     *
-     * @return string
-     */
-    public function getFinishSignupUrl()
-    {
-        return $this->container['finish_signup_url'];
-    }
-
-    /**
-     * Sets finish_signup_url
-     *
-     * @param string $finish_signup_url finish_signup_url
-     *
-     * @return $this
-     */
-    public function setFinishSignupUrl($finish_signup_url)
-    {
-        $this->container['finish_signup_url'] = $finish_signup_url;
 
         return $this;
     }

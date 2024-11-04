@@ -64,7 +64,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
         'authorization_code_credentials' => '\Alfaview\Model\AuthenticationAuthorizationCodeCredentials',
         'refresh_token_credentials' => '\Alfaview\Model\AuthenticationRefreshTokenCredentials',
         'ldap_credentials' => '\Alfaview\Model\AuthenticationLdapCredentials',
-        'guest_access_credentials' => '\Alfaview\Model\AuthenticationGuestAccessCredentials',
         'activation_token_credentials' => '\Alfaview\Model\AuthenticationActivationTokenCredentials',
         'company_switch_credentials' => '\Alfaview\Model\AuthenticationCompanySwitchCredentials',
         'magic_token_credentials' => '\Alfaview\Model\AuthenticationMagicTokenCredentials',
@@ -85,7 +84,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
         'authorization_code_credentials' => null,
         'refresh_token_credentials' => null,
         'ldap_credentials' => null,
-        'guest_access_credentials' => null,
         'activation_token_credentials' => null,
         'company_switch_credentials' => null,
         'magic_token_credentials' => null,
@@ -127,7 +125,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
         'authorization_code_credentials' => 'authorizationCodeCredentials',
         'refresh_token_credentials' => 'refreshTokenCredentials',
         'ldap_credentials' => 'ldapCredentials',
-        'guest_access_credentials' => 'guestAccessCredentials',
         'activation_token_credentials' => 'activationTokenCredentials',
         'company_switch_credentials' => 'companySwitchCredentials',
         'magic_token_credentials' => 'magicTokenCredentials',
@@ -148,7 +145,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
         'authorization_code_credentials' => 'setAuthorizationCodeCredentials',
         'refresh_token_credentials' => 'setRefreshTokenCredentials',
         'ldap_credentials' => 'setLdapCredentials',
-        'guest_access_credentials' => 'setGuestAccessCredentials',
         'activation_token_credentials' => 'setActivationTokenCredentials',
         'company_switch_credentials' => 'setCompanySwitchCredentials',
         'magic_token_credentials' => 'setMagicTokenCredentials',
@@ -169,7 +165,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
         'authorization_code_credentials' => 'getAuthorizationCodeCredentials',
         'refresh_token_credentials' => 'getRefreshTokenCredentials',
         'ldap_credentials' => 'getLdapCredentials',
-        'guest_access_credentials' => 'getGuestAccessCredentials',
         'activation_token_credentials' => 'getActivationTokenCredentials',
         'company_switch_credentials' => 'getCompanySwitchCredentials',
         'magic_token_credentials' => 'getMagicTokenCredentials',
@@ -244,7 +239,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
         $this->container['authorization_code_credentials'] = isset($data['authorization_code_credentials']) ? $data['authorization_code_credentials'] : null;
         $this->container['refresh_token_credentials'] = isset($data['refresh_token_credentials']) ? $data['refresh_token_credentials'] : null;
         $this->container['ldap_credentials'] = isset($data['ldap_credentials']) ? $data['ldap_credentials'] : null;
-        $this->container['guest_access_credentials'] = isset($data['guest_access_credentials']) ? $data['guest_access_credentials'] : null;
         $this->container['activation_token_credentials'] = isset($data['activation_token_credentials']) ? $data['activation_token_credentials'] : null;
         $this->container['company_switch_credentials'] = isset($data['company_switch_credentials']) ? $data['company_switch_credentials'] : null;
         $this->container['magic_token_credentials'] = isset($data['magic_token_credentials']) ? $data['magic_token_credentials'] : null;
@@ -417,30 +411,6 @@ class AuthenticationAuthenticationRequest implements ModelInterface, ArrayAccess
     public function setLdapCredentials($ldap_credentials)
     {
         $this->container['ldap_credentials'] = $ldap_credentials;
-
-        return $this;
-    }
-
-    /**
-     * Gets guest_access_credentials
-     *
-     * @return \Alfaview\Model\AuthenticationGuestAccessCredentials
-     */
-    public function getGuestAccessCredentials()
-    {
-        return $this->container['guest_access_credentials'];
-    }
-
-    /**
-     * Sets guest_access_credentials
-     *
-     * @param \Alfaview\Model\AuthenticationGuestAccessCredentials $guest_access_credentials guest_access_credentials
-     *
-     * @return $this
-     */
-    public function setGuestAccessCredentials($guest_access_credentials)
-    {
-        $this->container['guest_access_credentials'] = $guest_access_credentials;
 
         return $this;
     }

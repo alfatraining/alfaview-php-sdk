@@ -62,8 +62,7 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
         'user_invitations' => '\Alfaview\Model\BusinessLogicServiceUserInvitation[]',
         'user_permissions' => 'map[string,bool]',
         'company_name' => 'string',
-        'inviter_name' => 'string',
-        'finish_signup_url' => 'string'
+        'inviter_name' => 'string'
     ];
 
     /**
@@ -76,8 +75,7 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
         'user_invitations' => null,
         'user_permissions' => null,
         'company_name' => null,
-        'inviter_name' => null,
-        'finish_signup_url' => null
+        'inviter_name' => null
     ];
 
     /**
@@ -111,8 +109,7 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
         'user_invitations' => 'userInvitations',
         'user_permissions' => 'userPermissions',
         'company_name' => 'companyName',
-        'inviter_name' => 'inviterName',
-        'finish_signup_url' => 'finishSignupURL'
+        'inviter_name' => 'inviterName'
     ];
 
     /**
@@ -125,8 +122,7 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
         'user_invitations' => 'setUserInvitations',
         'user_permissions' => 'setUserPermissions',
         'company_name' => 'setCompanyName',
-        'inviter_name' => 'setInviterName',
-        'finish_signup_url' => 'setFinishSignupUrl'
+        'inviter_name' => 'setInviterName'
     ];
 
     /**
@@ -139,8 +135,7 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
         'user_invitations' => 'getUserInvitations',
         'user_permissions' => 'getUserPermissions',
         'company_name' => 'getCompanyName',
-        'inviter_name' => 'getInviterName',
-        'finish_signup_url' => 'getFinishSignupUrl'
+        'inviter_name' => 'getInviterName'
     ];
 
     /**
@@ -208,7 +203,6 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
         $this->container['user_permissions'] = isset($data['user_permissions']) ? $data['user_permissions'] : null;
         $this->container['company_name'] = isset($data['company_name']) ? $data['company_name'] : null;
         $this->container['inviter_name'] = isset($data['inviter_name']) ? $data['inviter_name'] : null;
-        $this->container['finish_signup_url'] = isset($data['finish_signup_url']) ? $data['finish_signup_url'] : null;
     }
 
     /**
@@ -351,30 +345,6 @@ class BusinessLogicServiceInviteUsersRequest implements ModelInterface, ArrayAcc
     public function setInviterName($inviter_name)
     {
         $this->container['inviter_name'] = $inviter_name;
-
-        return $this;
-    }
-
-    /**
-     * Gets finish_signup_url
-     *
-     * @return string
-     */
-    public function getFinishSignupUrl()
-    {
-        return $this->container['finish_signup_url'];
-    }
-
-    /**
-     * Sets finish_signup_url
-     *
-     * @param string $finish_signup_url finish_signup_url
-     *
-     * @return $this
-     */
-    public function setFinishSignupUrl($finish_signup_url)
-    {
-        $this->container['finish_signup_url'] = $finish_signup_url;
 
         return $this;
     }

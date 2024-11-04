@@ -5,10 +5,10 @@ All URIs are relative to *https://localhost*
 Method | HTTP request | Description
 ------------- | ------------- | -------------
 [**userAcceptInvitation**](UserServiceApi.md#userAcceptInvitation) | **POST** /acceptInvitation | 
-[**userCreate**](UserServiceApi.md#userCreate) | **POST** /create | 
+[**userCreate**](UserServiceApi.md#userCreate) | **POST** /create | Deprecated: use businessLogicService.InviteUsers RPC instead.
 [**userDestroy**](UserServiceApi.md#userDestroy) | **POST** /destroy | 
 [**userGetLocale**](UserServiceApi.md#userGetLocale) | **POST** /getLocale | 
-[**userInvite**](UserServiceApi.md#userInvite) | **POST** /invite | 
+[**userInvite**](UserServiceApi.md#userInvite) | **POST** /invite | Deprecated: use businessLogicService.InviteUsers RPC instead.
 [**userList**](UserServiceApi.md#userList) | **POST** /list | 
 [**userProfileUpdate**](UserServiceApi.md#userProfileUpdate) | **POST** /updateProfile | 
 [**userUpdate**](UserServiceApi.md#userUpdate) | **POST** /update | 
@@ -64,7 +64,7 @@ No authorization required
 # **userCreate**
 > \Alfaview\Model\UserUserCreateReply userCreate($body)
 
-
+Deprecated: use businessLogicService.InviteUsers RPC instead.
 
 ### Example
 ```php
@@ -76,7 +76,7 @@ $apiInstance = new Alfaview\Api\UserServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\UserUserCreateRequest(); // \Alfaview\Model\UserUserCreateRequest | 
+$body = new \Alfaview\Model\UserUserCreateRequest(); // \Alfaview\Model\UserUserCreateRequest | Deprecated: use businessLogicService.InviteUsers RPC instead.
 
 try {
     $result = $apiInstance->userCreate($body);
@@ -91,7 +91,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\UserUserCreateRequest**](../Model/UserUserCreateRequest.md)|  |
+ **body** | [**\Alfaview\Model\UserUserCreateRequest**](../Model/UserUserCreateRequest.md)| Deprecated: use businessLogicService.InviteUsers RPC instead. |
 
 ### Return type
 
@@ -205,7 +205,7 @@ No authorization required
 # **userInvite**
 > \Alfaview\Model\UserUserInviteReply userInvite($body)
 
-
+Deprecated: use businessLogicService.InviteUsers RPC instead.
 
 ### Example
 ```php
@@ -217,7 +217,7 @@ $apiInstance = new Alfaview\Api\UserServiceApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$body = new \Alfaview\Model\UserUserInviteRequest(); // \Alfaview\Model\UserUserInviteRequest | 
+$body = new \Alfaview\Model\UserUserInviteRequest(); // \Alfaview\Model\UserUserInviteRequest | Deprecated: use businessLogicService.InviteUsers RPC instead.
 
 try {
     $result = $apiInstance->userInvite($body);
@@ -232,7 +232,7 @@ try {
 
 Name | Type | Description  | Notes
 ------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\UserUserInviteRequest**](../Model/UserUserInviteRequest.md)|  |
+ **body** | [**\Alfaview\Model\UserUserInviteRequest**](../Model/UserUserInviteRequest.md)| Deprecated: use businessLogicService.InviteUsers RPC instead. |
 
 ### Return type
 

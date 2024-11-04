@@ -157,7 +157,7 @@ class RoomServiceApiTest extends TestCase
         $this->assertFalse($response->hasError);
 
         foreach ($response->reply->getRooms() as $id => $room) {
-            if (strpos($room->getDisplayName(), 'created by php sdk') !== false) {
+            if (strpos($room->getDisplayName() ?? '', 'created by php sdk') !== false) {
                 $response = self::$av->destroyRoom(self::$accessToken, $id);
                 $this->assertFalse($response->hasError);
             }

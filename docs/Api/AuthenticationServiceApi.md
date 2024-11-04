@@ -13,7 +13,6 @@ Method | HTTP request | Description
 [**isAuthenticated**](AuthenticationServiceApi.md#isAuthenticated) | **POST** /isAuthenticated | 
 [**listAuthentications**](AuthenticationServiceApi.md#listAuthentications) | **POST** /listAuthentications | 
 [**listIdentityProviders**](AuthenticationServiceApi.md#listIdentityProviders) | **POST** /listIdentityProviders | 
-[**migrateGuests**](AuthenticationServiceApi.md#migrateGuests) | **POST** /migrateGuests | 
 [**requestPasswordReset**](AuthenticationServiceApi.md#requestPasswordReset) | **POST** /requestPasswordReset | 
 [**sendCompanyDeletionEmail**](AuthenticationServiceApi.md#sendCompanyDeletionEmail) | **POST** /sendCompanyDeletionEmail | 
 [**signAccessToken**](AuthenticationServiceApi.md#signAccessToken) | **POST** /signAccessToken | 
@@ -430,53 +429,6 @@ Name | Type | Description  | Notes
 ### Return type
 
 [**\Alfaview\Model\AuthenticationListIdentityProvidersReply**](../Model/AuthenticationListIdentityProvidersReply.md)
-
-### Authorization
-
-No authorization required
-
-### HTTP request headers
-
- - **Content-Type**: application/json
- - **Accept**: application/json
-
-[[Back to top]](#) [[Back to API list]](../../README.md#documentation-for-api-endpoints) [[Back to Model list]](../../README.md#documentation-for-models) [[Back to README]](../../README.md)
-
-# **migrateGuests**
-> \Alfaview\Model\AuthenticationMigrateGuestsReply migrateGuests($body)
-
-
-
-### Example
-```php
-<?php
-require_once(__DIR__ . '/vendor/autoload.php');
-
-$apiInstance = new Alfaview\Api\AuthenticationServiceApi(
-    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
-    // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
-);
-$body = new \Alfaview\Model\AuthenticationMigrateGuestsRequest(); // \Alfaview\Model\AuthenticationMigrateGuestsRequest | * MigrateGuestsRequest requests to migrate all existing v1 guest and group links to the guestServiceV2. The access token must be transported via the `alfaview.token` header key. The value must be base64-encoded. The token must be equipped with common.MANAGE_COMPANY permissions.
-
-try {
-    $result = $apiInstance->migrateGuests($body);
-    print_r($result);
-} catch (Exception $e) {
-    echo 'Exception when calling AuthenticationServiceApi->migrateGuests: ', $e->getMessage(), PHP_EOL;
-}
-?>
-```
-
-### Parameters
-
-Name | Type | Description  | Notes
-------------- | ------------- | ------------- | -------------
- **body** | [**\Alfaview\Model\AuthenticationMigrateGuestsRequest**](../Model/AuthenticationMigrateGuestsRequest.md)| * MigrateGuestsRequest requests to migrate all existing v1 guest and group links to the guestServiceV2. The access token must be transported via the &#x60;alfaview.token&#x60; header key. The value must be base64-encoded. The token must be equipped with common.MANAGE_COMPANY permissions. |
-
-### Return type
-
-[**\Alfaview\Model\AuthenticationMigrateGuestsReply**](../Model/AuthenticationMigrateGuestsReply.md)
 
 ### Authorization
 

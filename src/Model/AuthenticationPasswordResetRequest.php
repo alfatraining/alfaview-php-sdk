@@ -59,7 +59,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerTypes = [
         'access_info' => '\Alfaview\Model\CommonAccessInfo',
-        'reset_url' => 'string',
         'username' => 'string',
         'company_id' => 'string'
     ];
@@ -71,7 +70,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
       */
     protected static $swaggerFormats = [
         'access_info' => null,
-        'reset_url' => null,
         'username' => null,
         'company_id' => null
     ];
@@ -104,7 +102,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
      */
     protected static $attributeMap = [
         'access_info' => 'accessInfo',
-        'reset_url' => 'resetURL',
         'username' => 'username',
         'company_id' => 'companyId'
     ];
@@ -116,7 +113,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
      */
     protected static $setters = [
         'access_info' => 'setAccessInfo',
-        'reset_url' => 'setResetUrl',
         'username' => 'setUsername',
         'company_id' => 'setCompanyId'
     ];
@@ -128,7 +124,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
      */
     protected static $getters = [
         'access_info' => 'getAccessInfo',
-        'reset_url' => 'getResetUrl',
         'username' => 'getUsername',
         'company_id' => 'getCompanyId'
     ];
@@ -194,7 +189,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
     public function __construct(array $data = null)
     {
         $this->container['access_info'] = isset($data['access_info']) ? $data['access_info'] : null;
-        $this->container['reset_url'] = isset($data['reset_url']) ? $data['reset_url'] : null;
         $this->container['username'] = isset($data['username']) ? $data['username'] : null;
         $this->container['company_id'] = isset($data['company_id']) ? $data['company_id'] : null;
     }
@@ -243,30 +237,6 @@ class AuthenticationPasswordResetRequest implements ModelInterface, ArrayAccess
     public function setAccessInfo($access_info)
     {
         $this->container['access_info'] = $access_info;
-
-        return $this;
-    }
-
-    /**
-     * Gets reset_url
-     *
-     * @return string
-     */
-    public function getResetUrl()
-    {
-        return $this->container['reset_url'];
-    }
-
-    /**
-     * Sets reset_url
-     *
-     * @param string $reset_url reset_url
-     *
-     * @return $this
-     */
-    public function setResetUrl($reset_url)
-    {
-        $this->container['reset_url'] = $reset_url;
 
         return $this;
     }
