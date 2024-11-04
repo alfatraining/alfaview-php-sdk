@@ -358,7 +358,9 @@ class UserServiceApi
     /**
      * Operation userCreate
      *
-     * @param  \Alfaview\Model\UserUserCreateRequest $body body (required)
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
+     *
+     * @param  \Alfaview\Model\UserUserCreateRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \Alfaview\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -373,7 +375,9 @@ class UserServiceApi
     /**
      * Operation userCreateWithHttpInfo
      *
-     * @param  \Alfaview\Model\UserUserCreateRequest $body (required)
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
+     *
+     * @param  \Alfaview\Model\UserUserCreateRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \Alfaview\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -454,9 +458,9 @@ class UserServiceApi
     /**
      * Operation userCreateAsync
      *
-     * 
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
      *
-     * @param  \Alfaview\Model\UserUserCreateRequest $body (required)
+     * @param  \Alfaview\Model\UserUserCreateRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -474,9 +478,9 @@ class UserServiceApi
     /**
      * Operation userCreateAsyncWithHttpInfo
      *
-     * 
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
      *
-     * @param  \Alfaview\Model\UserUserCreateRequest $body (required)
+     * @param  \Alfaview\Model\UserUserCreateRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -526,7 +530,9 @@ class UserServiceApi
     /**
      * Create request for operation 'userCreate'
      *
-     * @param  \Alfaview\Model\UserUserCreateRequest $body (required)
+	 * @deprecated use businessLogicService.InviteUsers RPC instead. (required)
+	 *
+     * @param  \Alfaview\Model\UserUserCreateRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
@@ -1162,7 +1168,9 @@ class UserServiceApi
     /**
      * Operation userInvite
      *
-     * @param  \Alfaview\Model\UserUserInviteRequest $body body (required)
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
+     *
+     * @param  \Alfaview\Model\UserUserInviteRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \Alfaview\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -1177,7 +1185,9 @@ class UserServiceApi
     /**
      * Operation userInviteWithHttpInfo
      *
-     * @param  \Alfaview\Model\UserUserInviteRequest $body (required)
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
+     *
+     * @param  \Alfaview\Model\UserUserInviteRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \Alfaview\ApiException on non-2xx response
      * @throws \InvalidArgumentException
@@ -1258,9 +1268,9 @@ class UserServiceApi
     /**
      * Operation userInviteAsync
      *
-     * 
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
      *
-     * @param  \Alfaview\Model\UserUserInviteRequest $body (required)
+     * @param  \Alfaview\Model\UserUserInviteRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -1278,9 +1288,9 @@ class UserServiceApi
     /**
      * Operation userInviteAsyncWithHttpInfo
      *
-     * 
+     * @deprecated: use businessLogicService.InviteUsers RPC instead.
      *
-     * @param  \Alfaview\Model\UserUserInviteRequest $body (required)
+     * @param  \Alfaview\Model\UserUserInviteRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
@@ -1330,7 +1340,9 @@ class UserServiceApi
     /**
      * Create request for operation 'userInvite'
      *
-     * @param  \Alfaview\Model\UserUserInviteRequest $body (required)
+	 * @deprecated use businessLogicService.InviteUsers RPC instead. (required)
+	 *
+     * @param  \Alfaview\Model\UserUserInviteRequest $body Deprecated: use businessLogicService.InviteUsers RPC instead. (required)
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request

@@ -36,6 +36,8 @@ use \Alfaview\ObjectSerializer;
  * UserUserCreateRequest Class Doc Comment
  *
  * @category Class
+ * @deprecated use businessLogicService.InviteUsers RPC instead.
+ * @description Deprecated: use businessLogicService.InviteUsers RPC instead.
  * @package  Alfaview
  * @author   Swagger Codegen team
  * @link     https://github.com/swagger-api/swagger-codegen
