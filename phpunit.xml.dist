@@ -21,8 +21,8 @@
 </testsuites>
 <source>
     <include>
-        <directory suffix=".php">./src/Api</directory>
-        <directory suffix=".php">./src/Model</directory>
+        <directory suffix=".php">./lib/Api</directory>
+        <directory suffix=".php">./lib/Model</directory>
     </include>
 </source>
 </phpunit>

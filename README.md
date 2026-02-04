@@ -13,18 +13,15 @@ Take a look the `Alfaview.php` in the `src` directory. It is a convenient entry 
 Here is an example for authenticating with the API and retrieving a list of rooms:
 
 ```php
-        $av = new Alfaview();
+        $alfaview = new Alfaview();
 
-        $credentials = new AuthenticationAuthorizationCodeCredentials();
-        $credentials->setClientId('YOUR_API_CLIENT_ID');
-        $credentials->setCode('YOUR_API_CODE');
-        $credentials->setCompanyId('YOUR_API_COMPANY_ID');
+        $credentials = new APICredentials();
+        $credentials->setClientId('API_CLIENT_ID');
+        $credentials->setKey('API_CODE');
+        $credentials->setCompanyId('API_COMPANY_ID');
 
-        $response = $av->authenticate($credentials);
-        $accessToken = $response->reply->getAccessToken();
+        $accessToken = $alfaview->authenticationApi->authenticateAPIKey($credentials);
 
-        $response = $av->roomList($accessToken);
-        var_dump($response->reply->getRooms());
 ```
 
 To create or update a room that differ from the default room quota:
@@ -38,50 +35,57 @@ To create or update a room that differ from the default room quota:
 it is required to specify the `\Alfaview\Model\CommonRoomQuotas` when creating or updating a room.
 
 ```php
-        $av = new Alfaview();
-        $room = new CommonRoom();
-        $quotas = new CommonRoomQuotas();
+        $alfaview = new Alfaview();
 
-        $room->setDisplayName("Meeting 1");
-        $room->setQuotas($quotas->setActiveParticipants(100));
+        $roomCreate = new RoomCreate();
+        $roomCreate->setDisplayName('room created by php-sdk V2');
+        $roomCreate->setCreateDefaultSubrooms(true);
+        $roomCreate->setMode(RoomCreate::MODE_NORMAL);
+        $roomCreate->setType(RoomCreate::TYPE_ROOM);
+        $roomCreate->setWaitingRoomEnabled(false);
 
-        $response = $av->createRoom($accessToken, $room);
-        var_dump($response->reply->getRoomId());
+        $room = $alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
 ```
 
 Assuming you already have an `$accessToken` from the API authentication above,
 To create a personal guest or group link in a room:
 ```php
-        $av = new Alfaview();
+        $alfaview = new Alfaview();
         // optionally validity end date, if not set the links are always valid
         $validUntil = new \DateTime("next week today");
         $roomId = 'YOUR_ROOM_ID'
 
         // Get the `Participant` permission group id to use in our group link, or any other permission group you want
-        $participantGroupId = $av->getPermissionGroupId($accessToken, 'Participant');
+        $permissionGroups = $alfaview->roomsApi->listPermissionGroups($accessToken->getAccessToken());
+        $participantPermissionGroupId = null;
+        foreach ($permissionGroups as $permissionGroup) {
+            if ($permissionGroup->getName() === 'Participant') {
+                $participantPermissionGroupId = $permissionGroup->getId();
+            }
+        }
 
-        $groupLink = new GuestServiceV2GroupLinkCreation();
-        $groupLink->setPermissionGroupId($participantGroupId);
-        $groupLink->setDescription("created by alfaview-php-sdk testCreateGroupLinks");
-        $groupLink->setValidUntil($validUntil);
+        $groupLink = new GroupLinkCreate();
+        $groupLink->setDescription('PHP SDK Group Link');
+        $groupLink->setDialInAllowed(false);
+        $groupLink->setPermissionGroupId($participantPermissionGroupId);
+        $groupLink->setValidUntil(new \DateTime('next week today'));
 
-        $response = $av->createGroupLink($accessToken, $roomId, [$groupLink]);
+        $groupLinksRequest = new PostGroupLinksRequestBody();
+        $groupLinksRequest->setCreate([$groupLink]);
 
-        /* @var \Alfaview\Model\GuestServiceV2CreateGroupLinksReply $reply */
-        $createGroupLinkReply = $response->reply;
+        $groupLinkId = $alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest, $accessToken->getAccessToken());
 
-        // Depending on how many you created a list is returned, in this example only one
-        $groupLink = $createGroupLinkReply->getGroupLinks()[0];
+        $groupLink = $alfaview->guestsApi->getGroupLink($groupLink[0]->getId(), $accessToken->getAccessToken());
 
-        // optionally you can use an externalId for your group link authentication to ensure only one person is authenticating from your system
-        $externalId = md5("unique-external-id-value-for-group-link");
-        $response = $av->guestAuthenticate(
-            'YOUR_API_COMPANY_ID',
-            $roomId,
-            $groupLink->getAccessKey(),
-            'John Doe',
-            $externalId
-        );
+        $groupLinkData = new GuestAuthInfoRequestData();
+        $groupLinkData->setDisplayName('John Doe');
+        $groupLinkData->setCompanyId('COMPANY_ID'));
+        $groupLinkData->setRoomId($roomId);
+        // optional externalId usage
+        $groupLinkData->setExternalId(md5('external_id'));
+        $groupLinkData->setAccessKey($groupLink->getAccessKey());
+
+        $groupLinkAuthResponse = $alfaview->authenticationApi->authenticateGuest($groupLinkData);
 
 ```
 
@@ -91,10 +95,8 @@ To create a personal guest or group link in a room:
 Not all use cases are covered in the convenience wrapper. However, the complete API functionality is yet available by directly accessing our API endpoints described in the documentation below. And if you are awesome, feel free to contribute!
 
 ### Documentation
-- [Authentication Service](docs/Api/AuthenticationServiceApi.md)
-- [BusinessLogic Service](docs/Api/BusinessLogicServiceApi.md)
-- [Company Service](docs/Api/CompanyServiceApi.md)
-- [Room Service](docs/Api/RoomServiceApi.md)
-- [User Service](docs/Api/UserServiceApi.md)
-- [QuotaService Service](docs/Api/QuotaServiceApi.md)
-- [GuestServiceV2 Service](docs/Api/GuestServiceApi.md)
+- [Authentication Service](docs/Api/AuthenticationApi.md)
+- [Room Service](docs/Api/RoomsApi.md)
+- [Meetings Service](docs/Api/MeetingsApi.md)
+- [Guests Service](docs/Api/GuestsApi.md)
+- [Reports Service](docs/Api/ReportsApi.md)
