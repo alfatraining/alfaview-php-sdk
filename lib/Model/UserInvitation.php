@@ -57,7 +57,7 @@ class UserInvitation implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'permissions' => '\Alfaview\Client\Model\UserPermissions',
+        'permissions' => '\Alfaview\Client\Model\InviteUserPermissions',
         'user' => '\Alfaview\Client\Model\UserInformation'
     ];
 
@@ -305,7 +305,7 @@ class UserInvitation implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets permissions
      *
-     * @return \Alfaview\Client\Model\UserPermissions
+     * @return \Alfaview\Client\Model\InviteUserPermissions
      */
     public function getPermissions()
     {
@@ -315,7 +315,7 @@ class UserInvitation implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets permissions
      *
-     * @param \Alfaview\Client\Model\UserPermissions $permissions The user permissions of the invited user.
+     * @param \Alfaview\Client\Model\InviteUserPermissions $permissions The user permissions of the invited user.
      *
      * @return self
      */
