@@ -84,7 +84,7 @@ class RoomsApiTest extends TestCase
 
         foreach ($response->getData() as $room) {
             if (strpos($room->getDisplayName(), 'created by php-sdk') !== false) {
-      //          $this->alfaview->roomsApi->deleteRoom($room->getId(), $accessToken->getAccessToken());
+                $this->alfaview->roomsApi->deleteRoom($room->getId(), $accessToken->getAccessToken());
             }
         }
     }

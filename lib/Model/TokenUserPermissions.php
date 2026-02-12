@@ -1,6 +1,6 @@
 <?php
 /**
- * TokenInfo
+ * TokenUserPermissions
  *
  * PHP version 8.1
  *
@@ -32,7 +32,7 @@ use \ArrayAccess;
 use \Alfaview\Client\ObjectSerializer;
 
 /**
- * TokenInfo Class Doc Comment
+ * TokenUserPermissions Class Doc Comment
  *
  * @category Class
  * @package  Alfaview\Client
@@ -40,7 +40,7 @@ use \Alfaview\Client\ObjectSerializer;
  * @link     https://openapi-generator.tech
  * @implements \ArrayAccess<string, mixed>
  */
-class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
+class TokenUserPermissions implements ModelInterface, ArrayAccess, \JsonSerializable
 {
     public const DISCRIMINATOR = null;
 
@@ -49,7 +49,7 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
       *
       * @var string
       */
-    protected static $openAPIModelName = 'TokenInfo';
+    protected static $openAPIModelName = 'TokenUserPermissions';
 
     /**
       * Array of property to type mappings. Used for (de)serialization
@@ -57,9 +57,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var string[]
       */
     protected static $openAPITypes = [
-        'active' => 'bool',
-        'expires_at' => '\DateTime',
-        'permissions' => '\Alfaview\Client\Model\TokenUserPermissions'
+        'manage_company' => 'bool',
+        'room_admin' => 'bool',
+        'room_create' => 'bool',
+        'room_list' => 'bool',
+        'user_admin' => 'bool',
+        'user_list' => 'bool',
+        'user_show' => 'bool'
     ];
 
     /**
@@ -70,9 +74,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
       * @psalm-var array<string, string|null>
       */
     protected static $openAPIFormats = [
-        'active' => null,
-        'expires_at' => 'date-time',
-        'permissions' => null
+        'manage_company' => null,
+        'room_admin' => null,
+        'room_create' => null,
+        'room_list' => null,
+        'user_admin' => null,
+        'user_list' => null,
+        'user_show' => null
     ];
 
     /**
@@ -81,9 +89,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
       * @var boolean[]
       */
     protected static array $openAPINullables = [
-        'active' => false,
-        'expires_at' => false,
-        'permissions' => false
+        'manage_company' => false,
+        'room_admin' => false,
+        'room_create' => false,
+        'room_list' => false,
+        'user_admin' => false,
+        'user_list' => false,
+        'user_show' => false
     ];
 
     /**
@@ -172,9 +184,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $attributeMap = [
-        'active' => 'active',
-        'expires_at' => 'expiresAt',
-        'permissions' => 'permissions'
+        'manage_company' => 'manageCompany',
+        'room_admin' => 'roomAdmin',
+        'room_create' => 'roomCreate',
+        'room_list' => 'roomList',
+        'user_admin' => 'userAdmin',
+        'user_list' => 'userList',
+        'user_show' => 'userShow'
     ];
 
     /**
@@ -183,9 +199,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $setters = [
-        'active' => 'setActive',
-        'expires_at' => 'setExpiresAt',
-        'permissions' => 'setPermissions'
+        'manage_company' => 'setManageCompany',
+        'room_admin' => 'setRoomAdmin',
+        'room_create' => 'setRoomCreate',
+        'room_list' => 'setRoomList',
+        'user_admin' => 'setUserAdmin',
+        'user_list' => 'setUserList',
+        'user_show' => 'setUserShow'
     ];
 
     /**
@@ -194,9 +214,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
      * @var string[]
      */
     protected static $getters = [
-        'active' => 'getActive',
-        'expires_at' => 'getExpiresAt',
-        'permissions' => 'getPermissions'
+        'manage_company' => 'getManageCompany',
+        'room_admin' => 'getRoomAdmin',
+        'room_create' => 'getRoomCreate',
+        'room_list' => 'getRoomList',
+        'user_admin' => 'getUserAdmin',
+        'user_list' => 'getUserList',
+        'user_show' => 'getUserShow'
     ];
 
     /**
@@ -256,9 +280,13 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
      */
     public function __construct(?array $data = null)
     {
-        $this->setIfExists('active', $data ?? [], null);
-        $this->setIfExists('expires_at', $data ?? [], null);
-        $this->setIfExists('permissions', $data ?? [], null);
+        $this->setIfExists('manage_company', $data ?? [], null);
+        $this->setIfExists('room_admin', $data ?? [], null);
+        $this->setIfExists('room_create', $data ?? [], null);
+        $this->setIfExists('room_list', $data ?? [], null);
+        $this->setIfExists('user_admin', $data ?? [], null);
+        $this->setIfExists('user_list', $data ?? [], null);
+        $this->setIfExists('user_show', $data ?? [], null);
     }
 
     /**
@@ -288,14 +316,26 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
     {
         $invalidProperties = [];
 
-        if ($this->container['active'] === null) {
-            $invalidProperties[] = "'active' can't be null";
+        if ($this->container['manage_company'] === null) {
+            $invalidProperties[] = "'manage_company' can't be null";
         }
-        if ($this->container['expires_at'] === null) {
-            $invalidProperties[] = "'expires_at' can't be null";
+        if ($this->container['room_admin'] === null) {
+            $invalidProperties[] = "'room_admin' can't be null";
         }
-        if ($this->container['permissions'] === null) {
-            $invalidProperties[] = "'permissions' can't be null";
+        if ($this->container['room_create'] === null) {
+            $invalidProperties[] = "'room_create' can't be null";
+        }
+        if ($this->container['room_list'] === null) {
+            $invalidProperties[] = "'room_list' can't be null";
+        }
+        if ($this->container['user_admin'] === null) {
+            $invalidProperties[] = "'user_admin' can't be null";
+        }
+        if ($this->container['user_list'] === null) {
+            $invalidProperties[] = "'user_list' can't be null";
+        }
+        if ($this->container['user_show'] === null) {
+            $invalidProperties[] = "'user_show' can't be null";
         }
         return $invalidProperties;
     }
@@ -313,82 +353,190 @@ class TokenInfo implements ModelInterface, ArrayAccess, \JsonSerializable
 
 
     /**
-     * Gets active
+     * Gets manage_company
      *
      * @return bool
      */
-    public function getActive()
+    public function getManageCompany()
     {
-        return $this->container['active'];
+        return $this->container['manage_company'];
     }
 
     /**
-     * Sets active
+     * Sets manage_company
      *
-     * @param bool $active Denotes whether the token is still valid.
+     * @param bool $manage_company If true, the user can manage company settings.
      *
      * @return self
      */
-    public function setActive($active)
+    public function setManageCompany($manage_company)
     {
-        if (is_null($active)) {
-            throw new \InvalidArgumentException('non-nullable active cannot be null');
+        if (is_null($manage_company)) {
+            throw new \InvalidArgumentException('non-nullable manage_company cannot be null');
         }
-        $this->container['active'] = $active;
+        $this->container['manage_company'] = $manage_company;
 
         return $this;
     }
 
     /**
-     * Gets expires_at
+     * Gets room_admin
      *
-     * @return \DateTime
+     * @return bool
      */
-    public function getExpiresAt()
+    public function getRoomAdmin()
     {
-        return $this->container['expires_at'];
+        return $this->container['room_admin'];
     }
 
     /**
-     * Sets expires_at
+     * Sets room_admin
      *
-     * @param \DateTime $expires_at Time at which the token expires.
+     * @param bool $room_admin If true, the user can create, update and delete any room.
      *
      * @return self
      */
-    public function setExpiresAt($expires_at)
+    public function setRoomAdmin($room_admin)
     {
-        if (is_null($expires_at)) {
-            throw new \InvalidArgumentException('non-nullable expires_at cannot be null');
+        if (is_null($room_admin)) {
+            throw new \InvalidArgumentException('non-nullable room_admin cannot be null');
         }
-        $this->container['expires_at'] = $expires_at;
+        $this->container['room_admin'] = $room_admin;
 
         return $this;
     }
 
     /**
-     * Gets permissions
+     * Gets room_create
      *
-     * @return \Alfaview\Client\Model\TokenUserPermissions
+     * @return bool
      */
-    public function getPermissions()
+    public function getRoomCreate()
     {
-        return $this->container['permissions'];
+        return $this->container['room_create'];
     }
 
     /**
-     * Sets permissions
+     * Sets room_create
      *
-     * @param \Alfaview\Client\Model\TokenUserPermissions $permissions The user permissions of the token.
+     * @param bool $room_create If true, the user can create rooms for their company.
      *
      * @return self
      */
-    public function setPermissions($permissions)
+    public function setRoomCreate($room_create)
     {
-        if (is_null($permissions)) {
-            throw new \InvalidArgumentException('non-nullable permissions cannot be null');
+        if (is_null($room_create)) {
+            throw new \InvalidArgumentException('non-nullable room_create cannot be null');
         }
-        $this->container['permissions'] = $permissions;
+        $this->container['room_create'] = $room_create;
+
+        return $this;
+    }
+
+    /**
+     * Gets room_list
+     *
+     * @return bool
+     */
+    public function getRoomList()
+    {
+        return $this->container['room_list'];
+    }
+
+    /**
+     * Sets room_list
+     *
+     * @param bool $room_list If true, the user can list all rooms in their company.
+     *
+     * @return self
+     */
+    public function setRoomList($room_list)
+    {
+        if (is_null($room_list)) {
+            throw new \InvalidArgumentException('non-nullable room_list cannot be null');
+        }
+        $this->container['room_list'] = $room_list;
+
+        return $this;
+    }
+
+    /**
+     * Gets user_admin
+     *
+     * @return bool
+     */
+    public function getUserAdmin()
+    {
+        return $this->container['user_admin'];
+    }
+
+    /**
+     * Sets user_admin
+     *
+     * @param bool $user_admin If true, the user can create, update and delete other users, send password reset mails and resend sign-up mails for new users.
+     *
+     * @return self
+     */
+    public function setUserAdmin($user_admin)
+    {
+        if (is_null($user_admin)) {
+            throw new \InvalidArgumentException('non-nullable user_admin cannot be null');
+        }
+        $this->container['user_admin'] = $user_admin;
+
+        return $this;
+    }
+
+    /**
+     * Gets user_list
+     *
+     * @return bool
+     */
+    public function getUserList()
+    {
+        return $this->container['user_list'];
+    }
+
+    /**
+     * Sets user_list
+     *
+     * @param bool $user_list If true, the user can list all users in their company.
+     *
+     * @return self
+     */
+    public function setUserList($user_list)
+    {
+        if (is_null($user_list)) {
+            throw new \InvalidArgumentException('non-nullable user_list cannot be null');
+        }
+        $this->container['user_list'] = $user_list;
+
+        return $this;
+    }
+
+    /**
+     * Gets user_show
+     *
+     * @return bool
+     */
+    public function getUserShow()
+    {
+        return $this->container['user_show'];
+    }
+
+    /**
+     * Sets user_show
+     *
+     * @param bool $user_show If true, the user can see the user names of all users in rooms they can access.
+     *
+     * @return self
+     */
+    public function setUserShow($user_show)
+    {
+        if (is_null($user_show)) {
+            throw new \InvalidArgumentException('non-nullable user_show cannot be null');
+        }
+        $this->container['user_show'] = $user_show;
 
         return $this;
     }

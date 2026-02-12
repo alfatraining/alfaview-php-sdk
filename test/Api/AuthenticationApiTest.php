@@ -181,8 +181,13 @@ class AuthenticationApiTest extends TestCase
      */
     public function testGetTokenInfo()
     {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
+        $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $resp = $this->alfaview->authenticationApi->getTokenInfo($accessToken->getAccessToken());
+        
+        $permissions = $resp->getPermissions();
+
+        $this->assertTrue($resp->getActive());
+        $this->assertNotEmpty($permissions->getRoomAdmin());
     }
 
     /**
