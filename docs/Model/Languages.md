@@ -1,4 +1,4 @@
-# # Languages
+# Languages
 
 ## Properties
 

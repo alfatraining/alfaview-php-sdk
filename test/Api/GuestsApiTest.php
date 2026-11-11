@@ -28,15 +28,12 @@
 namespace Alfaview\Client\Test\Api;
 
 use Alfaview\Client\Alfaview;
-use \Alfaview\Client\Configuration;
-use \Alfaview\Client\ApiException;
 use Alfaview\Client\Model\APICredentials;
 use Alfaview\Client\Model\GroupLinkCreate;
 use Alfaview\Client\Model\GuestLinkCreate;
 use Alfaview\Client\Model\CreateGroupLinksRequestBody;
 use Alfaview\Client\Model\CreateGuestLinksRequestBody;
 use Alfaview\Client\Model\RoomCreate;
-use \Alfaview\Client\ObjectSerializer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,6 +46,8 @@ use PHPUnit\Framework\TestCase;
  */
 class GuestsApiTest extends TestCase
 {
+    use DeletesTestRooms;
+
     protected Alfaview $alfaview;
 
     protected APICredentials $credentials;
@@ -80,13 +79,8 @@ class GuestsApiTest extends TestCase
     public function tearDown(): void
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $response = $this->alfaview->roomsApi->listRooms($accessToken->getAccessToken());
-
-        foreach ($response->getData() as $room) {
-            if (strpos($room->getDisplayName(), 'created by php-sdk') !== false) {
-                $this->alfaview->roomsApi->deleteRoom($room->getId(), $accessToken->getAccessToken());
-            }
-        }
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $this->deleteTestRooms();
     }
 
     /**
@@ -105,17 +99,18 @@ class GuestsApiTest extends TestCase
     public function testCreateGroupLink()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
 
         $roomCreate = new RoomCreate();
         $roomCreate->setDisplayName('room created by php-sdk V2');
         $roomCreate->setType(RoomCreate::TYPE_ROOM);
         $roomCreate->setWaitingRoomEnabled(false);
 
-        $room = $this->alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
         $roomId = $room->getId();
         $this->assertNotEmpty($roomId);
 
-        $permissionGroups = $this->alfaview->roomsApi->listPermissionGroups($accessToken->getAccessToken());
+        $permissionGroups = $this->alfaview->permissionsApi->listPermissionGroups();
         $participantPermissionGroupId = null;
         foreach ($permissionGroups as $permissionGroup) {
             if ($permissionGroup->getName() === 'Participant') {
@@ -132,7 +127,7 @@ class GuestsApiTest extends TestCase
         $groupLinksRequest = new CreateGroupLinksRequestBody();
         $groupLinksRequest->setCreate([$groupLink]);
 
-        $groupLinkResponse = $this->alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest, $accessToken->getAccessToken());
+        $groupLinkResponse = $this->alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest);
 
         $this->assertNotEmpty($groupLinkResponse[0]->getId());
     }
@@ -146,17 +141,18 @@ class GuestsApiTest extends TestCase
     public function testCreateGuestLinks()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
 
         $roomCreate = new RoomCreate();
         $roomCreate->setDisplayName('room created by php-sdk V2');
         $roomCreate->setType(RoomCreate::TYPE_ROOM);
         $roomCreate->setWaitingRoomEnabled(false);
 
-        $room = $this->alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
         $roomId = $room->getId();
         $this->assertNotEmpty($roomId);
 
-        $permissionGroups = $this->alfaview->roomsApi->listPermissionGroups($accessToken->getAccessToken());
+        $permissionGroups = $this->alfaview->permissionsApi->listPermissionGroups();
         $spectatorPermissionGroupId = null;
         foreach ($permissionGroups as $permissionGroup) {
             if ($permissionGroup->getName() === 'Spectator') {
@@ -169,14 +165,14 @@ class GuestsApiTest extends TestCase
         $guestLink->setDialInAllowed(false);
         $guestLink->setEmailAddress('test@example.com');
         $guestLink->setSendEmail(false);
-        $guestLink->setLocale('en-EN');
+        $guestLink->setLocale(GuestLinkCreate::LOCALE_EN_US);
         $guestLink->setPermissionGroupId($spectatorPermissionGroupId);
         $guestLink->setValidUntil(new \DateTime('next week today'));
 
         $guestLinksRequest = new CreateGuestLinksRequestBody();
         $guestLinksRequest->setCreate([$guestLink]);
 
-        $guestLinkResponse = $this->alfaview->guestsApi->createGuestLinks($roomId, $guestLinksRequest, $accessToken->getAccessToken());
+        $guestLinkResponse = $this->alfaview->guestsApi->createGuestLinks($roomId, $guestLinksRequest);
 
         $this->assertNotEmpty($guestLinkResponse[0]->getId());
     }

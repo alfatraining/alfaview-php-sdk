@@ -1,4 +1,4 @@
-# # TokenInfo
+# TokenInfo
 
 ## Properties
 

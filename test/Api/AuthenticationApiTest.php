@@ -32,7 +32,6 @@ use Alfaview\Client\Alfaview;
 use Alfaview\Client\Model\APICredentials;
 use Alfaview\Client\Model\AuthenticateGroupLinkRequestBody;
 use Alfaview\Client\Model\GroupLinkCreate;
-use Alfaview\Client\Model\GuestAuthInfoRequestData;
 use Alfaview\Client\Model\CreateGroupLinksRequestBody;
 use Alfaview\Client\Model\RoomCreate;
 use PHPUnit\Framework\TestCase;
@@ -47,6 +46,8 @@ use PHPUnit\Framework\TestCase;
  */
 class AuthenticationApiTest extends TestCase
 {
+    use DeletesTestRooms;
+
     protected Alfaview $alfaview;
 
     protected APICredentials $credentials;
@@ -78,13 +79,8 @@ class AuthenticationApiTest extends TestCase
     public function tearDown(): void
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $response = $this->alfaview->roomsApi->listRooms($accessToken->getAccessToken());
-
-        foreach ($response->getData() as $room) {
-            if (strpos($room->getDisplayName(), 'created by php-sdk') !== false) {
-                $this->alfaview->roomsApi->deleteRoom($room->getId(), $accessToken->getAccessToken());
-            }
-        }
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $this->deleteTestRooms();
     }
 
     /**
@@ -108,25 +104,26 @@ class AuthenticationApiTest extends TestCase
     }
 
     /**
-     * Test case for authenticateGuest
+     * Test case for authenticateGroupLink
      *
-     * Authenticate a guest.
+     * Authenticate a Guest (Group Link).
      *
      */
-    public function testAuthenticateGuest()
+    public function testAuthenticateGroupLink()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
 
         $roomCreate = new RoomCreate();
         $roomCreate->setDisplayName('room created by php-sdk V2');
         $roomCreate->setType(RoomCreate::TYPE_ROOM);
         $roomCreate->setWaitingRoomEnabled(false);
 
-        $room = $this->alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
         $roomId = $room->getId();
         $this->assertNotEmpty($roomId);
 
-        $permissionGroups = $this->alfaview->roomsApi->listPermissionGroups($accessToken->getAccessToken());
+        $permissionGroups = $this->alfaview->permissionsApi->listPermissionGroups();
         $participantPermissionGroupId = null;
         foreach ($permissionGroups as $permissionGroup) {
             if ($permissionGroup->getName() === 'Participant') {
@@ -143,11 +140,11 @@ class AuthenticationApiTest extends TestCase
         $groupLinksRequest = new CreateGroupLinksRequestBody();
         $groupLinksRequest->setCreate([$groupLink]);
 
-        $groupLink = $this->alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest, $accessToken->getAccessToken());
+        $groupLink = $this->alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest);
 
         $this->assertNotEmpty($groupLink);
 
-        $groupLink = $this->alfaview->guestsApi->getGroupLink($groupLink[0]->getId(), $accessToken->getAccessToken());
+        $groupLink = $this->alfaview->guestsApi->getGroupLink($groupLink[0]->getId());
 
         $groupLinkData = new AuthenticateGroupLinkRequestBody();
         $groupLinkData->setDisplayName('John Doe');
@@ -162,12 +159,24 @@ class AuthenticationApiTest extends TestCase
     }
 
     /**
-     * Test case for authenticateUser
+     * Test case for authenticateGuestLink
      *
-     * Authenticate a user.
+     * Authenticate a Guest (Guest Link).
      *
      */
-    public function testAuthenticateUser()
+    public function testAuthenticateGuestLink()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for authenticatePassword
+     *
+     * Authenticate via Password.
+     *
+     */
+    public function testAuthenticatePassword()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');
@@ -182,23 +191,12 @@ class AuthenticationApiTest extends TestCase
     public function testGetTokenInfo()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $resp = $this->alfaview->authenticationApi->getTokenInfo($accessToken->getAccessToken());
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $resp = $this->alfaview->authenticationApi->getTokenInfo();
         
         $permissions = $resp->getPermissions();
 
         $this->assertTrue($resp->getActive());
         $this->assertNotEmpty($permissions->getRoomAdmin());
-    }
-
-    /**
-     * Test case for inviteUser
-     *
-     * Invite user.
-     *
-     */
-    public function testInviteUser()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
     }
 }

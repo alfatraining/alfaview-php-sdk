@@ -28,15 +28,11 @@
 namespace Alfaview\Client\Test\Api;
 
 use Alfaview\Client\Alfaview;
-use \Alfaview\Client\Configuration;
-use \Alfaview\Client\ApiException;
 use Alfaview\Client\Model\APICredentials;
-use Alfaview\Client\Model\LanguageSettings;
 use Alfaview\Client\Model\LanguageSettingsEdit;
 use Alfaview\Client\Model\Room;
 use Alfaview\Client\Model\RoomCreate;
 use Alfaview\Client\Model\SubroomCreateListItem;
-use \Alfaview\Client\ObjectSerializer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -49,6 +45,8 @@ use PHPUnit\Framework\TestCase;
  */
 class RoomsApiTest extends TestCase
 {
+    use DeletesTestRooms;
+
     protected Alfaview $alfaview;
 
     protected APICredentials $credentials;
@@ -80,13 +78,8 @@ class RoomsApiTest extends TestCase
     public function tearDown(): void
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $response = $this->alfaview->roomsApi->listRooms($accessToken->getAccessToken());
-
-        foreach ($response->getData() as $room) {
-            if (strpos($room->getDisplayName(), 'created by php-sdk') !== false) {
-                $this->alfaview->roomsApi->deleteRoom($room->getId(), $accessToken->getAccessToken());
-            }
-        }
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $this->deleteTestRooms();
     }
 
     /**
@@ -94,18 +87,6 @@ class RoomsApiTest extends TestCase
      */
     public static function tearDownAfterClass(): void
     {
-    }
-
-    /**
-     * Test case for createJoinLink
-     *
-     * Create join link.
-     *
-     */
-    public function testCreateJoinLink()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
     }
 
     /**
@@ -129,6 +110,7 @@ class RoomsApiTest extends TestCase
     public function testCreateRoom()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
 
         $subrooms = array(
             new SubroomCreateListItem(),
@@ -144,11 +126,11 @@ class RoomsApiTest extends TestCase
         $roomCreate->setType(RoomCreate::TYPE_ROOM);
         $roomCreate->setWaitingRoomEnabled(false);
 
-        $room = $this->alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
         $this->assertNotEmpty($room->getId());
 
 
-        $fetchedRoom = $this->alfaview->roomsApi->getRoom($room->getId(), $accessToken->getAccessToken());
+        $fetchedRoom = $this->alfaview->roomsApi->getRoom($room->getId());
 
         $this->assertEquals($fetchedRoom->getId(), $room->getId());
 
@@ -187,13 +169,8 @@ class RoomsApiTest extends TestCase
     public function testDeleteRoom()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $response = $this->alfaview->roomsApi->listRooms($accessToken->getAccessToken());
-
-        foreach ($response->getData() as $room) {
-            if (strpos($room->getDisplayName(), 'created by php-sdk') !== false) {
-                $this->alfaview->roomsApi->deleteRoom($room->getId(), $accessToken->getAccessToken());
-            }
-        }
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $this->deleteTestRooms();
     }
 
     /**
@@ -257,18 +234,6 @@ class RoomsApiTest extends TestCase
     }
 
     /**
-     * Test case for listPermissionGroups
-     *
-     * List permission groups.
-     *
-     */
-    public function testListPermissionGroups()
-    {
-        // TODO: implement
-        self::markTestIncomplete('Not implemented');
-    }
-
-    /**
      * Test case for listPermissions
      *
      * List room permissions.
@@ -301,7 +266,8 @@ class RoomsApiTest extends TestCase
     public function testListRooms()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $rooms = $this->alfaview->roomsApi->listRooms($accessToken->getAccessToken(), Room::TYPE_ROOM);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $rooms = $this->alfaview->roomsApi->listRooms([Room::TYPE_ROOM]);
 
         $this->assertIsArray($rooms->getData());
     }
@@ -375,7 +341,8 @@ class RoomsApiTest extends TestCase
     public function testListAvailableLanguages()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
-        $resp = $this->alfaview->roomsApi->listAvailableLanguages($accessToken->getAccessToken());
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+        $resp = $this->alfaview->roomsApi->listAvailableLanguages();
 
         $this->assertNotEmpty($resp->getTranscription());
         $this->assertNotEmpty($resp->getTranslation());
@@ -390,14 +357,15 @@ class RoomsApiTest extends TestCase
     public function testGetLanguageSettings()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
 
         $roomCreate = new RoomCreate();
         $roomCreate->setDisplayName('room created by php-sdk V2');
         $roomCreate->setType(RoomCreate::TYPE_ROOM);
         $roomCreate->setWaitingRoomEnabled(false);
 
-        $room = $this->alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
-        $languageSettingsResp = $this->alfaview->roomsApi->getLanguageSettings($room->getId(), $accessToken->getAccessToken());
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
+        $languageSettingsResp = $this->alfaview->roomsApi->getLanguageSettings($room->getId());
 
         $this->assertNotEmpty($languageSettingsResp->getTranscriptionType());
     }
@@ -411,15 +379,16 @@ class RoomsApiTest extends TestCase
     public function testUpdateLanguageSettings()
     {
         $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
 
         $roomCreate = new RoomCreate();
         $roomCreate->setDisplayName('room created by php-sdk V2');
         $roomCreate->setType(RoomCreate::TYPE_ROOM);
         $roomCreate->setWaitingRoomEnabled(false);
 
-        $room = $this->alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
 
-        $listAvailableLanguagesResp = $this->alfaview->roomsApi->listAvailableLanguages($accessToken->getAccessToken());
+        $listAvailableLanguagesResp = $this->alfaview->roomsApi->listAvailableLanguages();
 
         $this->assertNotEmpty($listAvailableLanguagesResp->getTranscription());
         $this->assertNotEmpty($listAvailableLanguagesResp->getTranslation());
@@ -427,6 +396,59 @@ class RoomsApiTest extends TestCase
         $languageSettings = new LanguageSettingsEdit();
         $languageSettings->setTranscriptionEnabled(true);
         $languageSettings->setTargetTranscriptionLanguages([$listAvailableLanguagesResp->getTranscription()[0]]);
-        $this->alfaview->roomsApi->updateLanguageSettings($room->getId(), $languageSettings, $accessToken->getAccessToken());
+        $this->alfaview->roomsApi->updateLanguageSettings($room->getId(), $languageSettings);
+    }
+
+    /**
+     * Test case for getPasscode
+     *
+     * Get Passcode.
+     *
+     */
+    public function testGetPasscode()
+    {
+        $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+
+        $roomCreate = new RoomCreate();
+        $roomCreate->setDisplayName('room created by php-sdk V2');
+        $roomCreate->setType(RoomCreate::TYPE_ROOM);
+        $roomCreate->setWaitingRoomEnabled(false);
+        $roomCreate->setPasscodeRequired(true);
+
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
+        $fetchedRoom = $this->alfaview->roomsApi->getRoom($room->getId());
+        $this->assertTrue($fetchedRoom->getPasscodeRequired());
+
+        $passcode = $this->alfaview->roomsApi->getPasscode($room->getId());
+
+        $this->assertTrue($passcode->getRequired());
+        $this->assertNotEmpty($passcode->getPasscode());
+    }
+
+    /**
+     * Test case for regeneratePasscode
+     *
+     * Regenerate Passcode.
+     *
+     */
+    public function testRegeneratePasscode()
+    {
+        $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+
+        $roomCreate = new RoomCreate();
+        $roomCreate->setDisplayName('room created by php-sdk V2');
+        $roomCreate->setType(RoomCreate::TYPE_ROOM);
+        $roomCreate->setWaitingRoomEnabled(false);
+        $roomCreate->setPasscodeRequired(true);
+
+        $room = $this->alfaview->roomsApi->createRoom($roomCreate);
+        $oldPasscode = $this->alfaview->roomsApi->getPasscode($room->getId());
+
+        $newPasscode = $this->alfaview->roomsApi->regeneratePasscode($room->getId());
+
+        $this->assertNotEmpty($newPasscode->getPasscode());
+        $this->assertNotEquals($oldPasscode->getPasscode(), $newPasscode->getPasscode());
     }
 }

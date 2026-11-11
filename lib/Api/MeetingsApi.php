@@ -12,11 +12,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -83,6 +83,9 @@ class MeetingsApi
         'getOwnMeeting' => [
             'application/json',
         ],
+        'listInvitedMeetings' => [
+            'application/json',
+        ],
         'listOwnMeetings' => [
             'application/json',
         ],
@@ -142,18 +145,17 @@ class MeetingsApi
      *
      * Cancel Meeting
      *
-     * @param  string $id The ID of the meeting to cancel. (required)
+     * @param  string $id The meeting ID. (required)
      * @param  \Alfaview\Client\Model\MeetingCancellation $meeting_cancellation Additional data needed for the cancellation. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['cancelMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function cancelMeeting($id, $meeting_cancellation, $authorization = null, string $contentType = self::contentTypes['cancelMeeting'][0])
+    public function cancelMeeting($id, $meeting_cancellation, string $contentType = self::contentTypes['cancelMeeting'][0])
     {
-        $this->cancelMeetingWithHttpInfo($id, $meeting_cancellation, $authorization, $contentType);
+        $this->cancelMeetingWithHttpInfo($id, $meeting_cancellation, $contentType);
     }
 
     /**
@@ -161,18 +163,17 @@ class MeetingsApi
      *
      * Cancel Meeting
      *
-     * @param  string $id The ID of the meeting to cancel. (required)
+     * @param  string $id The meeting ID. (required)
      * @param  \Alfaview\Client\Model\MeetingCancellation $meeting_cancellation Additional data needed for the cancellation. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['cancelMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function cancelMeetingWithHttpInfo($id, $meeting_cancellation, $authorization = null, string $contentType = self::contentTypes['cancelMeeting'][0])
+    public function cancelMeetingWithHttpInfo($id, $meeting_cancellation, string $contentType = self::contentTypes['cancelMeeting'][0])
     {
-        $request = $this->cancelMeetingRequest($id, $meeting_cancellation, $authorization, $contentType);
+        $request = $this->cancelMeetingRequest($id, $meeting_cancellation, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -200,6 +201,46 @@ class MeetingsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -212,17 +253,16 @@ class MeetingsApi
      *
      * Cancel Meeting
      *
-     * @param  string $id The ID of the meeting to cancel. (required)
+     * @param  string $id The meeting ID. (required)
      * @param  \Alfaview\Client\Model\MeetingCancellation $meeting_cancellation Additional data needed for the cancellation. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['cancelMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function cancelMeetingAsync($id, $meeting_cancellation, $authorization = null, string $contentType = self::contentTypes['cancelMeeting'][0])
+    public function cancelMeetingAsync($id, $meeting_cancellation, string $contentType = self::contentTypes['cancelMeeting'][0])
     {
-        return $this->cancelMeetingAsyncWithHttpInfo($id, $meeting_cancellation, $authorization, $contentType)
+        return $this->cancelMeetingAsyncWithHttpInfo($id, $meeting_cancellation, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -235,18 +275,17 @@ class MeetingsApi
      *
      * Cancel Meeting
      *
-     * @param  string $id The ID of the meeting to cancel. (required)
+     * @param  string $id The meeting ID. (required)
      * @param  \Alfaview\Client\Model\MeetingCancellation $meeting_cancellation Additional data needed for the cancellation. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['cancelMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function cancelMeetingAsyncWithHttpInfo($id, $meeting_cancellation, $authorization = null, string $contentType = self::contentTypes['cancelMeeting'][0])
+    public function cancelMeetingAsyncWithHttpInfo($id, $meeting_cancellation, string $contentType = self::contentTypes['cancelMeeting'][0])
     {
         $returnType = '';
-        $request = $this->cancelMeetingRequest($id, $meeting_cancellation, $authorization, $contentType);
+        $request = $this->cancelMeetingRequest($id, $meeting_cancellation, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -274,15 +313,14 @@ class MeetingsApi
     /**
      * Create request for operation 'cancelMeeting'
      *
-     * @param  string $id The ID of the meeting to cancel. (required)
+     * @param  string $id The meeting ID. (required)
      * @param  \Alfaview\Client\Model\MeetingCancellation $meeting_cancellation Additional data needed for the cancellation. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['cancelMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function cancelMeetingRequest($id, $meeting_cancellation, $authorization = null, string $contentType = self::contentTypes['cancelMeeting'][0])
+    public function cancelMeetingRequest($id, $meeting_cancellation, string $contentType = self::contentTypes['cancelMeeting'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -300,7 +338,6 @@ class MeetingsApi
         }
 
 
-
         $resourcePath = '/v2/meetings/{id}/cancellation';
         $formParams = [];
         $queryParams = [];
@@ -309,15 +346,11 @@ class MeetingsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -325,7 +358,7 @@ class MeetingsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -334,7 +367,11 @@ class MeetingsApi
         if (isset($meeting_cancellation)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($meeting_cancellation));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($meeting_cancellation), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $meeting_cancellation;
             }
@@ -355,13 +392,21 @@ class MeetingsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -390,16 +435,15 @@ class MeetingsApi
      * Create Meeting
      *
      * @param  \Alfaview\Client\Model\MeetingCreate $meeting_create The meeting to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\ID
+     * @return \Alfaview\Client\Model\ID|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function createMeeting($meeting_create, $authorization = null, string $contentType = self::contentTypes['createMeeting'][0])
+    public function createMeeting($meeting_create, string $contentType = self::contentTypes['createMeeting'][0])
     {
-        list($response) = $this->createMeetingWithHttpInfo($meeting_create, $authorization, $contentType);
+        list($response) = $this->createMeetingWithHttpInfo($meeting_create, $contentType);
         return $response;
     }
 
@@ -409,16 +453,15 @@ class MeetingsApi
      * Create Meeting
      *
      * @param  \Alfaview\Client\Model\MeetingCreate $meeting_create The meeting to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\ID, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\ID|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createMeetingWithHttpInfo($meeting_create, $authorization = null, string $contentType = self::contentTypes['createMeeting'][0])
+    public function createMeetingWithHttpInfo($meeting_create, string $contentType = self::contentTypes['createMeeting'][0])
     {
-        $request = $this->createMeetingRequest($meeting_create, $authorization, $contentType);
+        $request = $this->createMeetingRequest($meeting_create, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -447,6 +490,30 @@ class MeetingsApi
                 case 201:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\ID',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -482,6 +549,38 @@ class MeetingsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -495,15 +594,14 @@ class MeetingsApi
      * Create Meeting
      *
      * @param  \Alfaview\Client\Model\MeetingCreate $meeting_create The meeting to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createMeetingAsync($meeting_create, $authorization = null, string $contentType = self::contentTypes['createMeeting'][0])
+    public function createMeetingAsync($meeting_create, string $contentType = self::contentTypes['createMeeting'][0])
     {
-        return $this->createMeetingAsyncWithHttpInfo($meeting_create, $authorization, $contentType)
+        return $this->createMeetingAsyncWithHttpInfo($meeting_create, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -517,16 +615,15 @@ class MeetingsApi
      * Create Meeting
      *
      * @param  \Alfaview\Client\Model\MeetingCreate $meeting_create The meeting to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createMeetingAsyncWithHttpInfo($meeting_create, $authorization = null, string $contentType = self::contentTypes['createMeeting'][0])
+    public function createMeetingAsyncWithHttpInfo($meeting_create, string $contentType = self::contentTypes['createMeeting'][0])
     {
         $returnType = '\Alfaview\Client\Model\ID';
-        $request = $this->createMeetingRequest($meeting_create, $authorization, $contentType);
+        $request = $this->createMeetingRequest($meeting_create, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -568,13 +665,12 @@ class MeetingsApi
      * Create request for operation 'createMeeting'
      *
      * @param  \Alfaview\Client\Model\MeetingCreate $meeting_create The meeting to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createMeetingRequest($meeting_create, $authorization = null, string $contentType = self::contentTypes['createMeeting'][0])
+    public function createMeetingRequest($meeting_create, string $contentType = self::contentTypes['createMeeting'][0])
     {
 
         // verify the required parameter 'meeting_create' is set
@@ -585,7 +681,6 @@ class MeetingsApi
         }
 
 
-
         $resourcePath = '/v2/meetings';
         $formParams = [];
         $queryParams = [];
@@ -594,15 +689,11 @@ class MeetingsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -611,7 +702,11 @@ class MeetingsApi
         if (isset($meeting_create)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($meeting_create));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($meeting_create), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $meeting_create;
             }
@@ -632,13 +727,21 @@ class MeetingsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -664,38 +767,36 @@ class MeetingsApi
     /**
      * Operation getOwnMeeting
      *
-     * Get own Meeting
+     * Get Own Meeting
      *
-     * @param  string $id The ID of the meeting to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\Meeting
+     * @return \Alfaview\Client\Model\Meeting|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function getOwnMeeting($id, $authorization = null, string $contentType = self::contentTypes['getOwnMeeting'][0])
+    public function getOwnMeeting($id, string $contentType = self::contentTypes['getOwnMeeting'][0])
     {
-        list($response) = $this->getOwnMeetingWithHttpInfo($id, $authorization, $contentType);
+        list($response) = $this->getOwnMeetingWithHttpInfo($id, $contentType);
         return $response;
     }
 
     /**
      * Operation getOwnMeetingWithHttpInfo
      *
-     * Get own Meeting
+     * Get Own Meeting
      *
-     * @param  string $id The ID of the meeting to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\Meeting, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\Meeting|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getOwnMeetingWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getOwnMeeting'][0])
+    public function getOwnMeetingWithHttpInfo($id, string $contentType = self::contentTypes['getOwnMeeting'][0])
     {
-        $request = $this->getOwnMeetingRequest($id, $authorization, $contentType);
+        $request = $this->getOwnMeetingRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -724,6 +825,30 @@ class MeetingsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\Meeting',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -759,6 +884,38 @@ class MeetingsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -769,18 +926,17 @@ class MeetingsApi
     /**
      * Operation getOwnMeetingAsync
      *
-     * Get own Meeting
+     * Get Own Meeting
      *
-     * @param  string $id The ID of the meeting to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getOwnMeetingAsync($id, $authorization = null, string $contentType = self::contentTypes['getOwnMeeting'][0])
+    public function getOwnMeetingAsync($id, string $contentType = self::contentTypes['getOwnMeeting'][0])
     {
-        return $this->getOwnMeetingAsyncWithHttpInfo($id, $authorization, $contentType)
+        return $this->getOwnMeetingAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -791,19 +947,18 @@ class MeetingsApi
     /**
      * Operation getOwnMeetingAsyncWithHttpInfo
      *
-     * Get own Meeting
+     * Get Own Meeting
      *
-     * @param  string $id The ID of the meeting to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getOwnMeetingAsyncWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getOwnMeeting'][0])
+    public function getOwnMeetingAsyncWithHttpInfo($id, string $contentType = self::contentTypes['getOwnMeeting'][0])
     {
         $returnType = '\Alfaview\Client\Model\Meeting';
-        $request = $this->getOwnMeetingRequest($id, $authorization, $contentType);
+        $request = $this->getOwnMeetingRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -844,14 +999,13 @@ class MeetingsApi
     /**
      * Create request for operation 'getOwnMeeting'
      *
-     * @param  string $id The ID of the meeting to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getOwnMeetingRequest($id, $authorization = null, string $contentType = self::contentTypes['getOwnMeeting'][0])
+    public function getOwnMeetingRequest($id, string $contentType = self::contentTypes['getOwnMeeting'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -862,7 +1016,6 @@ class MeetingsApi
         }
 
 
-
         $resourcePath = '/v2/meetings/{id}';
         $formParams = [];
         $queryParams = [];
@@ -871,15 +1024,11 @@ class MeetingsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -887,7 +1036,7 @@ class MeetingsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -910,13 +1059,349 @@ class MeetingsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation listInvitedMeetings
+     *
+     * List Meeting Invitations
+     *
+     * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listInvitedMeetings'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\MeetingInvitation[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function listInvitedMeetings($from = null, $to = null, string $contentType = self::contentTypes['listInvitedMeetings'][0])
+    {
+        list($response) = $this->listInvitedMeetingsWithHttpInfo($from, $to, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation listInvitedMeetingsWithHttpInfo
+     *
+     * List Meeting Invitations
+     *
+     * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listInvitedMeetings'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\MeetingInvitation[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function listInvitedMeetingsWithHttpInfo($from = null, $to = null, string $contentType = self::contentTypes['listInvitedMeetings'][0])
+    {
+        $request = $this->listInvitedMeetingsRequest($from, $to, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\MeetingInvitation[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\MeetingInvitation[]',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\MeetingInvitation[]',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation listInvitedMeetingsAsync
+     *
+     * List Meeting Invitations
+     *
+     * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listInvitedMeetings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function listInvitedMeetingsAsync($from = null, $to = null, string $contentType = self::contentTypes['listInvitedMeetings'][0])
+    {
+        return $this->listInvitedMeetingsAsyncWithHttpInfo($from, $to, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation listInvitedMeetingsAsyncWithHttpInfo
+     *
+     * List Meeting Invitations
+     *
+     * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listInvitedMeetings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function listInvitedMeetingsAsyncWithHttpInfo($from = null, $to = null, string $contentType = self::contentTypes['listInvitedMeetings'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\MeetingInvitation[]';
+        $request = $this->listInvitedMeetingsRequest($from, $to, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'listInvitedMeetings'
+     *
+     * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listInvitedMeetings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function listInvitedMeetingsRequest($from = null, $to = null, string $contentType = self::contentTypes['listInvitedMeetings'][0])
+    {
+
+
+
+
+        $resourcePath = '/v2/meetings/invitations';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $from,
+            'from', // param base name
+            'string', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
+        // query params
+        $queryParams = array_merge($queryParams, ObjectSerializer::toQueryValue(
+            $to,
+            'to', // param base name
+            'string', // openApiType
+            'form', // style
+            false, // explode
+            false // required
+        ) ?? []);
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -942,40 +1427,38 @@ class MeetingsApi
     /**
      * Operation listOwnMeetings
      *
-     * List own Meetings
+     * List Own Meetings
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listOwnMeetings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\Meeting[]
+     * @return \Alfaview\Client\Model\Meeting[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listOwnMeetings($authorization = null, $from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
+    public function listOwnMeetings($from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
     {
-        list($response) = $this->listOwnMeetingsWithHttpInfo($authorization, $from, $to, $contentType);
+        list($response) = $this->listOwnMeetingsWithHttpInfo($from, $to, $contentType);
         return $response;
     }
 
     /**
      * Operation listOwnMeetingsWithHttpInfo
      *
-     * List own Meetings
+     * List Own Meetings
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listOwnMeetings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\Meeting[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\Meeting[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listOwnMeetingsWithHttpInfo($authorization = null, $from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
+    public function listOwnMeetingsWithHttpInfo($from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
     {
-        $request = $this->listOwnMeetingsRequest($authorization, $from, $to, $contentType);
+        $request = $this->listOwnMeetingsRequest($from, $to, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1004,6 +1487,24 @@ class MeetingsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\Meeting[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -1039,6 +1540,30 @@ class MeetingsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1049,9 +1574,8 @@ class MeetingsApi
     /**
      * Operation listOwnMeetingsAsync
      *
-     * List own Meetings
+     * List Own Meetings
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listOwnMeetings'] to see the possible values for this operation
@@ -1059,9 +1583,9 @@ class MeetingsApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listOwnMeetingsAsync($authorization = null, $from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
+    public function listOwnMeetingsAsync($from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
     {
-        return $this->listOwnMeetingsAsyncWithHttpInfo($authorization, $from, $to, $contentType)
+        return $this->listOwnMeetingsAsyncWithHttpInfo($from, $to, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1072,9 +1596,8 @@ class MeetingsApi
     /**
      * Operation listOwnMeetingsAsyncWithHttpInfo
      *
-     * List own Meetings
+     * List Own Meetings
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listOwnMeetings'] to see the possible values for this operation
@@ -1082,10 +1605,10 @@ class MeetingsApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listOwnMeetingsAsyncWithHttpInfo($authorization = null, $from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
+    public function listOwnMeetingsAsyncWithHttpInfo($from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
     {
         $returnType = '\Alfaview\Client\Model\Meeting[]';
-        $request = $this->listOwnMeetingsRequest($authorization, $from, $to, $contentType);
+        $request = $this->listOwnMeetingsRequest($from, $to, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1126,7 +1649,6 @@ class MeetingsApi
     /**
      * Create request for operation 'listOwnMeetings'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  \DateTime|null $from The earliest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  \DateTime|null $to The latest time at which the meeting is scheduled to be ongoing. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listOwnMeetings'] to see the possible values for this operation
@@ -1134,9 +1656,8 @@ class MeetingsApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listOwnMeetingsRequest($authorization = null, $from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
+    public function listOwnMeetingsRequest($from = null, $to = null, string $contentType = self::contentTypes['listOwnMeetings'][0])
     {
-
 
 
 
@@ -1167,15 +1688,11 @@ class MeetingsApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1198,13 +1715,21 @@ class MeetingsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1232,18 +1757,17 @@ class MeetingsApi
      *
      * Update Meeting
      *
-     * @param  string $id The ID of the meeting to update. (required)
-     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting data. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
+     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateMeeting($id, $meeting_update, $authorization = null, string $contentType = self::contentTypes['updateMeeting'][0])
+    public function updateMeeting($id, $meeting_update, string $contentType = self::contentTypes['updateMeeting'][0])
     {
-        $this->updateMeetingWithHttpInfo($id, $meeting_update, $authorization, $contentType);
+        $this->updateMeetingWithHttpInfo($id, $meeting_update, $contentType);
     }
 
     /**
@@ -1251,18 +1775,17 @@ class MeetingsApi
      *
      * Update Meeting
      *
-     * @param  string $id The ID of the meeting to update. (required)
-     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting data. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
+     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateMeeting'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateMeetingWithHttpInfo($id, $meeting_update, $authorization = null, string $contentType = self::contentTypes['updateMeeting'][0])
+    public function updateMeetingWithHttpInfo($id, $meeting_update, string $contentType = self::contentTypes['updateMeeting'][0])
     {
-        $request = $this->updateMeetingRequest($id, $meeting_update, $authorization, $contentType);
+        $request = $this->updateMeetingRequest($id, $meeting_update, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1290,6 +1813,46 @@ class MeetingsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1302,17 +1865,16 @@ class MeetingsApi
      *
      * Update Meeting
      *
-     * @param  string $id The ID of the meeting to update. (required)
-     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting data. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
+     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateMeetingAsync($id, $meeting_update, $authorization = null, string $contentType = self::contentTypes['updateMeeting'][0])
+    public function updateMeetingAsync($id, $meeting_update, string $contentType = self::contentTypes['updateMeeting'][0])
     {
-        return $this->updateMeetingAsyncWithHttpInfo($id, $meeting_update, $authorization, $contentType)
+        return $this->updateMeetingAsyncWithHttpInfo($id, $meeting_update, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1325,18 +1887,17 @@ class MeetingsApi
      *
      * Update Meeting
      *
-     * @param  string $id The ID of the meeting to update. (required)
-     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting data. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
+     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateMeetingAsyncWithHttpInfo($id, $meeting_update, $authorization = null, string $contentType = self::contentTypes['updateMeeting'][0])
+    public function updateMeetingAsyncWithHttpInfo($id, $meeting_update, string $contentType = self::contentTypes['updateMeeting'][0])
     {
         $returnType = '';
-        $request = $this->updateMeetingRequest($id, $meeting_update, $authorization, $contentType);
+        $request = $this->updateMeetingRequest($id, $meeting_update, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1364,15 +1925,14 @@ class MeetingsApi
     /**
      * Create request for operation 'updateMeeting'
      *
-     * @param  string $id The ID of the meeting to update. (required)
-     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting data. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The meeting ID. (required)
+     * @param  \Alfaview\Client\Model\MeetingUpdate $meeting_update The updated meeting. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateMeeting'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateMeetingRequest($id, $meeting_update, $authorization = null, string $contentType = self::contentTypes['updateMeeting'][0])
+    public function updateMeetingRequest($id, $meeting_update, string $contentType = self::contentTypes['updateMeeting'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -1390,7 +1950,6 @@ class MeetingsApi
         }
 
 
-
         $resourcePath = '/v2/meetings/{id}';
         $formParams = [];
         $queryParams = [];
@@ -1399,15 +1958,11 @@ class MeetingsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -1415,7 +1970,7 @@ class MeetingsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1424,7 +1979,11 @@ class MeetingsApi
         if (isset($meeting_update)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($meeting_update));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($meeting_update), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $meeting_update;
             }
@@ -1445,13 +2004,21 @@ class MeetingsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1488,6 +2055,14 @@ class MeetingsApi
             if (!$options[RequestOptions::DEBUG]) {
                 throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
             }
+        }
+
+        if ($this->config->getCertFile()) {
+            $options[RequestOptions::CERT] = $this->config->getCertFile();
+        }
+
+        if ($this->config->getKeyFile()) {
+            $options[RequestOptions::SSL_KEY] = $this->config->getKeyFile();
         }
 
         return $options;

@@ -1,4 +1,4 @@
-# # TokenUserPermissions
+# TokenUserPermissions
 
 ## Properties
 

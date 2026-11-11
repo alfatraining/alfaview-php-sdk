@@ -13,11 +13,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -103,11 +103,11 @@ class ObjectSerializer
                     }
                 }
             } else {
-                foreach($data as $property => $value) {
+                foreach ($data as $property => $value) {
                     $values[$property] = self::sanitizeForSerialization($value);
                 }
             }
-            return (object)$values;
+            return (object) $values;
         } else {
             return (string)$data;
         }
@@ -139,7 +139,9 @@ class ObjectSerializer
      */
     public static function sanitizeTimestamp($timestamp)
     {
-        if (!is_string($timestamp)) return $timestamp;
+        if (!is_string($timestamp)) {
+            return $timestamp;
+        }
 
         return preg_replace('/(:\d{2}.\d{6})\d*/', '$1', $timestamp);
     }
@@ -167,20 +169,20 @@ class ObjectSerializer
      */
     private static function isEmptyValue($value, string $openApiType): bool
     {
-        # If empty() returns false, it is not empty regardless of its type.
+        // If empty() returns false, it is not empty regardless of its type.
         if (!empty($value)) {
             return false;
         }
 
-        # Null is always empty, as we cannot send a real "null" value in a query parameter.
+        // Null is always empty, as we cannot send a real "null" value in a query parameter.
         if ($value === null) {
             return true;
         }
 
         switch ($openApiType) {
-            # For numeric values, false and '' are considered empty.
-            # This comparison is safe for floating point values, since the previous call to empty() will
-            # filter out values that don't match 0.
+            // For numeric values, false and '' are considered empty.
+            // This comparison is safe for floating point values, since the previous call to empty() will
+            // filter out values that don't match 0.
             case 'int':
             case 'integer':
                 return $value !== 0;
@@ -189,16 +191,16 @@ class ObjectSerializer
             case 'float':
                 return $value !== 0 && $value !== 0.0;
 
-            # For boolean values, '' is considered empty
+            // For boolean values, '' is considered empty
             case 'bool':
             case 'boolean':
                 return !in_array($value, [false, 0], true);
 
-            # For string values, '' is considered empty.
+            // For string values, '' is considered empty.
             case 'string':
                 return $value === '';
 
-            # For all the other types, any value at this point can be considered empty.
+            // For all the other types, any value at this point can be considered empty.
             default:
                 return true;
         }
@@ -226,10 +228,10 @@ class ObjectSerializer
         bool $required = true
     ): array {
 
-        # Check if we should omit this parameter from the query. This should only happen when:
-        #  - Parameter is NOT required; AND
-        #  - its value is set to a value that is equivalent to "empty", depending on its OpenAPI type. For
-        #    example, 0 as "int" or "boolean" is NOT an empty value.
+        // Check if we should omit this parameter from the query. This should only happen when:
+        //  - Parameter is NOT required; AND
+        //  - its value is set to a value that is equivalent to "empty", depending on its OpenAPI type. For
+        //    example, 0 as "int" or "boolean" is NOT an empty value.
         if (self::isEmptyValue($value, $openApiType)) {
             if ($required) {
                 return ["{$paramName}" => ''];
@@ -238,8 +240,8 @@ class ObjectSerializer
             }
         }
 
-        # Handle DateTime objects in query
-        if($openApiType === "\\DateTime" && $value instanceof \DateTime) {
+        // Handle DateTime objects in query
+        if ($openApiType === "\\DateTime" && $value instanceof \DateTime) {
             return ["{$paramName}" => $value->format(self::$dateTimeFormat)];
         }
 
@@ -249,10 +251,12 @@ class ObjectSerializer
         // since \GuzzleHttp\Psr7\Query::build fails with nested arrays
         // need to flatten array first
         $flattenArray = function ($arr, $name, &$result = []) use (&$flattenArray, $style, $explode) {
-            if (!is_array($arr)) return $arr;
+            if (!is_array($arr)) {
+                return $arr;
+            }
 
             foreach ($arr as $k => $v) {
-                $prop = ($style === 'deepObject') ? $prop = "{$name}[{$k}]" : $k;
+                $prop = ($style === 'deepObject') ? "{$name}[{$k}]" : $k;
 
                 if (is_array($v)) {
                     $flattenArray($v, $prop, $result);
@@ -497,7 +501,7 @@ class ObjectSerializer
             $data = is_string($data) ? json_decode($data) : $data;
 
             if (is_array($data)) {
-                $data = (object)$data;
+                $data = (object) $data;
             }
 
             // If a discriminator is defined and points to a valid subclass, use it.
@@ -536,20 +540,20 @@ class ObjectSerializer
     }
 
     /**
-    * Build a query string from an array of key value pairs.
-    *
-    * This function can use the return value of `parse()` to build a query
-    * string. This function does not modify the provided keys when an array is
-    * encountered (like `http_build_query()` would).
-    *
-    * The function is copied from https://github.com/guzzle/psr7/blob/a243f80a1ca7fe8ceed4deee17f12c1930efe662/src/Query.php#L59-L112
-    * with a modification which is described in https://github.com/guzzle/psr7/pull/603
-    *
-    * @param array     $params              Query string parameters.
-    * @param int|false $encoding            Set to false to not encode, PHP_QUERY_RFC3986
-    *                                       to encode using RFC3986, or PHP_QUERY_RFC1738
-    *                                       to encode using RFC1738.
-    */
+     * Build a query string from an array of key value pairs.
+     *
+     * This function can use the return value of `parse()` to build a query
+     * string. This function does not modify the provided keys when an array is
+     * encountered (like `http_build_query()` would).
+     *
+     * The function is copied from https://github.com/guzzle/psr7/blob/a243f80a1ca7fe8ceed4deee17f12c1930efe662/src/Query.php#L59-L112
+     * with a modification which is described in https://github.com/guzzle/psr7/pull/603
+     *
+     * @param array     $params              Query string parameters.
+     * @param int|false $encoding            Set to false to not encode, PHP_QUERY_RFC3986
+     *                                       to encode using RFC3986, or PHP_QUERY_RFC1738
+     *                                       to encode using RFC1738.
+     */
     public static function buildQuery(array $params, $encoding = PHP_QUERY_RFC3986): string
     {
         if (!$params) {
@@ -594,6 +598,6 @@ class ObjectSerializer
             }
         }
 
-        return $qs ? (string) substr($qs, 0, -1) : '';
+        return $qs ? substr($qs, 0, -1) : '';
     }
 }

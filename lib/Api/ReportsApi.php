@@ -12,11 +12,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -133,19 +133,18 @@ class ReportsApi
      *
      * List Attendances
      *
-     * @param  string $room_id The room ID for the attendances. (required)
-     * @param  \DateTime $from The start time of the time period to consider in the report. (required)
+     * @param  string $room_id The room ID. (required)
+     * @param  \DateTime $from The start time of the time period to consider in the report. A session is kept for 62 days after it ends. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAttendances'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\UserAttendances[]
+     * @return \Alfaview\Client\Model\UserAttendances[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listAttendances($room_id, $from, $to, $authorization = null, string $contentType = self::contentTypes['listAttendances'][0])
+    public function listAttendances($room_id, $from, $to, string $contentType = self::contentTypes['listAttendances'][0])
     {
-        list($response) = $this->listAttendancesWithHttpInfo($room_id, $from, $to, $authorization, $contentType);
+        list($response) = $this->listAttendancesWithHttpInfo($room_id, $from, $to, $contentType);
         return $response;
     }
 
@@ -154,19 +153,18 @@ class ReportsApi
      *
      * List Attendances
      *
-     * @param  string $room_id The room ID for the attendances. (required)
-     * @param  \DateTime $from The start time of the time period to consider in the report. (required)
+     * @param  string $room_id The room ID. (required)
+     * @param  \DateTime $from The start time of the time period to consider in the report. A session is kept for 62 days after it ends. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAttendances'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\UserAttendances[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\UserAttendances[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listAttendancesWithHttpInfo($room_id, $from, $to, $authorization = null, string $contentType = self::contentTypes['listAttendances'][0])
+    public function listAttendancesWithHttpInfo($room_id, $from, $to, string $contentType = self::contentTypes['listAttendances'][0])
     {
-        $request = $this->listAttendancesRequest($room_id, $from, $to, $authorization, $contentType);
+        $request = $this->listAttendancesRequest($room_id, $from, $to, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -195,6 +193,24 @@ class ReportsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\UserAttendances[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -230,6 +246,30 @@ class ReportsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -242,18 +282,17 @@ class ReportsApi
      *
      * List Attendances
      *
-     * @param  string $room_id The room ID for the attendances. (required)
-     * @param  \DateTime $from The start time of the time period to consider in the report. (required)
+     * @param  string $room_id The room ID. (required)
+     * @param  \DateTime $from The start time of the time period to consider in the report. A session is kept for 62 days after it ends. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAttendances'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listAttendancesAsync($room_id, $from, $to, $authorization = null, string $contentType = self::contentTypes['listAttendances'][0])
+    public function listAttendancesAsync($room_id, $from, $to, string $contentType = self::contentTypes['listAttendances'][0])
     {
-        return $this->listAttendancesAsyncWithHttpInfo($room_id, $from, $to, $authorization, $contentType)
+        return $this->listAttendancesAsyncWithHttpInfo($room_id, $from, $to, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -266,19 +305,18 @@ class ReportsApi
      *
      * List Attendances
      *
-     * @param  string $room_id The room ID for the attendances. (required)
-     * @param  \DateTime $from The start time of the time period to consider in the report. (required)
+     * @param  string $room_id The room ID. (required)
+     * @param  \DateTime $from The start time of the time period to consider in the report. A session is kept for 62 days after it ends. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAttendances'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listAttendancesAsyncWithHttpInfo($room_id, $from, $to, $authorization = null, string $contentType = self::contentTypes['listAttendances'][0])
+    public function listAttendancesAsyncWithHttpInfo($room_id, $from, $to, string $contentType = self::contentTypes['listAttendances'][0])
     {
         $returnType = '\Alfaview\Client\Model\UserAttendances[]';
-        $request = $this->listAttendancesRequest($room_id, $from, $to, $authorization, $contentType);
+        $request = $this->listAttendancesRequest($room_id, $from, $to, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -319,16 +357,15 @@ class ReportsApi
     /**
      * Create request for operation 'listAttendances'
      *
-     * @param  string $room_id The room ID for the attendances. (required)
-     * @param  \DateTime $from The start time of the time period to consider in the report. (required)
+     * @param  string $room_id The room ID. (required)
+     * @param  \DateTime $from The start time of the time period to consider in the report. A session is kept for 62 days after it ends. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAttendances'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listAttendancesRequest($room_id, $from, $to, $authorization = null, string $contentType = self::contentTypes['listAttendances'][0])
+    public function listAttendancesRequest($room_id, $from, $to, string $contentType = self::contentTypes['listAttendances'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -351,7 +388,6 @@ class ReportsApi
                 'Missing the required parameter $to when calling listAttendances'
             );
         }
-
 
 
         $resourcePath = '/v2/rooms/{roomId}/attendances';
@@ -380,15 +416,11 @@ class ReportsApi
             true // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -396,7 +428,7 @@ class ReportsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -419,13 +451,21 @@ class ReportsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -456,16 +496,15 @@ class ReportsApi
      * @param  \DateTime $from The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
      * @param  int $step_duration_hours The duration of the time periods to group the report results in hours. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listStatistics'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\StatsPeriod[]
+     * @return \Alfaview\Client\Model\StatsPeriod[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listStatistics($from, $to, $step_duration_hours, $authorization = null, string $contentType = self::contentTypes['listStatistics'][0])
+    public function listStatistics($from, $to, $step_duration_hours, string $contentType = self::contentTypes['listStatistics'][0])
     {
-        list($response) = $this->listStatisticsWithHttpInfo($from, $to, $step_duration_hours, $authorization, $contentType);
+        list($response) = $this->listStatisticsWithHttpInfo($from, $to, $step_duration_hours, $contentType);
         return $response;
     }
 
@@ -477,16 +516,15 @@ class ReportsApi
      * @param  \DateTime $from The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
      * @param  int $step_duration_hours The duration of the time periods to group the report results in hours. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listStatistics'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\StatsPeriod[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\StatsPeriod[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listStatisticsWithHttpInfo($from, $to, $step_duration_hours, $authorization = null, string $contentType = self::contentTypes['listStatistics'][0])
+    public function listStatisticsWithHttpInfo($from, $to, $step_duration_hours, string $contentType = self::contentTypes['listStatistics'][0])
     {
-        $request = $this->listStatisticsRequest($from, $to, $step_duration_hours, $authorization, $contentType);
+        $request = $this->listStatisticsRequest($from, $to, $step_duration_hours, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -515,6 +553,24 @@ class ReportsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\StatsPeriod[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -550,6 +606,30 @@ class ReportsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -565,15 +645,14 @@ class ReportsApi
      * @param  \DateTime $from The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
      * @param  int $step_duration_hours The duration of the time periods to group the report results in hours. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listStatistics'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listStatisticsAsync($from, $to, $step_duration_hours, $authorization = null, string $contentType = self::contentTypes['listStatistics'][0])
+    public function listStatisticsAsync($from, $to, $step_duration_hours, string $contentType = self::contentTypes['listStatistics'][0])
     {
-        return $this->listStatisticsAsyncWithHttpInfo($from, $to, $step_duration_hours, $authorization, $contentType)
+        return $this->listStatisticsAsyncWithHttpInfo($from, $to, $step_duration_hours, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -589,16 +668,15 @@ class ReportsApi
      * @param  \DateTime $from The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
      * @param  int $step_duration_hours The duration of the time periods to group the report results in hours. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listStatistics'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listStatisticsAsyncWithHttpInfo($from, $to, $step_duration_hours, $authorization = null, string $contentType = self::contentTypes['listStatistics'][0])
+    public function listStatisticsAsyncWithHttpInfo($from, $to, $step_duration_hours, string $contentType = self::contentTypes['listStatistics'][0])
     {
         $returnType = '\Alfaview\Client\Model\StatsPeriod[]';
-        $request = $this->listStatisticsRequest($from, $to, $step_duration_hours, $authorization, $contentType);
+        $request = $this->listStatisticsRequest($from, $to, $step_duration_hours, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -642,13 +720,12 @@ class ReportsApi
      * @param  \DateTime $from The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past. (required)
      * @param  \DateTime $to The end time of the time period to consider in the report. (required)
      * @param  int $step_duration_hours The duration of the time periods to group the report results in hours. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listStatistics'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listStatisticsRequest($from, $to, $step_duration_hours, $authorization = null, string $contentType = self::contentTypes['listStatistics'][0])
+    public function listStatisticsRequest($from, $to, $step_duration_hours, string $contentType = self::contentTypes['listStatistics'][0])
     {
 
         // verify the required parameter 'from' is set
@@ -675,7 +752,6 @@ class ReportsApi
             throw new \InvalidArgumentException('invalid value for "$step_duration_hours" when calling ReportsApi.listStatistics, must be bigger than or equal to 1.');
         }
         
-
 
         $resourcePath = '/v2/stats';
         $formParams = [];
@@ -712,15 +788,11 @@ class ReportsApi
             true // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -743,13 +815,21 @@ class ReportsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -786,6 +866,14 @@ class ReportsApi
             if (!$options[RequestOptions::DEBUG]) {
                 throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
             }
+        }
+
+        if ($this->config->getCertFile()) {
+            $options[RequestOptions::CERT] = $this->config->getCertFile();
+        }
+
+        if ($this->config->getKeyFile()) {
+            $options[RequestOptions::SSL_KEY] = $this->config->getKeyFile();
         }
 
         return $options;

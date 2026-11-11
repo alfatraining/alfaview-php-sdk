@@ -1,5 +1,7 @@
 # Alfaview\Client\ReportsApi
 
+Report endpoints
+
 All URIs are relative to https://apis.alfaview.com, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
@@ -11,12 +13,12 @@ All URIs are relative to https://apis.alfaview.com, except if the operation defi
 ## `listAttendances()`
 
 ```php
-listAttendances($room_id, $from, $to, $authorization): \Alfaview\Client\Model\UserAttendances[]
+listAttendances($room_id, $from, $to): \Alfaview\Client\Model\UserAttendances[]
 ```
 
 List Attendances
 
-Lists attendances at a room during a time period.
+Lists attendances at a room during a time period.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `promote` or `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -25,19 +27,22 @@ Lists attendances at a room during a time period.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\ReportsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The room ID for the attendances.
-$from = 2024-09-22T11:00:00Z; // \DateTime | The start time of the time period to consider in the report.
-$to = 2024-09-22T12:00:00Z; // \DateTime | The end time of the time period to consider in the report.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$room_id = 'room_id_example'; // string | The room ID.
+$from = new \DateTime('2013-10-20T19:20:30+01:00'); // \DateTime | The start time of the time period to consider in the report. A session is kept for 62 days after it ends.
+$to = new \DateTime('2013-10-20T19:20:30+01:00'); // \DateTime | The end time of the time period to consider in the report.
 
 try {
-    $result = $apiInstance->listAttendances($room_id, $from, $to, $authorization);
+    $result = $apiInstance->listAttendances($room_id, $from, $to);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ReportsApi->listAttendances: ', $e->getMessage(), PHP_EOL;
@@ -48,10 +53,9 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **room_id** | **string**| The room ID for the attendances. | |
-| **from** | **\DateTime**| The start time of the time period to consider in the report. | |
+| **room_id** | **string**| The room ID. | |
+| **from** | **\DateTime**| The start time of the time period to consider in the report. A session is kept for 62 days after it ends. | |
 | **to** | **\DateTime**| The end time of the time period to consider in the report. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
 
 ### Return type
 
@@ -59,12 +63,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -73,12 +77,12 @@ No authorization required
 ## `listStatistics()`
 
 ```php
-listStatistics($from, $to, $step_duration_hours, $authorization): \Alfaview\Client\Model\StatsPeriod[]
+listStatistics($from, $to, $step_duration_hours): \Alfaview\Client\Model\StatsPeriod[]
 ```
 
 List Statistics
 
-Lists statistics for provided filters grouped by time periods depending on the corresponding query parameter.
+Lists statistics for provided filters grouped by time periods depending on the corresponding query parameter.  **Required permissions:** - user permission `manageCompany`
 
 ### Example
 
@@ -87,19 +91,22 @@ Lists statistics for provided filters grouped by time periods depending on the c
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\ReportsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$from = 2024-09-22T11:00:00Z; // \DateTime | The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past.
-$to = 2024-09-22T12:00:00Z; // \DateTime | The end time of the time period to consider in the report.
+$from = new \DateTime('2013-10-20T19:20:30+01:00'); // \DateTime | The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past.
+$to = new \DateTime('2013-10-20T19:20:30+01:00'); // \DateTime | The end time of the time period to consider in the report.
 $step_duration_hours = 56; // int | The duration of the time periods to group the report results in hours.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
 
 try {
-    $result = $apiInstance->listStatistics($from, $to, $step_duration_hours, $authorization);
+    $result = $apiInstance->listStatistics($from, $to, $step_duration_hours);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling ReportsApi->listStatistics: ', $e->getMessage(), PHP_EOL;
@@ -113,7 +120,6 @@ try {
 | **from** | **\DateTime**| The start time of the time period to consider in the report. The earliest start time can be exactly 62 days in the past. | |
 | **to** | **\DateTime**| The end time of the time period to consider in the report. | |
 | **step_duration_hours** | **int**| The duration of the time periods to group the report results in hours. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
 
 ### Return type
 
@@ -121,12 +127,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)

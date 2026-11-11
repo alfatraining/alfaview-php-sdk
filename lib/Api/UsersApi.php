@@ -12,11 +12,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -74,10 +74,22 @@ class UsersApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
+        'deleteUser' => [
+            'application/json',
+        ],
+        'getOwnCompany' => [
+            'application/json',
+        ],
+        'getOwnUser' => [
+            'application/json',
+        ],
         'inviteUser' => [
             'application/json',
         ],
         'listUsers' => [
+            'application/json',
+        ],
+        'updateUser' => [
             'application/json',
         ],
     ];
@@ -129,39 +141,37 @@ class UsersApi
     }
 
     /**
-     * Operation inviteUser
+     * Operation deleteUser
      *
-     * Invite User
+     * Delete User
      *
-     * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
+     * @param  string $id The user ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteUser'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function inviteUser($user_invitation, $authorization = null, string $contentType = self::contentTypes['inviteUser'][0])
+    public function deleteUser($id, string $contentType = self::contentTypes['deleteUser'][0])
     {
-        $this->inviteUserWithHttpInfo($user_invitation, $authorization, $contentType);
+        $this->deleteUserWithHttpInfo($id, $contentType);
     }
 
     /**
-     * Operation inviteUserWithHttpInfo
+     * Operation deleteUserWithHttpInfo
      *
-     * Invite User
+     * Delete User
      *
-     * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
+     * @param  string $id The user ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteUser'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function inviteUserWithHttpInfo($user_invitation, $authorization = null, string $contentType = self::contentTypes['inviteUser'][0])
+    public function deleteUserWithHttpInfo($id, string $contentType = self::contentTypes['deleteUser'][0])
     {
-        $request = $this->inviteUserRequest($user_invitation, $authorization, $contentType);
+        $request = $this->deleteUserRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -189,6 +199,820 @@ class UsersApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation deleteUserAsync
+     *
+     * Delete User
+     *
+     * @param  string $id The user ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function deleteUserAsync($id, string $contentType = self::contentTypes['deleteUser'][0])
+    {
+        return $this->deleteUserAsyncWithHttpInfo($id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation deleteUserAsyncWithHttpInfo
+     *
+     * Delete User
+     *
+     * @param  string $id The user ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function deleteUserAsyncWithHttpInfo($id, string $contentType = self::contentTypes['deleteUser'][0])
+    {
+        $returnType = '';
+        $request = $this->deleteUserRequest($id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'deleteUser'
+     *
+     * @param  string $id The user ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function deleteUserRequest($id, string $contentType = self::contentTypes['deleteUser'][0])
+    {
+
+        // verify the required parameter 'id' is set
+        if ($id === null || (is_array($id) && count($id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $id when calling deleteUser'
+            );
+        }
+
+
+        $resourcePath = '/v2/users/{id}';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($id !== null) {
+            $resourcePath = str_replace(
+                '{id}',
+                ObjectSerializer::toPathValue($id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'DELETE',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getOwnCompany
+     *
+     * Get own company
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnCompany'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\Company|\Alfaview\Client\Model\ErrorModel
+     */
+    public function getOwnCompany(string $contentType = self::contentTypes['getOwnCompany'][0])
+    {
+        list($response) = $this->getOwnCompanyWithHttpInfo($contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getOwnCompanyWithHttpInfo
+     *
+     * Get own company
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnCompany'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\Company|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getOwnCompanyWithHttpInfo(string $contentType = self::contentTypes['getOwnCompany'][0])
+    {
+        $request = $this->getOwnCompanyRequest($contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\Company',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\Company',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\Company',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getOwnCompanyAsync
+     *
+     * Get own company
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnCompany'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getOwnCompanyAsync(string $contentType = self::contentTypes['getOwnCompany'][0])
+    {
+        return $this->getOwnCompanyAsyncWithHttpInfo($contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getOwnCompanyAsyncWithHttpInfo
+     *
+     * Get own company
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnCompany'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getOwnCompanyAsyncWithHttpInfo(string $contentType = self::contentTypes['getOwnCompany'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\Company';
+        $request = $this->getOwnCompanyRequest($contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getOwnCompany'
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnCompany'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getOwnCompanyRequest(string $contentType = self::contentTypes['getOwnCompany'][0])
+    {
+
+
+        $resourcePath = '/v2/users/me/company';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getOwnUser
+     *
+     * Get Own User
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnUser'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\UserProfile|\Alfaview\Client\Model\ErrorModel
+     */
+    public function getOwnUser(string $contentType = self::contentTypes['getOwnUser'][0])
+    {
+        list($response) = $this->getOwnUserWithHttpInfo($contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getOwnUserWithHttpInfo
+     *
+     * Get Own User
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnUser'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\UserProfile|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getOwnUserWithHttpInfo(string $contentType = self::contentTypes['getOwnUser'][0])
+    {
+        $request = $this->getOwnUserRequest($contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\UserProfile',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\UserProfile',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\UserProfile',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getOwnUserAsync
+     *
+     * Get Own User
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getOwnUserAsync(string $contentType = self::contentTypes['getOwnUser'][0])
+    {
+        return $this->getOwnUserAsyncWithHttpInfo($contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getOwnUserAsyncWithHttpInfo
+     *
+     * Get Own User
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getOwnUserAsyncWithHttpInfo(string $contentType = self::contentTypes['getOwnUser'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\UserProfile';
+        $request = $this->getOwnUserRequest($contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getOwnUser'
+     *
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getOwnUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getOwnUserRequest(string $contentType = self::contentTypes['getOwnUser'][0])
+    {
+
+
+        $resourcePath = '/v2/users/me';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation inviteUser
+     *
+     * Invite User
+     *
+     * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    public function inviteUser($user_invitation, string $contentType = self::contentTypes['inviteUser'][0])
+    {
+        $this->inviteUserWithHttpInfo($user_invitation, $contentType);
+    }
+
+    /**
+     * Operation inviteUserWithHttpInfo
+     *
+     * Invite User
+     *
+     * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function inviteUserWithHttpInfo($user_invitation, string $contentType = self::contentTypes['inviteUser'][0])
+    {
+        $request = $this->inviteUserRequest($user_invitation, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            return [null, $statusCode, $response->getHeaders()];
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -202,15 +1026,14 @@ class UsersApi
      * Invite User
      *
      * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function inviteUserAsync($user_invitation, $authorization = null, string $contentType = self::contentTypes['inviteUser'][0])
+    public function inviteUserAsync($user_invitation, string $contentType = self::contentTypes['inviteUser'][0])
     {
-        return $this->inviteUserAsyncWithHttpInfo($user_invitation, $authorization, $contentType)
+        return $this->inviteUserAsyncWithHttpInfo($user_invitation, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -224,16 +1047,15 @@ class UsersApi
      * Invite User
      *
      * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function inviteUserAsyncWithHttpInfo($user_invitation, $authorization = null, string $contentType = self::contentTypes['inviteUser'][0])
+    public function inviteUserAsyncWithHttpInfo($user_invitation, string $contentType = self::contentTypes['inviteUser'][0])
     {
         $returnType = '';
-        $request = $this->inviteUserRequest($user_invitation, $authorization, $contentType);
+        $request = $this->inviteUserRequest($user_invitation, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -262,13 +1084,12 @@ class UsersApi
      * Create request for operation 'inviteUser'
      *
      * @param  \Alfaview\Client\Model\UserInvitation $user_invitation The user to invite. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['inviteUser'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function inviteUserRequest($user_invitation, $authorization = null, string $contentType = self::contentTypes['inviteUser'][0])
+    public function inviteUserRequest($user_invitation, string $contentType = self::contentTypes['inviteUser'][0])
     {
 
         // verify the required parameter 'user_invitation' is set
@@ -279,7 +1100,6 @@ class UsersApi
         }
 
 
-
         $resourcePath = '/v2/users/invitation';
         $formParams = [];
         $queryParams = [];
@@ -288,15 +1108,11 @@ class UsersApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -305,7 +1121,11 @@ class UsersApi
         if (isset($user_invitation)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($user_invitation));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($user_invitation), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $user_invitation;
             }
@@ -326,13 +1146,21 @@ class UsersApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -358,38 +1186,36 @@ class UsersApi
     /**
      * Operation listUsers
      *
-     * List users
+     * List Users
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string|null $email_address The email address of the user. (optional)
+     * @param  string|null $email_address The email address. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listUsers'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\User[]
+     * @return \Alfaview\Client\Model\User[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listUsers($authorization = null, $email_address = null, string $contentType = self::contentTypes['listUsers'][0])
+    public function listUsers($email_address = null, string $contentType = self::contentTypes['listUsers'][0])
     {
-        list($response) = $this->listUsersWithHttpInfo($authorization, $email_address, $contentType);
+        list($response) = $this->listUsersWithHttpInfo($email_address, $contentType);
         return $response;
     }
 
     /**
      * Operation listUsersWithHttpInfo
      *
-     * List users
+     * List Users
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string|null $email_address The email address of the user. (optional)
+     * @param  string|null $email_address The email address. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listUsers'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\User[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\User[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listUsersWithHttpInfo($authorization = null, $email_address = null, string $contentType = self::contentTypes['listUsers'][0])
+    public function listUsersWithHttpInfo($email_address = null, string $contentType = self::contentTypes['listUsers'][0])
     {
-        $request = $this->listUsersRequest($authorization, $email_address, $contentType);
+        $request = $this->listUsersRequest($email_address, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -418,6 +1244,24 @@ class UsersApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\User[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -453,6 +1297,30 @@ class UsersApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -463,18 +1331,17 @@ class UsersApi
     /**
      * Operation listUsersAsync
      *
-     * List users
+     * List Users
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string|null $email_address The email address of the user. (optional)
+     * @param  string|null $email_address The email address. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listUsersAsync($authorization = null, $email_address = null, string $contentType = self::contentTypes['listUsers'][0])
+    public function listUsersAsync($email_address = null, string $contentType = self::contentTypes['listUsers'][0])
     {
-        return $this->listUsersAsyncWithHttpInfo($authorization, $email_address, $contentType)
+        return $this->listUsersAsyncWithHttpInfo($email_address, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -485,19 +1352,18 @@ class UsersApi
     /**
      * Operation listUsersAsyncWithHttpInfo
      *
-     * List users
+     * List Users
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string|null $email_address The email address of the user. (optional)
+     * @param  string|null $email_address The email address. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listUsersAsyncWithHttpInfo($authorization = null, $email_address = null, string $contentType = self::contentTypes['listUsers'][0])
+    public function listUsersAsyncWithHttpInfo($email_address = null, string $contentType = self::contentTypes['listUsers'][0])
     {
         $returnType = '\Alfaview\Client\Model\User[]';
-        $request = $this->listUsersRequest($authorization, $email_address, $contentType);
+        $request = $this->listUsersRequest($email_address, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -538,16 +1404,14 @@ class UsersApi
     /**
      * Create request for operation 'listUsers'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string|null $email_address The email address of the user. (optional)
+     * @param  string|null $email_address The email address. (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listUsers'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listUsersRequest($authorization = null, $email_address = null, string $contentType = self::contentTypes['listUsers'][0])
+    public function listUsersRequest($email_address = null, string $contentType = self::contentTypes['listUsers'][0])
     {
-
 
 
 
@@ -568,15 +1432,11 @@ class UsersApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -599,13 +1459,21 @@ class UsersApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -629,6 +1497,259 @@ class UsersApi
     }
 
     /**
+     * Operation updateUser
+     *
+     * Update Own User
+     *
+     * @param  \Alfaview\Client\Model\UserUpdate $user_update The updated user information. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateUser'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    public function updateUser($user_update, string $contentType = self::contentTypes['updateUser'][0])
+    {
+        $this->updateUserWithHttpInfo($user_update, $contentType);
+    }
+
+    /**
+     * Operation updateUserWithHttpInfo
+     *
+     * Update Own User
+     *
+     * @param  \Alfaview\Client\Model\UserUpdate $user_update The updated user information. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateUser'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function updateUserWithHttpInfo($user_update, string $contentType = self::contentTypes['updateUser'][0])
+    {
+        $request = $this->updateUserRequest($user_update, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            return [null, $statusCode, $response->getHeaders()];
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation updateUserAsync
+     *
+     * Update Own User
+     *
+     * @param  \Alfaview\Client\Model\UserUpdate $user_update The updated user information. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function updateUserAsync($user_update, string $contentType = self::contentTypes['updateUser'][0])
+    {
+        return $this->updateUserAsyncWithHttpInfo($user_update, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation updateUserAsyncWithHttpInfo
+     *
+     * Update Own User
+     *
+     * @param  \Alfaview\Client\Model\UserUpdate $user_update The updated user information. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function updateUserAsyncWithHttpInfo($user_update, string $contentType = self::contentTypes['updateUser'][0])
+    {
+        $returnType = '';
+        $request = $this->updateUserRequest($user_update, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'updateUser'
+     *
+     * @param  \Alfaview\Client\Model\UserUpdate $user_update The updated user information. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateUser'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function updateUserRequest($user_update, string $contentType = self::contentTypes['updateUser'][0])
+    {
+
+        // verify the required parameter 'user_update' is set
+        if ($user_update === null || (is_array($user_update) && count($user_update) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $user_update when calling updateUser'
+            );
+        }
+
+
+        $resourcePath = '/v2/users';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($user_update)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($user_update), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $user_update;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'PATCH',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Create http client option
      *
      * @throws \RuntimeException on file opening failure
@@ -642,6 +1763,14 @@ class UsersApi
             if (!$options[RequestOptions::DEBUG]) {
                 throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
             }
+        }
+
+        if ($this->config->getCertFile()) {
+            $options[RequestOptions::CERT] = $this->config->getCertFile();
+        }
+
+        if ($this->config->getKeyFile()) {
+            $options[RequestOptions::SSL_KEY] = $this->config->getKeyFile();
         }
 
         return $options;

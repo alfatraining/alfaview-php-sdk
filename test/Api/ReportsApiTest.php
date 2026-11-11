@@ -27,9 +27,6 @@
 
 namespace Alfaview\Client\Test\Api;
 
-use \Alfaview\Client\Configuration;
-use \Alfaview\Client\ApiException;
-use \Alfaview\Client\ObjectSerializer;
 use PHPUnit\Framework\TestCase;
 
 /**

@@ -1,4 +1,4 @@
-# # ErrorDetail
+# ErrorDetail
 
 ## Properties
 

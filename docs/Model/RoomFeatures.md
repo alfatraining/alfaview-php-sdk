@@ -1,4 +1,4 @@
-# # RoomFeatures
+# RoomFeatures
 
 ## Properties
 
@@ -10,6 +10,9 @@ Name | Type | Description | Notes
 **disable_camera_off** | **string** | Prevents the camera from being turned off. |
 **disable_join_and_leave_notifications** | **string** | Disables notifications when users join or leave the room. |
 **disable_mini_window** | **string** | Prevents the display of the floating mini window when the alfaview window is minimized. |
+**exam_screenshare** | **string** | All monitors of all participants in this room are shared with the moderators. Users with an incompatible version are not able to join the room. Linux users can always join the room due to technical limitations on Linux systems with this feature. |
+**live_streaming** | **string** | Allows to live stream all video and audio in the alfaview room to external live streaming servers. |
+**local_recording** | **string** | Allows to record all video and audio in the alfaview room. Recorded video files are stored locally. |
 **raise_hands** | **string** | Allows participants and spectators to raise their hand to indicate that they want to say something. |
 **share_content_only_to_moderators** | **string** | If enabled, only moderators can see active screen shares. |
 **show_raised_hands_only_to_moderators** | **string** | If enabled, only moderators can see who is currently raising a hand. |

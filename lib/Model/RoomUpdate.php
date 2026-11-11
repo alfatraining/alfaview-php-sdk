@@ -13,11 +13,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -45,21 +45,22 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     public const DISCRIMINATOR = null;
 
     /**
-      * The original name of the model.
-      *
-      * @var string
-      */
+     * The original name of the model.
+     *
+     * @var string
+     */
     protected static $openAPIModelName = 'RoomUpdate';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
+     * Array of property to type mappings. Used for (de)serialization
+     *
+     * @var string[]
+     */
     protected static $openAPITypes = [
         'default_permissions' => '\Alfaview\Client\Model\Permissions',
         'display_name' => 'string',
-        'features' => '\Alfaview\Client\Model\RoomFeatures',
+        'features' => '\Alfaview\Client\Model\RoomFeaturesEdit',
+        'passcode_required' => 'bool',
         'permissions' => '\Alfaview\Client\Model\ParticipantPermissions[]',
         'quotas' => '\Alfaview\Client\Model\RoomQuotasEdit',
         'subrooms' => '\Alfaview\Client\Model\SubroomEditListItem[]',
@@ -68,16 +69,17 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * Array of property to format mappings. Used for (de)serialization
-      *
-      * @var string[]
-      * @phpstan-var array<string, string|null>
-      * @psalm-var array<string, string|null>
-      */
+     * Array of property to format mappings. Used for (de)serialization
+     *
+     * @var string[]
+     * @phpstan-var array<string, string|null>
+     * @psalm-var array<string, string|null>
+     */
     protected static $openAPIFormats = [
         'default_permissions' => null,
         'display_name' => null,
         'features' => null,
+        'passcode_required' => null,
         'permissions' => null,
         'quotas' => null,
         'subrooms' => null,
@@ -86,14 +88,15 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * Array of nullable properties. Used for (de)serialization
-      *
-      * @var boolean[]
-      */
+     * Array of nullable properties. Used for (de)serialization
+     *
+     * @var boolean[]
+     */
     protected static array $openAPINullables = [
         'default_permissions' => false,
         'display_name' => true,
         'features' => false,
+        'passcode_required' => true,
         'permissions' => true,
         'quotas' => false,
         'subrooms' => true,
@@ -102,10 +105,10 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * If a nullable field gets set to null, insert it here
-      *
-      * @var boolean[]
-      */
+     * If a nullable field gets set to null, insert it here
+     *
+     * @var boolean[]
+     */
     protected array $openAPINullablesSetToNull = [];
 
     /**
@@ -190,6 +193,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         'default_permissions' => 'defaultPermissions',
         'display_name' => 'displayName',
         'features' => 'features',
+        'passcode_required' => 'passcodeRequired',
         'permissions' => 'permissions',
         'quotas' => 'quotas',
         'subrooms' => 'subrooms',
@@ -206,6 +210,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         'default_permissions' => 'setDefaultPermissions',
         'display_name' => 'setDisplayName',
         'features' => 'setFeatures',
+        'passcode_required' => 'setPasscodeRequired',
         'permissions' => 'setPermissions',
         'quotas' => 'setQuotas',
         'subrooms' => 'setSubrooms',
@@ -222,6 +227,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         'default_permissions' => 'getDefaultPermissions',
         'display_name' => 'getDisplayName',
         'features' => 'getFeatures',
+        'passcode_required' => 'getPasscodeRequired',
         'permissions' => 'getPermissions',
         'quotas' => 'getQuotas',
         'subrooms' => 'getSubrooms',
@@ -289,6 +295,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('default_permissions', $data ?? [], null);
         $this->setIfExists('display_name', $data ?? [], null);
         $this->setIfExists('features', $data ?? [], null);
+        $this->setIfExists('passcode_required', $data ?? [], null);
         $this->setIfExists('permissions', $data ?? [], null);
         $this->setIfExists('quotas', $data ?? [], null);
         $this->setIfExists('subrooms', $data ?? [], null);
@@ -297,14 +304,14 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-    * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
-    * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
-    * $this->openAPINullablesSetToNull array
-    *
-    * @param string $variableName
-    * @param array  $fields
-    * @param mixed  $defaultValue
-    */
+     * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
+     * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
+     * $this->openAPINullablesSetToNull array
+     *
+     * @param string $variableName
+     * @param array  $fields
+     * @param mixed  $defaultValue
+     */
     private function setIfExists(string $variableName, array $fields, $defaultValue): void
     {
         if (self::isNullable($variableName) && array_key_exists($variableName, $fields) && is_null($fields[$variableName])) {
@@ -351,7 +358,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets default_permissions
      *
-     * @param \Alfaview\Client\Model\Permissions|null $default_permissions Optional default permissions for every non-guest user in this room.
+     * @param \Alfaview\Client\Model\Permissions|null $default_permissions Optional default permissions for every non-guest user. If default permissions are empty, users will not have any permissions by default.
      *
      * @return self
      */
@@ -378,7 +385,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets display_name
      *
-     * @param string|null $display_name The name of the room that is displayed in UIs.
+     * @param string|null $display_name The name that is displayed in UIs.
      *
      * @return self
      */
@@ -402,7 +409,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Gets features
      *
-     * @return \Alfaview\Client\Model\RoomFeatures|null
+     * @return \Alfaview\Client\Model\RoomFeaturesEdit|null
      */
     public function getFeatures()
     {
@@ -412,7 +419,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets features
      *
-     * @param \Alfaview\Client\Model\RoomFeatures|null $features The features configuration of this room.
+     * @param \Alfaview\Client\Model\RoomFeaturesEdit|null $features The feature configuration. If no state is specified for a feature, <code>default</code> is assumed.
      *
      * @return self
      */
@@ -422,6 +429,40 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
             throw new \InvalidArgumentException('non-nullable features cannot be null');
         }
         $this->container['features'] = $features;
+
+        return $this;
+    }
+
+    /**
+     * Gets passcode_required
+     *
+     * @return bool|null
+     */
+    public function getPasscodeRequired()
+    {
+        return $this->container['passcode_required'];
+    }
+
+    /**
+     * Sets passcode_required
+     *
+     * @param bool|null $passcode_required If true, a passcode is required to enter the room.
+     *
+     * @return self
+     */
+    public function setPasscodeRequired($passcode_required)
+    {
+        if (is_null($passcode_required)) {
+            array_push($this->openAPINullablesSetToNull, 'passcode_required');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('passcode_required', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['passcode_required'] = $passcode_required;
 
         return $this;
     }
@@ -439,7 +480,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets permissions
      *
-     * @param \Alfaview\Client\Model\ParticipantPermissions[]|null $permissions The permissions of users for this room. Permissions not present in this array will be deleted.
+     * @param \Alfaview\Client\Model\ParticipantPermissions[]|null $permissions The user permissions. Permissions not present in this array will be deleted.
      *
      * @return self
      */
@@ -473,7 +514,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets quotas
      *
-     * @param \Alfaview\Client\Model\RoomQuotasEdit|null $quotas The quota information of the room.
+     * @param \Alfaview\Client\Model\RoomQuotasEdit|null $quotas The quota information.
      *
      * @return self
      */
@@ -500,7 +541,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets subrooms
      *
-     * @param \Alfaview\Client\Model\SubroomEditListItem[]|null $subrooms A full list of all subrooms contained in the room. Subrooms not present in this list will be deleted.
+     * @param \Alfaview\Client\Model\SubroomEditListItem[]|null $subrooms The contained subrooms. Subrooms not present in this list will be deleted.
      *
      * @return self
      */
@@ -534,7 +575,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets waiting_room_enabled
      *
-     * @param bool|null $waiting_room_enabled If true, participants will join the waiting room to be admitted by a moderator. Rooms of the type 'department' cannot have a waiting room.
+     * @param bool|null $waiting_room_enabled If true, participants will enter the waiting room when joining the room. A moderator can admit waiting participants to join the actual room. Rooms of the type <code>department</code> cannot have a waiting room
      *
      * @return self
      */
@@ -568,7 +609,7 @@ class RoomUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets waiting_room_welcome_note
      *
-     * @param string|null $waiting_room_welcome_note The welcome note that is shown to the participants as they join the waiting room. Rooms of the type 'department' cannot have a waiting room.
+     * @param string|null $waiting_room_welcome_note The welcome note that is shown to the participants as they join the waiting room. Rooms of the type <code>department</code> cannot have a waiting room.
      *
      * @return self
      */

@@ -1,4 +1,4 @@
-# # InviteUserPermissions
+# InviteUserPermissions
 
 ## Properties
 

@@ -27,9 +27,8 @@
 
 namespace Alfaview\Client\Test\Api;
 
-use \Alfaview\Client\Configuration;
-use \Alfaview\Client\ApiException;
-use \Alfaview\Client\ObjectSerializer;
+use Alfaview\Client\Alfaview;
+use Alfaview\Client\Model\APICredentials;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -42,6 +41,9 @@ use PHPUnit\Framework\TestCase;
  */
 class UsersApiTest extends TestCase
 {
+    protected Alfaview $alfaview;
+
+    protected APICredentials $credentials;
 
     /**
      * Setup before running any test cases
@@ -55,6 +57,13 @@ class UsersApiTest extends TestCase
      */
     public function setUp(): void
     {
+        $this->alfaview = new Alfaview();
+        $this->alfaview->setHost(getenv('API_HOST'));
+
+        $this->credentials = new APICredentials();
+        $this->credentials->setClientId(getenv('API_CLIENT_ID'));
+        $this->credentials->setKey(getenv('API_CODE'));
+        $this->credentials->setCompanyId(getenv('API_COMPANY_ID'));
     }
 
     /**
@@ -72,12 +81,85 @@ class UsersApiTest extends TestCase
     }
 
     /**
+     * Test case for deleteUser
+     *
+     * Delete User.
+     *
+     */
+    public function testDeleteUser()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for getOwnCompany
+     *
+     * Get own Company.
+     *
+     */
+    public function testGetOwnCompany()
+    {
+        $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+
+        $company = $this->alfaview->usersApi->getOwnCompany();
+
+        $this->assertEquals(getenv('API_COMPANY_ID'), $company->getCompanyId());
+        $this->assertNotEmpty($company->getDisplayName());
+    }
+
+    /**
+     * Test case for getOwnUser
+     *
+     * Get own User.
+     *
+     */
+    public function testGetOwnUser()
+    {
+        $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+
+        $user = $this->alfaview->usersApi->getOwnUser();
+
+        $this->assertNotEmpty($user->getId());
+    }
+
+    /**
      * Test case for inviteUser
      *
      * Invite User.
      *
      */
     public function testInviteUser()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for listUsers
+     *
+     * List users.
+     *
+     */
+    public function testListUsers()
+    {
+        $accessToken = $this->alfaview->authenticationApi->authenticateAPIKey($this->credentials);
+        $this->alfaview->setAccessToken($accessToken->getAccessToken());
+
+        $users = $this->alfaview->usersApi->listUsers();
+
+        $this->assertIsArray($users);
+    }
+
+    /**
+     * Test case for updateUser
+     *
+     * Update own User.
+     *
+     */
+    public function testUpdateUser()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

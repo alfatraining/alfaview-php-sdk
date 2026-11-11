@@ -1,9 +1,13 @@
 # Alfaview\Client\GuestsApi
 
+Guest endpoints
+
 All URIs are relative to https://apis.alfaview.com, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
 | ------------- | ------------- | ------------- |
+| [**authenticateGroupLink()**](GuestsApi.md#authenticateGroupLink) | **POST** /v2/auth/group-link | Authenticate a Guest (Group Link) |
+| [**authenticateGuestLink()**](GuestsApi.md#authenticateGuestLink) | **POST** /v2/auth/guest-link | Authenticate a Guest (Guest Link) |
 | [**createGroupLink()**](GuestsApi.md#createGroupLink) | **POST** /v2/rooms/{roomId}/group-links | Create Group Links |
 | [**createGuestLinks()**](GuestsApi.md#createGuestLinks) | **POST** /v2/rooms/{roomId}/guest-links | Create Guest Links |
 | [**deleteGroupLink()**](GuestsApi.md#deleteGroupLink) | **DELETE** /v2/rooms/{roomId}/group-links/{id} | Delete Group Link |
@@ -18,15 +22,15 @@ All URIs are relative to https://apis.alfaview.com, except if the operation defi
 | [**updateGuestLink()**](GuestsApi.md#updateGuestLink) | **PATCH** /v2/guest-links/{id} | Update Guest Link |
 
 
-## `createGroupLink()`
+## `authenticateGroupLink()`
 
 ```php
-createGroupLink($room_id, $create_group_links_request_body, $authorization): \Alfaview\Client\Model\ID[]
+authenticateGroupLink($authenticate_group_link_request_body): \Alfaview\Client\Model\GroupLinkAuthenticationInfo
 ```
 
-Create Group Links
+Authenticate a Guest (Group Link)
 
-Creates group links for a room.
+Tries to authenticate a group link guest via access key. If the access key exists, information about the guest's authentication are returned. If the access key is also valid at the time of the request, the response additionally includes an access token and a token expiry time.  **Required permissions:** - none
 
 ### Example
 
@@ -41,12 +45,127 @@ $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The room ID for the group links.
-$create_group_links_request_body = new \Alfaview\Client\Model\CreateGroupLinksRequestBody(); // \Alfaview\Client\Model\CreateGroupLinksRequestBody
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$authenticate_group_link_request_body = new \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody(); // \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody | The authentication information for the guest.
 
 try {
-    $result = $apiInstance->createGroupLink($room_id, $create_group_links_request_body, $authorization);
+    $result = $apiInstance->authenticateGroupLink($authenticate_group_link_request_body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling GuestsApi->authenticateGroupLink: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **authenticate_group_link_request_body** | [**\Alfaview\Client\Model\AuthenticateGroupLinkRequestBody**](../Model/AuthenticateGroupLinkRequestBody.md)| The authentication information for the guest. | |
+
+### Return type
+
+[**\Alfaview\Client\Model\GroupLinkAuthenticationInfo**](../Model/GroupLinkAuthenticationInfo.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `authenticateGuestLink()`
+
+```php
+authenticateGuestLink($authenticate_guest_link_request_body): \Alfaview\Client\Model\GuestLinkAuthenticationInfo
+```
+
+Authenticate a Guest (Guest Link)
+
+Tries to authenticate a guest link guest via access key. If the access key exists, information about the guest's authentication are returned. If the access key is also valid at the time of the request, the response additionally includes an access token and a token expiry time.  **Required permissions:** - none
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+
+$apiInstance = new Alfaview\Client\Api\GuestsApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client()
+);
+$authenticate_guest_link_request_body = new \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody(); // \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody | The authentication information for the guest.
+
+try {
+    $result = $apiInstance->authenticateGuestLink($authenticate_guest_link_request_body);
+    print_r($result);
+} catch (Exception $e) {
+    echo 'Exception when calling GuestsApi->authenticateGuestLink: ', $e->getMessage(), PHP_EOL;
+}
+```
+
+### Parameters
+
+| Name | Type | Description  | Notes |
+| ------------- | ------------- | ------------- | ------------- |
+| **authenticate_guest_link_request_body** | [**\Alfaview\Client\Model\AuthenticateGuestLinkRequestBody**](../Model/AuthenticateGuestLinkRequestBody.md)| The authentication information for the guest. | |
+
+### Return type
+
+[**\Alfaview\Client\Model\GuestLinkAuthenticationInfo**](../Model/GuestLinkAuthenticationInfo.md)
+
+### Authorization
+
+No authorization required
+
+### HTTP request headers
+
+- **Content-Type**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
+
+[[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
+[[Back to Model list]](../../README.md#models)
+[[Back to README]](../../README.md)
+
+## `createGroupLink()`
+
+```php
+createGroupLink($room_id, $create_group_links_request_body): \Alfaview\Client\Model\ID[]
+```
+
+Create Group Links
+
+Creates group links for a room.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
+
+### Example
+
+```php
+<?php
+require_once(__DIR__ . '/vendor/autoload.php');
+
+
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
+
+$apiInstance = new Alfaview\Client\Api\GuestsApi(
+    // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
+    // This is optional, `GuzzleHttp\Client` will be used as default.
+    new GuzzleHttp\Client(),
+    $config
+);
+$room_id = 'room_id_example'; // string | The room ID.
+$create_group_links_request_body = new \Alfaview\Client\Model\CreateGroupLinksRequestBody(); // \Alfaview\Client\Model\CreateGroupLinksRequestBody | The group links to create.
+
+try {
+    $result = $apiInstance->createGroupLink($room_id, $create_group_links_request_body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->createGroupLink: ', $e->getMessage(), PHP_EOL;
@@ -57,9 +176,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **room_id** | **string**| The room ID for the group links. | |
-| **create_group_links_request_body** | [**\Alfaview\Client\Model\CreateGroupLinksRequestBody**](../Model/CreateGroupLinksRequestBody.md)|  | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **room_id** | **string**| The room ID. | |
+| **create_group_links_request_body** | [**\Alfaview\Client\Model\CreateGroupLinksRequestBody**](../Model/CreateGroupLinksRequestBody.md)| The group links to create. | |
 
 ### Return type
 
@@ -67,12 +185,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -81,12 +199,12 @@ No authorization required
 ## `createGuestLinks()`
 
 ```php
-createGuestLinks($room_id, $create_guest_links_request_body, $authorization): \Alfaview\Client\Model\ID[]
+createGuestLinks($room_id, $create_guest_links_request_body): \Alfaview\Client\Model\GuestLink[]
 ```
 
 Create Guest Links
 
-Creates guest links for a room.
+Creates guest links for a room.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -95,18 +213,21 @@ Creates guest links for a room.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The room ID for the guest link.
-$create_guest_links_request_body = new \Alfaview\Client\Model\CreateGuestLinksRequestBody(); // \Alfaview\Client\Model\CreateGuestLinksRequestBody
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$room_id = 'room_id_example'; // string | The room ID.
+$create_guest_links_request_body = new \Alfaview\Client\Model\CreateGuestLinksRequestBody(); // \Alfaview\Client\Model\CreateGuestLinksRequestBody | The guest links to create.
 
 try {
-    $result = $apiInstance->createGuestLinks($room_id, $create_guest_links_request_body, $authorization);
+    $result = $apiInstance->createGuestLinks($room_id, $create_guest_links_request_body);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->createGuestLinks: ', $e->getMessage(), PHP_EOL;
@@ -117,22 +238,21 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **room_id** | **string**| The room ID for the guest link. | |
-| **create_guest_links_request_body** | [**\Alfaview\Client\Model\CreateGuestLinksRequestBody**](../Model/CreateGuestLinksRequestBody.md)|  | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **room_id** | **string**| The room ID. | |
+| **create_guest_links_request_body** | [**\Alfaview\Client\Model\CreateGuestLinksRequestBody**](../Model/CreateGuestLinksRequestBody.md)| The guest links to create. | |
 
 ### Return type
 
-[**\Alfaview\Client\Model\ID[]**](../Model/ID.md)
+[**\Alfaview\Client\Model\GuestLink[]**](../Model/GuestLink.md)
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -141,12 +261,12 @@ No authorization required
 ## `deleteGroupLink()`
 
 ```php
-deleteGroupLink($id, $room_id, $authorization)
+deleteGroupLink($id, $room_id)
 ```
 
 Delete Group Link
 
-Deletes a group link.
+Deletes a group link.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator.
 
 ### Example
 
@@ -155,18 +275,21 @@ Deletes a group link.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$id = 00000000-0000-0000-0000-000000000000; // string | The ID of the group link to delete.
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The ID of the room of the group link.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$id = 'id_example'; // string | The group link ID.
+$room_id = 'room_id_example'; // string | The room ID.
 
 try {
-    $apiInstance->deleteGroupLink($id, $room_id, $authorization);
+    $apiInstance->deleteGroupLink($id, $room_id);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->deleteGroupLink: ', $e->getMessage(), PHP_EOL;
 }
@@ -176,9 +299,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **id** | **string**| The ID of the group link to delete. | |
-| **room_id** | **string**| The ID of the room of the group link. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **id** | **string**| The group link ID. | |
+| **room_id** | **string**| The room ID. | |
 
 ### Return type
 
@@ -186,12 +308,12 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -200,12 +322,12 @@ No authorization required
 ## `deleteGuestLink()`
 
 ```php
-deleteGuestLink($id, $room_id, $authorization)
+deleteGuestLink($id, $room_id)
 ```
 
 Delete Guest Link
 
-Deletes a guest link.
+Deletes a guest link.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator.
 
 ### Example
 
@@ -214,18 +336,21 @@ Deletes a guest link.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$id = 00000000-0000-0000-0000-000000000000; // string | The ID of the guest link to delete.
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The ID of the room of the guest link.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$id = 'id_example'; // string | The guest link ID.
+$room_id = 'room_id_example'; // string | The room ID.
 
 try {
-    $apiInstance->deleteGuestLink($id, $room_id, $authorization);
+    $apiInstance->deleteGuestLink($id, $room_id);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->deleteGuestLink: ', $e->getMessage(), PHP_EOL;
 }
@@ -235,9 +360,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **id** | **string**| The ID of the guest link to delete. | |
-| **room_id** | **string**| The ID of the room of the guest link. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **id** | **string**| The guest link ID. | |
+| **room_id** | **string**| The room ID. | |
 
 ### Return type
 
@@ -245,12 +369,12 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: Not defined
+- **Accept**: `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -259,12 +383,12 @@ No authorization required
 ## `getGroupLink()`
 
 ```php
-getGroupLink($id, $authorization): \Alfaview\Client\Model\GroupLink
+getGroupLink($id): \Alfaview\Client\Model\GroupLink
 ```
 
 Get Group Link
 
-Gets a single group link.
+Gets a single group link.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -273,17 +397,20 @@ Gets a single group link.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$id = 00000000-0000-0000-0000-000000000000; // string | The ID of the group link to get.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$id = 'id_example'; // string | The group link ID.
 
 try {
-    $result = $apiInstance->getGroupLink($id, $authorization);
+    $result = $apiInstance->getGroupLink($id);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->getGroupLink: ', $e->getMessage(), PHP_EOL;
@@ -294,8 +421,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **id** | **string**| The ID of the group link to get. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **id** | **string**| The group link ID. | |
 
 ### Return type
 
@@ -303,12 +429,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -317,12 +443,12 @@ No authorization required
 ## `getGuestLink()`
 
 ```php
-getGuestLink($id, $authorization): \Alfaview\Client\Model\GuestLink
+getGuestLink($id): \Alfaview\Client\Model\GuestLink
 ```
 
 Get Guest Link
 
-Gets a single guest link.
+Gets a single guest link.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -331,17 +457,20 @@ Gets a single guest link.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$id = 00000000-0000-0000-0000-000000000000; // string | The ID of the guest link to get.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$id = 'id_example'; // string | The guest link ID.
 
 try {
-    $result = $apiInstance->getGuestLink($id, $authorization);
+    $result = $apiInstance->getGuestLink($id);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->getGuestLink: ', $e->getMessage(), PHP_EOL;
@@ -352,8 +481,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **id** | **string**| The ID of the guest link to get. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **id** | **string**| The guest link ID. | |
 
 ### Return type
 
@@ -361,12 +489,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -375,12 +503,12 @@ No authorization required
 ## `listGroupLinks()`
 
 ```php
-listGroupLinks($authorization, $page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGroupLink
+listGroupLinks($page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGroupLink
 ```
 
 List Group Links
 
-Lists group links.
+Lists group links.  **Required permissions** (all of): - user permission `roomList` - user permission `roomAdmin`  **Result:** - all group links of the company, except the links of meetings that the caller did not create
 
 ### Example
 
@@ -389,18 +517,21 @@ Lists group links.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
 $page_token = 'page_token_example'; // string | For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request.
-$limit = 100; // int | For pagination: Set a limit on the number of returned group links.
+$limit = 100; // int | For pagination: Limit the number of returned group links.
 
 try {
-    $result = $apiInstance->listGroupLinks($authorization, $page_token, $limit);
+    $result = $apiInstance->listGroupLinks($page_token, $limit);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->listGroupLinks: ', $e->getMessage(), PHP_EOL;
@@ -411,9 +542,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
 | **page_token** | **string**| For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. | [optional] |
-| **limit** | **int**| For pagination: Set a limit on the number of returned group links. | [optional] [default to 100] |
+| **limit** | **int**| For pagination: Limit the number of returned group links. | [optional] [default to 100] |
 
 ### Return type
 
@@ -421,12 +551,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -435,12 +565,12 @@ No authorization required
 ## `listGroupLinksForRoom()`
 
 ```php
-listGroupLinksForRoom($room_id, $authorization, $page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGroupLink
+listGroupLinksForRoom($room_id, $page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGroupLink
 ```
 
 List Group Links for Room
 
-Lists group links for a room. Returns an empty array if the room does not exist.
+Lists group links for a room.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -449,19 +579,22 @@ Lists group links for a room. Returns an empty array if the room does not exist.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The room ID of the group links.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$room_id = 'room_id_example'; // string | The room ID.
 $page_token = 'page_token_example'; // string | For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request.
-$limit = 100; // int | For pagination: Set a limit on the number of returned group links.
+$limit = 100; // int | For pagination: Limit the number of returned group links.
 
 try {
-    $result = $apiInstance->listGroupLinksForRoom($room_id, $authorization, $page_token, $limit);
+    $result = $apiInstance->listGroupLinksForRoom($room_id, $page_token, $limit);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->listGroupLinksForRoom: ', $e->getMessage(), PHP_EOL;
@@ -472,10 +605,9 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **room_id** | **string**| The room ID of the group links. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **room_id** | **string**| The room ID. | |
 | **page_token** | **string**| For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. | [optional] |
-| **limit** | **int**| For pagination: Set a limit on the number of returned group links. | [optional] [default to 100] |
+| **limit** | **int**| For pagination: Limit the number of returned group links. | [optional] [default to 100] |
 
 ### Return type
 
@@ -483,12 +615,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -497,12 +629,12 @@ No authorization required
 ## `listGuestLinks()`
 
 ```php
-listGuestLinks($authorization, $page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGuestLink
+listGuestLinks($page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGuestLink
 ```
 
 List Guest Links
 
-Lists guest links.
+Lists guest links.  **Required permissions** (all of): - user permission `roomList` - user permission `roomAdmin`  **Result:** - all guest links of the company, except the links of meetings that the caller did not create
 
 ### Example
 
@@ -511,18 +643,21 @@ Lists guest links.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
 $page_token = 'page_token_example'; // string | For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request.
-$limit = 100; // int | For pagination: Set a limit on the number of returned guest links.
+$limit = 100; // int | For pagination: Limit the number of returned guest links.
 
 try {
-    $result = $apiInstance->listGuestLinks($authorization, $page_token, $limit);
+    $result = $apiInstance->listGuestLinks($page_token, $limit);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->listGuestLinks: ', $e->getMessage(), PHP_EOL;
@@ -533,9 +668,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
 | **page_token** | **string**| For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. | [optional] |
-| **limit** | **int**| For pagination: Set a limit on the number of returned guest links. | [optional] [default to 100] |
+| **limit** | **int**| For pagination: Limit the number of returned guest links. | [optional] [default to 100] |
 
 ### Return type
 
@@ -543,12 +677,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -557,12 +691,12 @@ No authorization required
 ## `listGuestLinksForRoom()`
 
 ```php
-listGuestLinksForRoom($room_id, $authorization, $page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGuestLink
+listGuestLinksForRoom($room_id, $page_token, $limit): \Alfaview\Client\Model\PaginatedBodyListGuestLink
 ```
 
 List Guest Links for a Room
 
-Lists guest links for a room. Returns an empty array if the room does not exist.
+Lists guest links for a room.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -571,19 +705,22 @@ Lists guest links for a room. Returns an empty array if the room does not exist.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$room_id = 00000000-0000-0000-0000-000000000000; // string | The room ID for the guest link.
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$room_id = 'room_id_example'; // string | The room ID.
 $page_token = 'page_token_example'; // string | For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request.
-$limit = 100; // int | For pagination: Set a limit on the number of returned guest links.
+$limit = 100; // int | For pagination: Limit the number of returned guest links.
 
 try {
-    $result = $apiInstance->listGuestLinksForRoom($room_id, $authorization, $page_token, $limit);
+    $result = $apiInstance->listGuestLinksForRoom($room_id, $page_token, $limit);
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->listGuestLinksForRoom: ', $e->getMessage(), PHP_EOL;
@@ -594,10 +731,9 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **room_id** | **string**| The room ID for the guest link. | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **room_id** | **string**| The room ID. | |
 | **page_token** | **string**| For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. | [optional] |
-| **limit** | **int**| For pagination: Set a limit on the number of returned guest links. | [optional] [default to 100] |
+| **limit** | **int**| For pagination: Limit the number of returned guest links. | [optional] [default to 100] |
 
 ### Return type
 
@@ -605,12 +741,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -619,12 +755,12 @@ No authorization required
 ## `updateGroupLink()`
 
 ```php
-updateGroupLink($id, $group_link_update, $authorization)
+updateGroupLink($id, $group_link_update)
 ```
 
 Update Group Link
 
-Updates a group link.
+Updates a group link.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -633,18 +769,21 @@ Updates a group link.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$id = 00000000-0000-0000-0000-000000000000; // string | The ID of the group link to update.
-$group_link_update = new \Alfaview\Client\Model\GroupLinkUpdate(); // \Alfaview\Client\Model\GroupLinkUpdate
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$id = 'id_example'; // string | The group link ID.
+$group_link_update = new \Alfaview\Client\Model\GroupLinkUpdate(); // \Alfaview\Client\Model\GroupLinkUpdate | The updated group link.
 
 try {
-    $apiInstance->updateGroupLink($id, $group_link_update, $authorization);
+    $apiInstance->updateGroupLink($id, $group_link_update);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->updateGroupLink: ', $e->getMessage(), PHP_EOL;
 }
@@ -654,9 +793,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **id** | **string**| The ID of the group link to update. | |
-| **group_link_update** | [**\Alfaview\Client\Model\GroupLinkUpdate**](../Model/GroupLinkUpdate.md)|  | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **id** | **string**| The group link ID. | |
+| **group_link_update** | [**\Alfaview\Client\Model\GroupLinkUpdate**](../Model/GroupLinkUpdate.md)| The updated group link. | |
 
 ### Return type
 
@@ -664,12 +802,12 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: Not defined
+- **Accept**: `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -678,12 +816,12 @@ No authorization required
 ## `updateGuestLink()`
 
 ```php
-updateGuestLink($id, $guest_link_update, $authorization)
+updateGuestLink($id, $guest_link_update)
 ```
 
 Update Guest Link
 
-Updates a guest link.
+Updates a guest link.  **Required permissions:** - normal room: one of user permission `roomAdmin` or room permission `admin` in the room - meeting room: the caller must be the meeting's creator
 
 ### Example
 
@@ -692,18 +830,21 @@ Updates a guest link.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\GuestsApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$id = 00000000-0000-0000-0000-000000000000; // string | The ID of the guest link to update.
-$guest_link_update = new \Alfaview\Client\Model\GuestLinkUpdate(); // \Alfaview\Client\Model\GuestLinkUpdate
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
+$id = 'id_example'; // string | The guest link ID.
+$guest_link_update = new \Alfaview\Client\Model\GuestLinkUpdate(); // \Alfaview\Client\Model\GuestLinkUpdate | The updated guest link.
 
 try {
-    $apiInstance->updateGuestLink($id, $guest_link_update, $authorization);
+    $apiInstance->updateGuestLink($id, $guest_link_update);
 } catch (Exception $e) {
     echo 'Exception when calling GuestsApi->updateGuestLink: ', $e->getMessage(), PHP_EOL;
 }
@@ -713,9 +854,8 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **id** | **string**| The ID of the guest link to update. | |
-| **guest_link_update** | [**\Alfaview\Client\Model\GuestLinkUpdate**](../Model/GuestLinkUpdate.md)|  | |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+| **id** | **string**| The guest link ID. | |
+| **guest_link_update** | [**\Alfaview\Client\Model\GuestLinkUpdate**](../Model/GuestLinkUpdate.md)| The updated guest link. | |
 
 ### Return type
 
@@ -723,12 +863,12 @@ void (empty response body)
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: Not defined
+- **Accept**: `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)

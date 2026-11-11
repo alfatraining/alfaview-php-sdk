@@ -1,13 +1,13 @@
-# # RoomTypeData
+# RoomTypeData
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**max_active_participants** | **int** | The maximum number of active participants allowed in this room type. |
-**max_spectator_only_participants** | **int** | The maximum number of spectator-only participants in this room type. |
-**max_sub_rooms** | **int** | The maximum number of subrooms in this room type. |
-**name** | **string** | The name of the room type. |
+**max_active_participants** | **int** | The maximum number of active participants. |
+**max_spectator_only_participants** | **int** | The maximum number of spectator-only participants. |
+**max_sub_rooms** | **int** | The maximum number of subrooms. |
+**name** | **string** | The room type name. |
 **total** | **int** | The total quota of this room type. |
 **used** | **int** | The number of existing rooms using this room type. |
 

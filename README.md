@@ -1,102 +1,106 @@
 # alfaview PHP SDK
 
-A PHP library for the alfaview APIs. This SDK is the successor of the previous version that was based on gRPC. Starting with version `2.0` this SDK no longer requires the gRPC server module and relies solely on JSON-based API communication.
+A PHP library for the [alfaview API v2](https://apis.alfaview.com/v2/docs/openapi). This SDK is the successor of the previous version that was based on gRPC. Starting with version `2.0` this SDK no longer requires the gRPC server module and relies solely on JSON-based API communication.
 
 ### Getting started
 - Signup for an alfaview account on [alfaview.com](https://alfaview.com)
-- Create your API credentials in the [Account Management](https://app.alfaview.com/#/settings) of your alfaview account
-- Include this SDK via Composer and take it for a spin
+- Create your API credentials in the alfaview administration, see the [support center](https://support.alfaview.com/en/developers/request-your-api-credentials/)
+- Include this SDK via Composer (`composer require alfatraining/alfaview-php-sdk`) and take it for a spin
 
 ### Convenient usage
-Take a look the `Alfaview.php` in the `src` directory. It is a convenient entry point for most use cases like **authentication**, **listing rooms** or **creating join links**.
+Take a look at `Alfaview.php` in the `lib` directory. It is a convenient entry point that exposes all API services (`authenticationApi`, `roomsApi`, `guestsApi`, `meetingsApi`, `permissionsApi`, `filesApi`, `reportsApi`, `usersApi`) with one shared configuration.
 
-Here is an example for authenticating with the API and retrieving a list of rooms:
-
-```php
-        $alfaview = new Alfaview();
-
-        $credentials = new APICredentials();
-        $credentials->setClientId('API_CLIENT_ID');
-        $credentials->setKey('API_CODE');
-        $credentials->setCompanyId('API_COMPANY_ID');
-
-        $accessToken = $alfaview->authenticationApi->authenticateAPIKey($credentials);
-
-```
-
-To create or update a room that differ from the default room quota:
-
-```
-'active_participants' => 50
-'passive_participants' => 0
-'sub_rooms' => 10
-```
-
-it is required to specify the `\Alfaview\Model\CommonRoomQuotas` when creating or updating a room.
+Authenticate with your API credentials and hand the access token to the SDK once. It is then sent as `Authorization: Bearer <token>` with every request that requires it. Access tokens are valid for 1 hour.
 
 ```php
-        $alfaview = new Alfaview();
+use Alfaview\Client\Alfaview;
+use Alfaview\Client\Model\APICredentials;
 
-        $roomCreate = new RoomCreate();
-        $roomCreate->setDisplayName('room created by php-sdk V2');
-        $roomCreate->setCreateDefaultSubrooms(true);
-        $roomCreate->setMode(RoomCreate::MODE_NORMAL);
-        $roomCreate->setType(RoomCreate::TYPE_ROOM);
-        $roomCreate->setWaitingRoomEnabled(false);
+$alfaview = new Alfaview();
 
-        $room = $alfaview->roomsApi->createRoom($roomCreate, $accessToken->getAccessToken());
+$credentials = new APICredentials();
+$credentials->setClientId('API_CLIENT_ID');
+$credentials->setKey('API_CODE');
+$credentials->setCompanyId('API_COMPANY_ID');
+
+$accessToken = $alfaview->authenticationApi->authenticateAPIKey($credentials);
+$alfaview->setAccessToken($accessToken->getAccessToken());
+
+$rooms = $alfaview->roomsApi->listRooms();
 ```
 
-Assuming you already have an `$accessToken` from the API authentication above,
-To create a personal guest or group link in a room:
+To create a room:
+
 ```php
-        $alfaview = new Alfaview();
-        // optionally validity end date, if not set the links are always valid
-        $validUntil = new \DateTime("next week today");
-        $roomId = 'YOUR_ROOM_ID'
+use Alfaview\Client\Model\RoomCreate;
+use Alfaview\Client\Model\SubroomCreateListItem;
 
-        // Get the `Participant` permission group id to use in our group link, or any other permission group you want
-        $permissionGroups = $alfaview->roomsApi->listPermissionGroups($accessToken->getAccessToken());
-        $participantPermissionGroupId = null;
-        foreach ($permissionGroups as $permissionGroup) {
-            if ($permissionGroup->getName() === 'Participant') {
-                $participantPermissionGroupId = $permissionGroup->getId();
-            }
-        }
+$roomCreate = new RoomCreate();
+$roomCreate->setDisplayName('room created by php-sdk V2');
+$roomCreate->setType(RoomCreate::TYPE_ROOM);
+$roomCreate->setWaitingRoomEnabled(false);
+// optionally create subrooms right away
+$roomCreate->setSubrooms([new SubroomCreateListItem(), new SubroomCreateListItem()]);
 
-        $groupLink = new GroupLinkCreate();
-        $groupLink->setDescription('PHP SDK Group Link');
-        $groupLink->setDialInAllowed(false);
-        $groupLink->setPermissionGroupId($participantPermissionGroupId);
-        $groupLink->setValidUntil(new \DateTime('next week today'));
-
-        $groupLinksRequest = new PostGroupLinksRequestBody();
-        $groupLinksRequest->setCreate([$groupLink]);
-
-        $groupLinkId = $alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest, $accessToken->getAccessToken());
-
-        $groupLink = $alfaview->guestsApi->getGroupLink($groupLink[0]->getId(), $accessToken->getAccessToken());
-
-        $groupLinkData = new GuestAuthInfoRequestData();
-        $groupLinkData->setDisplayName('John Doe');
-        $groupLinkData->setCompanyId('COMPANY_ID'));
-        $groupLinkData->setRoomId($roomId);
-        // optional externalId usage
-        $groupLinkData->setExternalId(md5('external_id'));
-        $groupLinkData->setAccessKey($groupLink->getAccessKey());
-
-        $groupLinkAuthResponse = $alfaview->authenticationApi->authenticateGuest($groupLinkData);
-
+$roomId = $alfaview->roomsApi->createRoom($roomCreate)->getId();
+$room = $alfaview->roomsApi->getRoom($roomId);
 ```
 
+To create a group link in a room and authenticate a guest with it:
 
+```php
+use Alfaview\Client\Model\AuthenticateGroupLinkRequestBody;
+use Alfaview\Client\Model\CreateGroupLinksRequestBody;
+use Alfaview\Client\Model\GroupLinkCreate;
+
+// Get the `Participant` permission group id to use in our group link, or any other permission group you want
+$participantPermissionGroupId = null;
+foreach ($alfaview->permissionsApi->listPermissionGroups() as $permissionGroup) {
+    if ($permissionGroup->getName() === 'Participant') {
+        $participantPermissionGroupId = $permissionGroup->getId();
+    }
+}
+
+$groupLink = new GroupLinkCreate();
+$groupLink->setDescription('PHP SDK Group Link');
+$groupLink->setDialInAllowed(false);
+$groupLink->setPermissionGroupId($participantPermissionGroupId);
+// optional validity end date, if not set the link is always valid
+$groupLink->setValidUntil(new \DateTime('next week today'));
+
+$groupLinksRequest = new CreateGroupLinksRequestBody();
+$groupLinksRequest->setCreate([$groupLink]);
+
+$createdGroupLinks = $alfaview->guestsApi->createGroupLink($roomId, $groupLinksRequest);
+$groupLink = $alfaview->guestsApi->getGroupLink($createdGroupLinks[0]->getId());
+
+$groupLinkData = new AuthenticateGroupLinkRequestBody();
+$groupLinkData->setDisplayName('John Doe');
+$groupLinkData->setCompanyId('API_COMPANY_ID');
+$groupLinkData->setRoomId($roomId);
+// optional externalId (32 to 256 characters)
+$groupLinkData->setExternalId(md5('external_id'));
+$groupLinkData->setAccessKey($groupLink->getAccessKey());
+
+$guestAuthentication = $alfaview->authenticationApi->authenticateGroupLink($groupLinkData);
+```
+
+Errors are thrown as `\Alfaview\Client\ApiException`. `getCode()` returns the HTTP status and `getResponseBody()` the `application/problem+json` error body.
+
+### Upgrading to 3.0
+Version 2.x passed the access token to every call (e.g. `createRoom($roomCreate, $token)`). The `$authorization` parameter no longer exists. Call `$alfaview->setAccessToken($token)` (or `Configuration::setAccessToken()`) once instead. Remove the token argument from every call: PHP does not reject the extra argument, it ends up in the wrong parameter (e.g. as the content type) and the request fails with `401` or `415`.
+`listPermissionGroups()` has moved from `roomsApi` to `permissionsApi`.
+`createGuestLinks()` returns the created `GuestLink` objects instead of `ID` objects. Code that only calls `getId()` on them keeps working.
 
 ### Advanced usage
-Not all use cases are covered in the convenience wrapper. However, the complete API functionality is yet available by directly accessing our API endpoints described in the documentation below. And if you are awesome, feel free to contribute!
+Not all use cases are covered in the convenience wrapper. However, the complete API functionality is available by directly accessing our API endpoints described in the documentation below. And if you are awesome, feel free to contribute!
 
 ### Documentation
 - [Authentication Service](docs/Api/AuthenticationApi.md)
 - [Room Service](docs/Api/RoomsApi.md)
+- [Permissions Service](docs/Api/PermissionsApi.md)
+- [Files Service](docs/Api/FilesApi.md)
 - [Meetings Service](docs/Api/MeetingsApi.md)
 - [Guests Service](docs/Api/GuestsApi.md)
 - [Reports Service](docs/Api/ReportsApi.md)
+- [Users Service](docs/Api/UsersApi.md)

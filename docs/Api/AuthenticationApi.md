@@ -1,5 +1,7 @@
 # Alfaview\Client\AuthenticationApi
 
+Authentication endpoints
+
 All URIs are relative to https://apis.alfaview.com, except if the operation defines another base path.
 
 | Method | HTTP request | Description |
@@ -19,7 +21,7 @@ authenticateAPIKey($api_credentials): \Alfaview\Client\Model\AccessToken
 
 Authenticate via API Key
 
-Authenticates via an API key. Refer to the [related support article](https://support.alfaview.com/en/developers/request-your-api-credentials/) to generate one.
+Authenticates via an API key and returns an access token. Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  **Required permissions:** - none
 
 ### Example
 
@@ -34,7 +36,7 @@ $apiInstance = new Alfaview\Client\Api\AuthenticationApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$api_credentials = new \Alfaview\Client\Model\APICredentials(); // \Alfaview\Client\Model\APICredentials | The API credentials to authenticate.
+$api_credentials = new \Alfaview\Client\Model\APICredentials(); // \Alfaview\Client\Model\APICredentials | The API credentials.
 
 try {
     $result = $apiInstance->authenticateAPIKey($api_credentials);
@@ -48,7 +50,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **api_credentials** | [**\Alfaview\Client\Model\APICredentials**](../Model/APICredentials.md)| The API credentials to authenticate. | |
+| **api_credentials** | [**\Alfaview\Client\Model\APICredentials**](../Model/APICredentials.md)| The API credentials. | |
 
 ### Return type
 
@@ -61,7 +63,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -75,7 +77,7 @@ authenticateGroupLink($authenticate_group_link_request_body): \Alfaview\Client\M
 
 Authenticate a Guest (Group Link)
 
-Tries to authenticate a group-link guest via access key. If the access key exists, information about the guest's authentication are returned. If the access key is also valid at the time of the request, the response additionally includes an access token and a token expiry time.
+Tries to authenticate a group link guest via access key. If the access key exists, information about the guest's authentication are returned. If the access key is also valid at the time of the request, the response additionally includes an access token and a token expiry time.  **Required permissions:** - none
 
 ### Example
 
@@ -117,7 +119,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -131,7 +133,7 @@ authenticateGuestLink($authenticate_guest_link_request_body): \Alfaview\Client\M
 
 Authenticate a Guest (Guest Link)
 
-Tries to authenticate a guest-link guest via access key. If the access key exists, information about the guest's authentication are returned. If the access key is also valid at the time of the request, the response additionally includes an access token and a token expiry time.
+Tries to authenticate a guest link guest via access key. If the access key exists, information about the guest's authentication are returned. If the access key is also valid at the time of the request, the response additionally includes an access token and a token expiry time.  **Required permissions:** - none
 
 ### Example
 
@@ -173,7 +175,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -187,7 +189,7 @@ authenticatePassword($password_credentials): \Alfaview\Client\Model\AccessToken
 
 Authenticate via Password
 
-Authenticates a user via username and password and returns an access token.
+Authenticates a user via username and password and returns an access token. The user must not have two-factor authentication enabled.  **Required permissions:** - none
 
 ### Example
 
@@ -202,7 +204,7 @@ $apiInstance = new Alfaview\Client\Api\AuthenticationApi(
     // This is optional, `GuzzleHttp\Client` will be used as default.
     new GuzzleHttp\Client()
 );
-$password_credentials = new \Alfaview\Client\Model\PasswordCredentials(); // \Alfaview\Client\Model\PasswordCredentials | The user credentials to authenticate.
+$password_credentials = new \Alfaview\Client\Model\PasswordCredentials(); // \Alfaview\Client\Model\PasswordCredentials | The user credentials.
 
 try {
     $result = $apiInstance->authenticatePassword($password_credentials);
@@ -216,7 +218,7 @@ try {
 
 | Name | Type | Description  | Notes |
 | ------------- | ------------- | ------------- | ------------- |
-| **password_credentials** | [**\Alfaview\Client\Model\PasswordCredentials**](../Model/PasswordCredentials.md)| The user credentials to authenticate. | |
+| **password_credentials** | [**\Alfaview\Client\Model\PasswordCredentials**](../Model/PasswordCredentials.md)| The user credentials. | |
 
 ### Return type
 
@@ -229,7 +231,7 @@ No authorization required
 ### HTTP request headers
 
 - **Content-Type**: `application/json`
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)
@@ -238,12 +240,12 @@ No authorization required
 ## `getTokenInfo()`
 
 ```php
-getTokenInfo($authorization): \Alfaview\Client\Model\TokenInfo
+getTokenInfo(): \Alfaview\Client\Model\TokenInfo
 ```
 
 Get Access Token Information
 
-Retrieves details of the access token provided in the Authorization header.
+Retrieves details about the access token provided in the Authorization header. Expired tokens are accepted.  **Required permissions:** - none beyond the access token
 
 ### Example
 
@@ -252,16 +254,19 @@ Retrieves details of the access token provided in the Authorization header.
 require_once(__DIR__ . '/vendor/autoload.php');
 
 
+// Configure Bearer (opaque) authorization: accessToken
+$config = Alfaview\Client\Configuration::getDefaultConfiguration()->setAccessToken('YOUR_ACCESS_TOKEN');
+
 
 $apiInstance = new Alfaview\Client\Api\AuthenticationApi(
     // If you want use custom http client, pass your client which implements `GuzzleHttp\ClientInterface`.
     // This is optional, `GuzzleHttp\Client` will be used as default.
-    new GuzzleHttp\Client()
+    new GuzzleHttp\Client(),
+    $config
 );
-$authorization = 'authorization_example'; // string | A valid access token (can be obtained by authenticating).
 
 try {
-    $result = $apiInstance->getTokenInfo($authorization);
+    $result = $apiInstance->getTokenInfo();
     print_r($result);
 } catch (Exception $e) {
     echo 'Exception when calling AuthenticationApi->getTokenInfo: ', $e->getMessage(), PHP_EOL;
@@ -270,9 +275,7 @@ try {
 
 ### Parameters
 
-| Name | Type | Description  | Notes |
-| ------------- | ------------- | ------------- | ------------- |
-| **authorization** | **string**| A valid access token (can be obtained by authenticating). | [optional] |
+This endpoint does not need any parameter.
 
 ### Return type
 
@@ -280,12 +283,12 @@ try {
 
 ### Authorization
 
-No authorization required
+[accessToken](../../README.md#accessToken)
 
 ### HTTP request headers
 
 - **Content-Type**: Not defined
-- **Accept**: `application/json`
+- **Accept**: `application/json`, `application/problem+json`
 
 [[Back to top]](#) [[Back to API list]](../../README.md#endpoints)
 [[Back to Model list]](../../README.md#models)

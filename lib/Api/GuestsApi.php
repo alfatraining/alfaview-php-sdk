@@ -12,11 +12,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -74,6 +74,12 @@ class GuestsApi
 
     /** @var string[] $contentTypes **/
     public const contentTypes = [
+        'authenticateGroupLink' => [
+            'application/json',
+        ],
+        'authenticateGuestLink' => [
+            'application/json',
+        ],
         'createGroupLink' => [
             'application/json',
         ],
@@ -159,22 +165,655 @@ class GuestsApi
     }
 
     /**
+     * Operation authenticateGroupLink
+     *
+     * Authenticate a Guest (Group Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody $authenticate_group_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGroupLink'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\GroupLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function authenticateGroupLink($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
+    {
+        list($response) = $this->authenticateGroupLinkWithHttpInfo($authenticate_group_link_request_body, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateGroupLinkWithHttpInfo
+     *
+     * Authenticate a Guest (Group Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody $authenticate_group_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGroupLink'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\GroupLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateGroupLinkWithHttpInfo($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
+    {
+        $request = $this->authenticateGroupLinkRequest($authenticate_group_link_request_body, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\GroupLinkAuthenticationInfo',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\GroupLinkAuthenticationInfo',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\GroupLinkAuthenticationInfo',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateGroupLinkAsync
+     *
+     * Authenticate a Guest (Group Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody $authenticate_group_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGroupLink'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateGroupLinkAsync($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
+    {
+        return $this->authenticateGroupLinkAsyncWithHttpInfo($authenticate_group_link_request_body, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateGroupLinkAsyncWithHttpInfo
+     *
+     * Authenticate a Guest (Group Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody $authenticate_group_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGroupLink'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateGroupLinkAsyncWithHttpInfo($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\GroupLinkAuthenticationInfo';
+        $request = $this->authenticateGroupLinkRequest($authenticate_group_link_request_body, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateGroupLink'
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGroupLinkRequestBody $authenticate_group_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGroupLink'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateGroupLinkRequest($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
+    {
+
+        // verify the required parameter 'authenticate_group_link_request_body' is set
+        if ($authenticate_group_link_request_body === null || (is_array($authenticate_group_link_request_body) && count($authenticate_group_link_request_body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $authenticate_group_link_request_body when calling authenticateGroupLink'
+            );
+        }
+
+
+        $resourcePath = '/v2/auth/group-link';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($authenticate_group_link_request_body)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($authenticate_group_link_request_body), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $authenticate_group_link_request_body;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation authenticateGuestLink
+     *
+     * Authenticate a Guest (Guest Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody $authenticate_guest_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGuestLink'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\GuestLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function authenticateGuestLink($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
+    {
+        list($response) = $this->authenticateGuestLinkWithHttpInfo($authenticate_guest_link_request_body, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation authenticateGuestLinkWithHttpInfo
+     *
+     * Authenticate a Guest (Guest Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody $authenticate_guest_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGuestLink'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\GuestLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function authenticateGuestLinkWithHttpInfo($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
+    {
+        $request = $this->authenticateGuestLinkRequest($authenticate_guest_link_request_body, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\GuestLinkAuthenticationInfo',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\GuestLinkAuthenticationInfo',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\GuestLinkAuthenticationInfo',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation authenticateGuestLinkAsync
+     *
+     * Authenticate a Guest (Guest Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody $authenticate_guest_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGuestLink'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateGuestLinkAsync($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
+    {
+        return $this->authenticateGuestLinkAsyncWithHttpInfo($authenticate_guest_link_request_body, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation authenticateGuestLinkAsyncWithHttpInfo
+     *
+     * Authenticate a Guest (Guest Link)
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody $authenticate_guest_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGuestLink'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function authenticateGuestLinkAsyncWithHttpInfo($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\GuestLinkAuthenticationInfo';
+        $request = $this->authenticateGuestLinkRequest($authenticate_guest_link_request_body, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'authenticateGuestLink'
+     *
+     * @param  \Alfaview\Client\Model\AuthenticateGuestLinkRequestBody $authenticate_guest_link_request_body The authentication information for the guest. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateGuestLink'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function authenticateGuestLinkRequest($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
+    {
+
+        // verify the required parameter 'authenticate_guest_link_request_body' is set
+        if ($authenticate_guest_link_request_body === null || (is_array($authenticate_guest_link_request_body) && count($authenticate_guest_link_request_body) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $authenticate_guest_link_request_body when calling authenticateGuestLink'
+            );
+        }
+
+
+        $resourcePath = '/v2/auth/guest-link';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($authenticate_guest_link_request_body)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($authenticate_guest_link_request_body), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $authenticate_guest_link_request_body;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation createGroupLink
      *
      * Create Group Links
      *
-     * @param  string $room_id The room ID for the group links. (required)
-     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body create_group_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body The group links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\ID[]
+     * @return \Alfaview\Client\Model\ID[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function createGroupLink($room_id, $create_group_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGroupLink'][0])
+    public function createGroupLink($room_id, $create_group_links_request_body, string $contentType = self::contentTypes['createGroupLink'][0])
     {
-        list($response) = $this->createGroupLinkWithHttpInfo($room_id, $create_group_links_request_body, $authorization, $contentType);
+        list($response) = $this->createGroupLinkWithHttpInfo($room_id, $create_group_links_request_body, $contentType);
         return $response;
     }
 
@@ -183,18 +822,17 @@ class GuestsApi
      *
      * Create Group Links
      *
-     * @param  string $room_id The room ID for the group links. (required)
-     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body The group links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\ID[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\ID[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createGroupLinkWithHttpInfo($room_id, $create_group_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGroupLink'][0])
+    public function createGroupLinkWithHttpInfo($room_id, $create_group_links_request_body, string $contentType = self::contentTypes['createGroupLink'][0])
     {
-        $request = $this->createGroupLinkRequest($room_id, $create_group_links_request_body, $authorization, $contentType);
+        $request = $this->createGroupLinkRequest($room_id, $create_group_links_request_body, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -223,6 +861,30 @@ class GuestsApi
                 case 201:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\ID[]',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -258,6 +920,38 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -270,17 +964,16 @@ class GuestsApi
      *
      * Create Group Links
      *
-     * @param  string $room_id The room ID for the group links. (required)
-     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body The group links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createGroupLinkAsync($room_id, $create_group_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGroupLink'][0])
+    public function createGroupLinkAsync($room_id, $create_group_links_request_body, string $contentType = self::contentTypes['createGroupLink'][0])
     {
-        return $this->createGroupLinkAsyncWithHttpInfo($room_id, $create_group_links_request_body, $authorization, $contentType)
+        return $this->createGroupLinkAsyncWithHttpInfo($room_id, $create_group_links_request_body, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -293,18 +986,17 @@ class GuestsApi
      *
      * Create Group Links
      *
-     * @param  string $room_id The room ID for the group links. (required)
-     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body The group links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createGroupLinkAsyncWithHttpInfo($room_id, $create_group_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGroupLink'][0])
+    public function createGroupLinkAsyncWithHttpInfo($room_id, $create_group_links_request_body, string $contentType = self::contentTypes['createGroupLink'][0])
     {
         $returnType = '\Alfaview\Client\Model\ID[]';
-        $request = $this->createGroupLinkRequest($room_id, $create_group_links_request_body, $authorization, $contentType);
+        $request = $this->createGroupLinkRequest($room_id, $create_group_links_request_body, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -345,15 +1037,14 @@ class GuestsApi
     /**
      * Create request for operation 'createGroupLink'
      *
-     * @param  string $room_id The room ID for the group links. (required)
-     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGroupLinksRequestBody $create_group_links_request_body The group links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createGroupLinkRequest($room_id, $create_group_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGroupLink'][0])
+    public function createGroupLinkRequest($room_id, $create_group_links_request_body, string $contentType = self::contentTypes['createGroupLink'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -371,7 +1062,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/group-links';
         $formParams = [];
         $queryParams = [];
@@ -380,15 +1070,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -396,7 +1082,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -405,7 +1091,11 @@ class GuestsApi
         if (isset($create_group_links_request_body)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($create_group_links_request_body));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($create_group_links_request_body), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $create_group_links_request_body;
             }
@@ -426,13 +1116,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -460,18 +1158,17 @@ class GuestsApi
      *
      * Create Guest Links
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body create_guest_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body The guest links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGuestLinks'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\ID[]
+     * @return \Alfaview\Client\Model\GuestLink[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function createGuestLinks($room_id, $create_guest_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGuestLinks'][0])
+    public function createGuestLinks($room_id, $create_guest_links_request_body, string $contentType = self::contentTypes['createGuestLinks'][0])
     {
-        list($response) = $this->createGuestLinksWithHttpInfo($room_id, $create_guest_links_request_body, $authorization, $contentType);
+        list($response) = $this->createGuestLinksWithHttpInfo($room_id, $create_guest_links_request_body, $contentType);
         return $response;
     }
 
@@ -480,18 +1177,17 @@ class GuestsApi
      *
      * Create Guest Links
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body The guest links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGuestLinks'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\ID[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\GuestLink[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createGuestLinksWithHttpInfo($room_id, $create_guest_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGuestLinks'][0])
+    public function createGuestLinksWithHttpInfo($room_id, $create_guest_links_request_body, string $contentType = self::contentTypes['createGuestLinks'][0])
     {
-        $request = $this->createGuestLinksRequest($room_id, $create_guest_links_request_body, $authorization, $contentType);
+        $request = $this->createGuestLinksRequest($room_id, $create_guest_links_request_body, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -519,7 +1215,31 @@ class GuestsApi
             switch($statusCode) {
                 case 201:
                     return $this->handleResponseWithDataType(
-                        '\Alfaview\Client\Model\ID[]',
+                        '\Alfaview\Client\Model\GuestLink[]',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -541,7 +1261,7 @@ class GuestsApi
             }
 
             return $this->handleResponseWithDataType(
-                '\Alfaview\Client\Model\ID[]',
+                '\Alfaview\Client\Model\GuestLink[]',
                 $request,
                 $response,
             );
@@ -550,7 +1270,39 @@ class GuestsApi
                 case 201:
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
-                        '\Alfaview\Client\Model\ID[]',
+                        '\Alfaview\Client\Model\GuestLink[]',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -567,17 +1319,16 @@ class GuestsApi
      *
      * Create Guest Links
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body The guest links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGuestLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createGuestLinksAsync($room_id, $create_guest_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGuestLinks'][0])
+    public function createGuestLinksAsync($room_id, $create_guest_links_request_body, string $contentType = self::contentTypes['createGuestLinks'][0])
     {
-        return $this->createGuestLinksAsyncWithHttpInfo($room_id, $create_guest_links_request_body, $authorization, $contentType)
+        return $this->createGuestLinksAsyncWithHttpInfo($room_id, $create_guest_links_request_body, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -590,18 +1341,17 @@ class GuestsApi
      *
      * Create Guest Links
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body The guest links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGuestLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createGuestLinksAsyncWithHttpInfo($room_id, $create_guest_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGuestLinks'][0])
+    public function createGuestLinksAsyncWithHttpInfo($room_id, $create_guest_links_request_body, string $contentType = self::contentTypes['createGuestLinks'][0])
     {
-        $returnType = '\Alfaview\Client\Model\ID[]';
-        $request = $this->createGuestLinksRequest($room_id, $create_guest_links_request_body, $authorization, $contentType);
+        $returnType = '\Alfaview\Client\Model\GuestLink[]';
+        $request = $this->createGuestLinksRequest($room_id, $create_guest_links_request_body, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -642,15 +1392,14 @@ class GuestsApi
     /**
      * Create request for operation 'createGuestLinks'
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\CreateGuestLinksRequestBody $create_guest_links_request_body The guest links to create. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createGuestLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createGuestLinksRequest($room_id, $create_guest_links_request_body, $authorization = null, string $contentType = self::contentTypes['createGuestLinks'][0])
+    public function createGuestLinksRequest($room_id, $create_guest_links_request_body, string $contentType = self::contentTypes['createGuestLinks'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -668,7 +1417,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/guest-links';
         $formParams = [];
         $queryParams = [];
@@ -677,15 +1425,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -693,7 +1437,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -702,7 +1446,11 @@ class GuestsApi
         if (isset($create_guest_links_request_body)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($create_guest_links_request_body));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($create_guest_links_request_body), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $create_guest_links_request_body;
             }
@@ -723,13 +1471,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -757,18 +1513,17 @@ class GuestsApi
      *
      * Delete Group Link
      *
-     * @param  string $id The ID of the group link to delete. (required)
-     * @param  string $room_id The ID of the room of the group link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function deleteGroupLink($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGroupLink'][0])
+    public function deleteGroupLink($id, $room_id, string $contentType = self::contentTypes['deleteGroupLink'][0])
     {
-        $this->deleteGroupLinkWithHttpInfo($id, $room_id, $authorization, $contentType);
+        $this->deleteGroupLinkWithHttpInfo($id, $room_id, $contentType);
     }
 
     /**
@@ -776,18 +1531,17 @@ class GuestsApi
      *
      * Delete Group Link
      *
-     * @param  string $id The ID of the group link to delete. (required)
-     * @param  string $room_id The ID of the room of the group link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteGroupLinkWithHttpInfo($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGroupLink'][0])
+    public function deleteGroupLinkWithHttpInfo($id, $room_id, string $contentType = self::contentTypes['deleteGroupLink'][0])
     {
-        $request = $this->deleteGroupLinkRequest($id, $room_id, $authorization, $contentType);
+        $request = $this->deleteGroupLinkRequest($id, $room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -815,6 +1569,30 @@ class GuestsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -827,17 +1605,16 @@ class GuestsApi
      *
      * Delete Group Link
      *
-     * @param  string $id The ID of the group link to delete. (required)
-     * @param  string $room_id The ID of the room of the group link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteGroupLinkAsync($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGroupLink'][0])
+    public function deleteGroupLinkAsync($id, $room_id, string $contentType = self::contentTypes['deleteGroupLink'][0])
     {
-        return $this->deleteGroupLinkAsyncWithHttpInfo($id, $room_id, $authorization, $contentType)
+        return $this->deleteGroupLinkAsyncWithHttpInfo($id, $room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -850,18 +1627,17 @@ class GuestsApi
      *
      * Delete Group Link
      *
-     * @param  string $id The ID of the group link to delete. (required)
-     * @param  string $room_id The ID of the room of the group link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteGroupLinkAsyncWithHttpInfo($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGroupLink'][0])
+    public function deleteGroupLinkAsyncWithHttpInfo($id, $room_id, string $contentType = self::contentTypes['deleteGroupLink'][0])
     {
         $returnType = '';
-        $request = $this->deleteGroupLinkRequest($id, $room_id, $authorization, $contentType);
+        $request = $this->deleteGroupLinkRequest($id, $room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -889,15 +1665,14 @@ class GuestsApi
     /**
      * Create request for operation 'deleteGroupLink'
      *
-     * @param  string $id The ID of the group link to delete. (required)
-     * @param  string $room_id The ID of the room of the group link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function deleteGroupLinkRequest($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGroupLink'][0])
+    public function deleteGroupLinkRequest($id, $room_id, string $contentType = self::contentTypes['deleteGroupLink'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -915,7 +1690,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/group-links/{id}';
         $formParams = [];
         $queryParams = [];
@@ -924,15 +1698,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -940,7 +1710,7 @@ class GuestsApi
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -948,7 +1718,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -971,13 +1741,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1005,18 +1783,17 @@ class GuestsApi
      *
      * Delete Guest Link
      *
-     * @param  string $id The ID of the guest link to delete. (required)
-     * @param  string $room_id The ID of the room of the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGuestLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function deleteGuestLink($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGuestLink'][0])
+    public function deleteGuestLink($id, $room_id, string $contentType = self::contentTypes['deleteGuestLink'][0])
     {
-        $this->deleteGuestLinkWithHttpInfo($id, $room_id, $authorization, $contentType);
+        $this->deleteGuestLinkWithHttpInfo($id, $room_id, $contentType);
     }
 
     /**
@@ -1024,18 +1801,17 @@ class GuestsApi
      *
      * Delete Guest Link
      *
-     * @param  string $id The ID of the guest link to delete. (required)
-     * @param  string $room_id The ID of the room of the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGuestLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteGuestLinkWithHttpInfo($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGuestLink'][0])
+    public function deleteGuestLinkWithHttpInfo($id, $room_id, string $contentType = self::contentTypes['deleteGuestLink'][0])
     {
-        $request = $this->deleteGuestLinkRequest($id, $room_id, $authorization, $contentType);
+        $request = $this->deleteGuestLinkRequest($id, $room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1063,6 +1839,30 @@ class GuestsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1075,17 +1875,16 @@ class GuestsApi
      *
      * Delete Guest Link
      *
-     * @param  string $id The ID of the guest link to delete. (required)
-     * @param  string $room_id The ID of the room of the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteGuestLinkAsync($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGuestLink'][0])
+    public function deleteGuestLinkAsync($id, $room_id, string $contentType = self::contentTypes['deleteGuestLink'][0])
     {
-        return $this->deleteGuestLinkAsyncWithHttpInfo($id, $room_id, $authorization, $contentType)
+        return $this->deleteGuestLinkAsyncWithHttpInfo($id, $room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1098,18 +1897,17 @@ class GuestsApi
      *
      * Delete Guest Link
      *
-     * @param  string $id The ID of the guest link to delete. (required)
-     * @param  string $room_id The ID of the room of the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteGuestLinkAsyncWithHttpInfo($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGuestLink'][0])
+    public function deleteGuestLinkAsyncWithHttpInfo($id, $room_id, string $contentType = self::contentTypes['deleteGuestLink'][0])
     {
         $returnType = '';
-        $request = $this->deleteGuestLinkRequest($id, $room_id, $authorization, $contentType);
+        $request = $this->deleteGuestLinkRequest($id, $room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1137,15 +1935,14 @@ class GuestsApi
     /**
      * Create request for operation 'deleteGuestLink'
      *
-     * @param  string $id The ID of the guest link to delete. (required)
-     * @param  string $room_id The ID of the room of the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function deleteGuestLinkRequest($id, $room_id, $authorization = null, string $contentType = self::contentTypes['deleteGuestLink'][0])
+    public function deleteGuestLinkRequest($id, $room_id, string $contentType = self::contentTypes['deleteGuestLink'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -1163,7 +1960,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/guest-links/{id}';
         $formParams = [];
         $queryParams = [];
@@ -1172,15 +1968,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -1188,7 +1980,7 @@ class GuestsApi
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -1196,7 +1988,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1219,13 +2011,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1253,17 +2053,16 @@ class GuestsApi
      *
      * Get Group Link
      *
-     * @param  string $id The ID of the group link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\GroupLink
+     * @return \Alfaview\Client\Model\GroupLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function getGroupLink($id, $authorization = null, string $contentType = self::contentTypes['getGroupLink'][0])
+    public function getGroupLink($id, string $contentType = self::contentTypes['getGroupLink'][0])
     {
-        list($response) = $this->getGroupLinkWithHttpInfo($id, $authorization, $contentType);
+        list($response) = $this->getGroupLinkWithHttpInfo($id, $contentType);
         return $response;
     }
 
@@ -1272,17 +2071,16 @@ class GuestsApi
      *
      * Get Group Link
      *
-     * @param  string $id The ID of the group link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\GroupLink, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\GroupLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getGroupLinkWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getGroupLink'][0])
+    public function getGroupLinkWithHttpInfo($id, string $contentType = self::contentTypes['getGroupLink'][0])
     {
-        $request = $this->getGroupLinkRequest($id, $authorization, $contentType);
+        $request = $this->getGroupLinkRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1311,6 +2109,30 @@ class GuestsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\GroupLink',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -1346,6 +2168,38 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1358,16 +2212,15 @@ class GuestsApi
      *
      * Get Group Link
      *
-     * @param  string $id The ID of the group link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getGroupLinkAsync($id, $authorization = null, string $contentType = self::contentTypes['getGroupLink'][0])
+    public function getGroupLinkAsync($id, string $contentType = self::contentTypes['getGroupLink'][0])
     {
-        return $this->getGroupLinkAsyncWithHttpInfo($id, $authorization, $contentType)
+        return $this->getGroupLinkAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1380,17 +2233,16 @@ class GuestsApi
      *
      * Get Group Link
      *
-     * @param  string $id The ID of the group link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getGroupLinkAsyncWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getGroupLink'][0])
+    public function getGroupLinkAsyncWithHttpInfo($id, string $contentType = self::contentTypes['getGroupLink'][0])
     {
         $returnType = '\Alfaview\Client\Model\GroupLink';
-        $request = $this->getGroupLinkRequest($id, $authorization, $contentType);
+        $request = $this->getGroupLinkRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1431,14 +2283,13 @@ class GuestsApi
     /**
      * Create request for operation 'getGroupLink'
      *
-     * @param  string $id The ID of the group link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getGroupLinkRequest($id, $authorization = null, string $contentType = self::contentTypes['getGroupLink'][0])
+    public function getGroupLinkRequest($id, string $contentType = self::contentTypes['getGroupLink'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -1449,7 +2300,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/group-links/{id}';
         $formParams = [];
         $queryParams = [];
@@ -1458,15 +2308,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -1474,7 +2320,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1497,13 +2343,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1531,17 +2385,16 @@ class GuestsApi
      *
      * Get Guest Link
      *
-     * @param  string $id The ID of the guest link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGuestLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\GuestLink
+     * @return \Alfaview\Client\Model\GuestLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function getGuestLink($id, $authorization = null, string $contentType = self::contentTypes['getGuestLink'][0])
+    public function getGuestLink($id, string $contentType = self::contentTypes['getGuestLink'][0])
     {
-        list($response) = $this->getGuestLinkWithHttpInfo($id, $authorization, $contentType);
+        list($response) = $this->getGuestLinkWithHttpInfo($id, $contentType);
         return $response;
     }
 
@@ -1550,17 +2403,16 @@ class GuestsApi
      *
      * Get Guest Link
      *
-     * @param  string $id The ID of the guest link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGuestLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\GuestLink, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\GuestLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getGuestLinkWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getGuestLink'][0])
+    public function getGuestLinkWithHttpInfo($id, string $contentType = self::contentTypes['getGuestLink'][0])
     {
-        $request = $this->getGuestLinkRequest($id, $authorization, $contentType);
+        $request = $this->getGuestLinkRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1589,6 +2441,30 @@ class GuestsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\GuestLink',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -1624,6 +2500,38 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1636,16 +2544,15 @@ class GuestsApi
      *
      * Get Guest Link
      *
-     * @param  string $id The ID of the guest link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getGuestLinkAsync($id, $authorization = null, string $contentType = self::contentTypes['getGuestLink'][0])
+    public function getGuestLinkAsync($id, string $contentType = self::contentTypes['getGuestLink'][0])
     {
-        return $this->getGuestLinkAsyncWithHttpInfo($id, $authorization, $contentType)
+        return $this->getGuestLinkAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1658,17 +2565,16 @@ class GuestsApi
      *
      * Get Guest Link
      *
-     * @param  string $id The ID of the guest link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getGuestLinkAsyncWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getGuestLink'][0])
+    public function getGuestLinkAsyncWithHttpInfo($id, string $contentType = self::contentTypes['getGuestLink'][0])
     {
         $returnType = '\Alfaview\Client\Model\GuestLink';
-        $request = $this->getGuestLinkRequest($id, $authorization, $contentType);
+        $request = $this->getGuestLinkRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1709,14 +2615,13 @@ class GuestsApi
     /**
      * Create request for operation 'getGuestLink'
      *
-     * @param  string $id The ID of the guest link to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getGuestLinkRequest($id, $authorization = null, string $contentType = self::contentTypes['getGuestLink'][0])
+    public function getGuestLinkRequest($id, string $contentType = self::contentTypes['getGuestLink'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -1727,7 +2632,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/guest-links/{id}';
         $formParams = [];
         $queryParams = [];
@@ -1736,15 +2640,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -1752,7 +2652,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1775,13 +2675,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1809,18 +2717,17 @@ class GuestsApi
      *
      * List Group Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinks'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\PaginatedBodyListGroupLink
+     * @return \Alfaview\Client\Model\PaginatedBodyListGroupLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listGroupLinks($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
+    public function listGroupLinks($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
     {
-        list($response) = $this->listGroupLinksWithHttpInfo($authorization, $page_token, $limit, $contentType);
+        list($response) = $this->listGroupLinksWithHttpInfo($page_token, $limit, $contentType);
         return $response;
     }
 
@@ -1829,18 +2736,17 @@ class GuestsApi
      *
      * List Group Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinks'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\PaginatedBodyListGroupLink, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\PaginatedBodyListGroupLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listGroupLinksWithHttpInfo($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
+    public function listGroupLinksWithHttpInfo($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
     {
-        $request = $this->listGroupLinksRequest($authorization, $page_token, $limit, $contentType);
+        $request = $this->listGroupLinksRequest($page_token, $limit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1869,6 +2775,24 @@ class GuestsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\PaginatedBodyListGroupLink',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -1904,6 +2828,30 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1916,17 +2864,16 @@ class GuestsApi
      *
      * List Group Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGroupLinksAsync($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
+    public function listGroupLinksAsync($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
     {
-        return $this->listGroupLinksAsyncWithHttpInfo($authorization, $page_token, $limit, $contentType)
+        return $this->listGroupLinksAsyncWithHttpInfo($page_token, $limit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1939,18 +2886,17 @@ class GuestsApi
      *
      * List Group Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGroupLinksAsyncWithHttpInfo($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
+    public function listGroupLinksAsyncWithHttpInfo($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
     {
         $returnType = '\Alfaview\Client\Model\PaginatedBodyListGroupLink';
-        $request = $this->listGroupLinksRequest($authorization, $page_token, $limit, $contentType);
+        $request = $this->listGroupLinksRequest($page_token, $limit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1991,17 +2937,15 @@ class GuestsApi
     /**
      * Create request for operation 'listGroupLinks'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listGroupLinksRequest($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
+    public function listGroupLinksRequest($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinks'][0])
     {
-
 
 
         if ($limit !== null && $limit > 500) {
@@ -2038,15 +2982,11 @@ class GuestsApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2069,13 +3009,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -2103,19 +3051,18 @@ class GuestsApi
      *
      * List Group Links for Room
      *
-     * @param  string $room_id The room ID of the group links. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinksForRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\PaginatedBodyListGroupLink
+     * @return \Alfaview\Client\Model\PaginatedBodyListGroupLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listGroupLinksForRoom($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
+    public function listGroupLinksForRoom($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
     {
-        list($response) = $this->listGroupLinksForRoomWithHttpInfo($room_id, $authorization, $page_token, $limit, $contentType);
+        list($response) = $this->listGroupLinksForRoomWithHttpInfo($room_id, $page_token, $limit, $contentType);
         return $response;
     }
 
@@ -2124,19 +3071,18 @@ class GuestsApi
      *
      * List Group Links for Room
      *
-     * @param  string $room_id The room ID of the group links. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinksForRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\PaginatedBodyListGroupLink, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\PaginatedBodyListGroupLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listGroupLinksForRoomWithHttpInfo($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
+    public function listGroupLinksForRoomWithHttpInfo($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
     {
-        $request = $this->listGroupLinksForRoomRequest($room_id, $authorization, $page_token, $limit, $contentType);
+        $request = $this->listGroupLinksForRoomRequest($room_id, $page_token, $limit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2165,6 +3111,24 @@ class GuestsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\PaginatedBodyListGroupLink',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2200,6 +3164,30 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2212,18 +3200,17 @@ class GuestsApi
      *
      * List Group Links for Room
      *
-     * @param  string $room_id The room ID of the group links. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinksForRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGroupLinksForRoomAsync($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
+    public function listGroupLinksForRoomAsync($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
     {
-        return $this->listGroupLinksForRoomAsyncWithHttpInfo($room_id, $authorization, $page_token, $limit, $contentType)
+        return $this->listGroupLinksForRoomAsyncWithHttpInfo($room_id, $page_token, $limit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2236,19 +3223,18 @@ class GuestsApi
      *
      * List Group Links for Room
      *
-     * @param  string $room_id The room ID of the group links. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinksForRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGroupLinksForRoomAsyncWithHttpInfo($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
+    public function listGroupLinksForRoomAsyncWithHttpInfo($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
     {
         $returnType = '\Alfaview\Client\Model\PaginatedBodyListGroupLink';
-        $request = $this->listGroupLinksForRoomRequest($room_id, $authorization, $page_token, $limit, $contentType);
+        $request = $this->listGroupLinksForRoomRequest($room_id, $page_token, $limit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2289,16 +3275,15 @@ class GuestsApi
     /**
      * Create request for operation 'listGroupLinksForRoom'
      *
-     * @param  string $room_id The room ID of the group links. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned group links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned group links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGroupLinksForRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listGroupLinksForRoomRequest($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
+    public function listGroupLinksForRoomRequest($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGroupLinksForRoom'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -2307,7 +3292,6 @@ class GuestsApi
                 'Missing the required parameter $room_id when calling listGroupLinksForRoom'
             );
         }
-
 
 
         if ($limit !== null && $limit > 500) {
@@ -2344,15 +3328,11 @@ class GuestsApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -2360,7 +3340,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2383,13 +3363,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -2417,18 +3405,17 @@ class GuestsApi
      *
      * List Guest Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinks'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\PaginatedBodyListGuestLink
+     * @return \Alfaview\Client\Model\PaginatedBodyListGuestLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listGuestLinks($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
+    public function listGuestLinks($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
     {
-        list($response) = $this->listGuestLinksWithHttpInfo($authorization, $page_token, $limit, $contentType);
+        list($response) = $this->listGuestLinksWithHttpInfo($page_token, $limit, $contentType);
         return $response;
     }
 
@@ -2437,18 +3424,17 @@ class GuestsApi
      *
      * List Guest Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinks'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\PaginatedBodyListGuestLink, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\PaginatedBodyListGuestLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listGuestLinksWithHttpInfo($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
+    public function listGuestLinksWithHttpInfo($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
     {
-        $request = $this->listGuestLinksRequest($authorization, $page_token, $limit, $contentType);
+        $request = $this->listGuestLinksRequest($page_token, $limit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2477,6 +3463,24 @@ class GuestsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\PaginatedBodyListGuestLink',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2512,6 +3516,30 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2524,17 +3552,16 @@ class GuestsApi
      *
      * List Guest Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGuestLinksAsync($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
+    public function listGuestLinksAsync($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
     {
-        return $this->listGuestLinksAsyncWithHttpInfo($authorization, $page_token, $limit, $contentType)
+        return $this->listGuestLinksAsyncWithHttpInfo($page_token, $limit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2547,18 +3574,17 @@ class GuestsApi
      *
      * List Guest Links
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGuestLinksAsyncWithHttpInfo($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
+    public function listGuestLinksAsyncWithHttpInfo($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
     {
         $returnType = '\Alfaview\Client\Model\PaginatedBodyListGuestLink';
-        $request = $this->listGuestLinksRequest($authorization, $page_token, $limit, $contentType);
+        $request = $this->listGuestLinksRequest($page_token, $limit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2599,17 +3625,15 @@ class GuestsApi
     /**
      * Create request for operation 'listGuestLinks'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinks'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listGuestLinksRequest($authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
+    public function listGuestLinksRequest($page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinks'][0])
     {
-
 
 
         if ($limit !== null && $limit > 500) {
@@ -2646,15 +3670,11 @@ class GuestsApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2677,13 +3697,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -2711,19 +3739,18 @@ class GuestsApi
      *
      * List Guest Links for a Room
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinksForRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\PaginatedBodyListGuestLink
+     * @return \Alfaview\Client\Model\PaginatedBodyListGuestLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listGuestLinksForRoom($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
+    public function listGuestLinksForRoom($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
     {
-        list($response) = $this->listGuestLinksForRoomWithHttpInfo($room_id, $authorization, $page_token, $limit, $contentType);
+        list($response) = $this->listGuestLinksForRoomWithHttpInfo($room_id, $page_token, $limit, $contentType);
         return $response;
     }
 
@@ -2732,19 +3759,18 @@ class GuestsApi
      *
      * List Guest Links for a Room
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinksForRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\PaginatedBodyListGuestLink, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\PaginatedBodyListGuestLink|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listGuestLinksForRoomWithHttpInfo($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
+    public function listGuestLinksForRoomWithHttpInfo($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
     {
-        $request = $this->listGuestLinksForRoomRequest($room_id, $authorization, $page_token, $limit, $contentType);
+        $request = $this->listGuestLinksForRoomRequest($room_id, $page_token, $limit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2773,6 +3799,24 @@ class GuestsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\PaginatedBodyListGuestLink',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2808,6 +3852,30 @@ class GuestsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2820,18 +3888,17 @@ class GuestsApi
      *
      * List Guest Links for a Room
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinksForRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGuestLinksForRoomAsync($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
+    public function listGuestLinksForRoomAsync($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
     {
-        return $this->listGuestLinksForRoomAsyncWithHttpInfo($room_id, $authorization, $page_token, $limit, $contentType)
+        return $this->listGuestLinksForRoomAsyncWithHttpInfo($room_id, $page_token, $limit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2844,19 +3911,18 @@ class GuestsApi
      *
      * List Guest Links for a Room
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinksForRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listGuestLinksForRoomAsyncWithHttpInfo($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
+    public function listGuestLinksForRoomAsyncWithHttpInfo($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
     {
         $returnType = '\Alfaview\Client\Model\PaginatedBodyListGuestLink';
-        $request = $this->listGuestLinksForRoomRequest($room_id, $authorization, $page_token, $limit, $contentType);
+        $request = $this->listGuestLinksForRoomRequest($room_id, $page_token, $limit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2897,16 +3963,15 @@ class GuestsApi
     /**
      * Create request for operation 'listGuestLinksForRoom'
      *
-     * @param  string $room_id The room ID for the guest link. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
-     * @param  int|null $limit For pagination: Set a limit on the number of returned guest links. (optional, default to 100)
+     * @param  int|null $limit For pagination: Limit the number of returned guest links. (optional, default to 100)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listGuestLinksForRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listGuestLinksForRoomRequest($room_id, $authorization = null, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
+    public function listGuestLinksForRoomRequest($room_id, $page_token = null, $limit = 100, string $contentType = self::contentTypes['listGuestLinksForRoom'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -2915,7 +3980,6 @@ class GuestsApi
                 'Missing the required parameter $room_id when calling listGuestLinksForRoom'
             );
         }
-
 
 
         if ($limit !== null && $limit > 500) {
@@ -2952,15 +4016,11 @@ class GuestsApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -2968,7 +4028,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2991,13 +4051,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -3025,18 +4093,17 @@ class GuestsApi
      *
      * Update Group Link
      *
-     * @param  string $id The ID of the group link to update. (required)
-     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update group_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update The updated group link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateGroupLink($id, $group_link_update, $authorization = null, string $contentType = self::contentTypes['updateGroupLink'][0])
+    public function updateGroupLink($id, $group_link_update, string $contentType = self::contentTypes['updateGroupLink'][0])
     {
-        $this->updateGroupLinkWithHttpInfo($id, $group_link_update, $authorization, $contentType);
+        $this->updateGroupLinkWithHttpInfo($id, $group_link_update, $contentType);
     }
 
     /**
@@ -3044,18 +4111,17 @@ class GuestsApi
      *
      * Update Group Link
      *
-     * @param  string $id The ID of the group link to update. (required)
-     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update The updated group link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGroupLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateGroupLinkWithHttpInfo($id, $group_link_update, $authorization = null, string $contentType = self::contentTypes['updateGroupLink'][0])
+    public function updateGroupLinkWithHttpInfo($id, $group_link_update, string $contentType = self::contentTypes['updateGroupLink'][0])
     {
-        $request = $this->updateGroupLinkRequest($id, $group_link_update, $authorization, $contentType);
+        $request = $this->updateGroupLinkRequest($id, $group_link_update, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3083,6 +4149,46 @@ class GuestsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -3095,17 +4201,16 @@ class GuestsApi
      *
      * Update Group Link
      *
-     * @param  string $id The ID of the group link to update. (required)
-     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update The updated group link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateGroupLinkAsync($id, $group_link_update, $authorization = null, string $contentType = self::contentTypes['updateGroupLink'][0])
+    public function updateGroupLinkAsync($id, $group_link_update, string $contentType = self::contentTypes['updateGroupLink'][0])
     {
-        return $this->updateGroupLinkAsyncWithHttpInfo($id, $group_link_update, $authorization, $contentType)
+        return $this->updateGroupLinkAsyncWithHttpInfo($id, $group_link_update, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3118,18 +4223,17 @@ class GuestsApi
      *
      * Update Group Link
      *
-     * @param  string $id The ID of the group link to update. (required)
-     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update The updated group link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateGroupLinkAsyncWithHttpInfo($id, $group_link_update, $authorization = null, string $contentType = self::contentTypes['updateGroupLink'][0])
+    public function updateGroupLinkAsyncWithHttpInfo($id, $group_link_update, string $contentType = self::contentTypes['updateGroupLink'][0])
     {
         $returnType = '';
-        $request = $this->updateGroupLinkRequest($id, $group_link_update, $authorization, $contentType);
+        $request = $this->updateGroupLinkRequest($id, $group_link_update, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3157,15 +4261,14 @@ class GuestsApi
     /**
      * Create request for operation 'updateGroupLink'
      *
-     * @param  string $id The ID of the group link to update. (required)
-     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The group link ID. (required)
+     * @param  \Alfaview\Client\Model\GroupLinkUpdate $group_link_update The updated group link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGroupLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateGroupLinkRequest($id, $group_link_update, $authorization = null, string $contentType = self::contentTypes['updateGroupLink'][0])
+    public function updateGroupLinkRequest($id, $group_link_update, string $contentType = self::contentTypes['updateGroupLink'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -3183,7 +4286,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/group-links/{id}';
         $formParams = [];
         $queryParams = [];
@@ -3192,15 +4294,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -3208,7 +4306,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -3217,7 +4315,11 @@ class GuestsApi
         if (isset($group_link_update)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($group_link_update));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($group_link_update), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $group_link_update;
             }
@@ -3238,13 +4340,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -3272,18 +4382,17 @@ class GuestsApi
      *
      * Update Guest Link
      *
-     * @param  string $id The ID of the guest link to update. (required)
-     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update guest_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update The updated guest link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGuestLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateGuestLink($id, $guest_link_update, $authorization = null, string $contentType = self::contentTypes['updateGuestLink'][0])
+    public function updateGuestLink($id, $guest_link_update, string $contentType = self::contentTypes['updateGuestLink'][0])
     {
-        $this->updateGuestLinkWithHttpInfo($id, $guest_link_update, $authorization, $contentType);
+        $this->updateGuestLinkWithHttpInfo($id, $guest_link_update, $contentType);
     }
 
     /**
@@ -3291,18 +4400,17 @@ class GuestsApi
      *
      * Update Guest Link
      *
-     * @param  string $id The ID of the guest link to update. (required)
-     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update The updated guest link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGuestLink'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateGuestLinkWithHttpInfo($id, $guest_link_update, $authorization = null, string $contentType = self::contentTypes['updateGuestLink'][0])
+    public function updateGuestLinkWithHttpInfo($id, $guest_link_update, string $contentType = self::contentTypes['updateGuestLink'][0])
     {
-        $request = $this->updateGuestLinkRequest($id, $guest_link_update, $authorization, $contentType);
+        $request = $this->updateGuestLinkRequest($id, $guest_link_update, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3330,6 +4438,46 @@ class GuestsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -3342,17 +4490,16 @@ class GuestsApi
      *
      * Update Guest Link
      *
-     * @param  string $id The ID of the guest link to update. (required)
-     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update The updated guest link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateGuestLinkAsync($id, $guest_link_update, $authorization = null, string $contentType = self::contentTypes['updateGuestLink'][0])
+    public function updateGuestLinkAsync($id, $guest_link_update, string $contentType = self::contentTypes['updateGuestLink'][0])
     {
-        return $this->updateGuestLinkAsyncWithHttpInfo($id, $guest_link_update, $authorization, $contentType)
+        return $this->updateGuestLinkAsyncWithHttpInfo($id, $guest_link_update, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3365,18 +4512,17 @@ class GuestsApi
      *
      * Update Guest Link
      *
-     * @param  string $id The ID of the guest link to update. (required)
-     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update The updated guest link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateGuestLinkAsyncWithHttpInfo($id, $guest_link_update, $authorization = null, string $contentType = self::contentTypes['updateGuestLink'][0])
+    public function updateGuestLinkAsyncWithHttpInfo($id, $guest_link_update, string $contentType = self::contentTypes['updateGuestLink'][0])
     {
         $returnType = '';
-        $request = $this->updateGuestLinkRequest($id, $guest_link_update, $authorization, $contentType);
+        $request = $this->updateGuestLinkRequest($id, $guest_link_update, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3404,15 +4550,14 @@ class GuestsApi
     /**
      * Create request for operation 'updateGuestLink'
      *
-     * @param  string $id The ID of the guest link to update. (required)
-     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The guest link ID. (required)
+     * @param  \Alfaview\Client\Model\GuestLinkUpdate $guest_link_update The updated guest link. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateGuestLink'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateGuestLinkRequest($id, $guest_link_update, $authorization = null, string $contentType = self::contentTypes['updateGuestLink'][0])
+    public function updateGuestLinkRequest($id, $guest_link_update, string $contentType = self::contentTypes['updateGuestLink'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -3430,7 +4575,6 @@ class GuestsApi
         }
 
 
-
         $resourcePath = '/v2/guest-links/{id}';
         $formParams = [];
         $queryParams = [];
@@ -3439,15 +4583,11 @@ class GuestsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -3455,7 +4595,7 @@ class GuestsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -3464,7 +4604,11 @@ class GuestsApi
         if (isset($guest_link_update)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($guest_link_update));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($guest_link_update), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $guest_link_update;
             }
@@ -3485,13 +4629,21 @@ class GuestsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -3528,6 +4680,14 @@ class GuestsApi
             if (!$options[RequestOptions::DEBUG]) {
                 throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
             }
+        }
+
+        if ($this->config->getCertFile()) {
+            $options[RequestOptions::CERT] = $this->config->getCertFile();
+        }
+
+        if ($this->config->getKeyFile()) {
+            $options[RequestOptions::SSL_KEY] = $this->config->getKeyFile();
         }
 
         return $options;

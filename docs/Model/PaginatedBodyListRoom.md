@@ -1,4 +1,4 @@
-# # PaginatedBodyListRoom
+# PaginatedBodyListRoom
 
 ## Properties
 

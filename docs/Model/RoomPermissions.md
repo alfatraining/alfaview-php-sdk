@@ -1,4 +1,4 @@
-# # RoomPermissions
+# RoomPermissions
 
 ## Properties
 

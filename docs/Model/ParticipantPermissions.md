@@ -1,4 +1,4 @@
-# # ParticipantPermissions
+# ParticipantPermissions
 
 ## Properties
 

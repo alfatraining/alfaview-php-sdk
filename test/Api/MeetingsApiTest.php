@@ -27,9 +27,6 @@
 
 namespace Alfaview\Client\Test\Api;
 
-use \Alfaview\Client\Configuration;
-use \Alfaview\Client\ApiException;
-use \Alfaview\Client\ObjectSerializer;
 use PHPUnit\Framework\TestCase;
 
 /**
@@ -102,6 +99,18 @@ class MeetingsApiTest extends TestCase
      *
      */
     public function testGetOwnMeeting()
+    {
+        // TODO: implement
+        self::markTestIncomplete('Not implemented');
+    }
+
+    /**
+     * Test case for listInvitedMeetings
+     *
+     * List Meeting Invitations.
+     *
+     */
+    public function testListInvitedMeetings()
     {
         // TODO: implement
         self::markTestIncomplete('Not implemented');

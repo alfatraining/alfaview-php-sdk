@@ -13,11 +13,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -45,61 +45,64 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     public const DISCRIMINATOR = null;
 
     /**
-      * The original name of the model.
-      *
-      * @var string
-      */
+     * The original name of the model.
+     *
+     * @var string
+     */
     protected static $openAPIModelName = 'MeetingUpdate';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
+     * Array of property to type mappings. Used for (de)serialization
+     *
+     * @var string[]
+     */
     protected static $openAPITypes = [
         'agenda' => 'string',
         'early_access_minutes' => 'int',
         'end' => '\DateTime',
+        'recurrence_rule' => 'string',
         'start' => '\DateTime',
         'timezone' => 'string',
         'title' => 'string'
     ];
 
     /**
-      * Array of property to format mappings. Used for (de)serialization
-      *
-      * @var string[]
-      * @phpstan-var array<string, string|null>
-      * @psalm-var array<string, string|null>
-      */
+     * Array of property to format mappings. Used for (de)serialization
+     *
+     * @var string[]
+     * @phpstan-var array<string, string|null>
+     * @psalm-var array<string, string|null>
+     */
     protected static $openAPIFormats = [
         'agenda' => null,
         'early_access_minutes' => 'int64',
         'end' => 'date-time',
+        'recurrence_rule' => null,
         'start' => 'date-time',
         'timezone' => null,
         'title' => null
     ];
 
     /**
-      * Array of nullable properties. Used for (de)serialization
-      *
-      * @var boolean[]
-      */
+     * Array of nullable properties. Used for (de)serialization
+     *
+     * @var boolean[]
+     */
     protected static array $openAPINullables = [
         'agenda' => true,
         'early_access_minutes' => true,
         'end' => true,
+        'recurrence_rule' => true,
         'start' => true,
         'timezone' => true,
         'title' => true
     ];
 
     /**
-      * If a nullable field gets set to null, insert it here
-      *
-      * @var boolean[]
-      */
+     * If a nullable field gets set to null, insert it here
+     *
+     * @var boolean[]
+     */
     protected array $openAPINullablesSetToNull = [];
 
     /**
@@ -184,6 +187,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         'agenda' => 'agenda',
         'early_access_minutes' => 'earlyAccessMinutes',
         'end' => 'end',
+        'recurrence_rule' => 'recurrenceRule',
         'start' => 'start',
         'timezone' => 'timezone',
         'title' => 'title'
@@ -198,6 +202,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         'agenda' => 'setAgenda',
         'early_access_minutes' => 'setEarlyAccessMinutes',
         'end' => 'setEnd',
+        'recurrence_rule' => 'setRecurrenceRule',
         'start' => 'setStart',
         'timezone' => 'setTimezone',
         'title' => 'setTitle'
@@ -212,6 +217,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         'agenda' => 'getAgenda',
         'early_access_minutes' => 'getEarlyAccessMinutes',
         'end' => 'getEnd',
+        'recurrence_rule' => 'getRecurrenceRule',
         'start' => 'getStart',
         'timezone' => 'getTimezone',
         'title' => 'getTitle'
@@ -277,20 +283,21 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('agenda', $data ?? [], null);
         $this->setIfExists('early_access_minutes', $data ?? [], null);
         $this->setIfExists('end', $data ?? [], null);
+        $this->setIfExists('recurrence_rule', $data ?? [], null);
         $this->setIfExists('start', $data ?? [], null);
         $this->setIfExists('timezone', $data ?? [], null);
         $this->setIfExists('title', $data ?? [], null);
     }
 
     /**
-    * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
-    * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
-    * $this->openAPINullablesSetToNull array
-    *
-    * @param string $variableName
-    * @param array  $fields
-    * @param mixed  $defaultValue
-    */
+     * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
+     * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
+     * $this->openAPINullablesSetToNull array
+     *
+     * @param string $variableName
+     * @param array  $fields
+     * @param mixed  $defaultValue
+     */
     private function setIfExists(string $variableName, array $fields, $defaultValue): void
     {
         if (self::isNullable($variableName) && array_key_exists($variableName, $fields) && is_null($fields[$variableName])) {
@@ -345,7 +352,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets agenda
      *
-     * @param string|null $agenda The agenda of the meeting. HTML is not allowed.
+     * @param string|null $agenda The meeting agenda. HTML is not allowed.
      *
      * @return self
      */
@@ -379,7 +386,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets early_access_minutes
      *
-     * @param int|null $early_access_minutes The duration of the early access period in minutes.
+     * @param int|null $early_access_minutes The duration of the early access period to the meeting room in minutes. In this period, invitees without moderator or administrator permissions can join the meeting. The meeting creator can always join 1 hour and invitees with moderator or administrator permissions 30 minutes before the meeting starts.
      *
      * @return self
      */
@@ -395,7 +402,6 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
                 $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
             }
         }
-
         if (!is_null($early_access_minutes) && ($early_access_minutes > 30)) {
             throw new \InvalidArgumentException('invalid value for $early_access_minutes when calling MeetingUpdate., must be smaller than or equal to 30.');
         }
@@ -421,7 +427,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets end
      *
-     * @param \DateTime|null $end The end time of the meeting.
+     * @param \DateTime|null $end The end time. For a recurring meeting, or with <code>recurrenceRule</code>, the end of the first instance, and <code>end</code> minus <code>start</code> is the duration of each instance.
      *
      * @return self
      */
@@ -443,6 +449,40 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
+     * Gets recurrence_rule
+     *
+     * @return string|null
+     */
+    public function getRecurrenceRule()
+    {
+        return $this->container['recurrence_rule'];
+    }
+
+    /**
+     * Sets recurrence_rule
+     *
+     * @param string|null $recurrence_rule Sets the recurrence rule of a non-recurring meeting, which makes it recurring, or replaces the rule of a recurring meeting. Without <code>start</code>, the current start of the meeting becomes the start of the first instance. A recurring meeting cannot become non-recurring again, because the rule cannot be removed. The prefix <code>RRULE:</code> is optional. A <code>DTSTART</code> line may precede the rule only together with the prefix <code>RRULE:</code>.
+     *
+     * @return self
+     */
+    public function setRecurrenceRule($recurrence_rule)
+    {
+        if (is_null($recurrence_rule)) {
+            array_push($this->openAPINullablesSetToNull, 'recurrence_rule');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('recurrence_rule', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['recurrence_rule'] = $recurrence_rule;
+
+        return $this;
+    }
+
+    /**
      * Gets start
      *
      * @return \DateTime|null
@@ -455,7 +495,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets start
      *
-     * @param \DateTime|null $start The start time of the meeting.
+     * @param \DateTime|null $start The start time. For a recurring meeting, or with <code>recurrenceRule</code>, the start of the first instance.
      *
      * @return self
      */
@@ -489,7 +529,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets timezone
      *
-     * @param string|null $timezone The time zone of the meeting.
+     * @param string|null $timezone The time zone used for time information.
      *
      * @return self
      */
@@ -523,7 +563,7 @@ class MeetingUpdate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets title
      *
-     * @param string|null $title The title of the meeting.
+     * @param string|null $title The meeting title.
      *
      * @return self
      */

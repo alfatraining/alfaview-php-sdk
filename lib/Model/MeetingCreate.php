@@ -13,11 +13,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -45,24 +45,27 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     public const DISCRIMINATOR = null;
 
     /**
-      * The original name of the model.
-      *
-      * @var string
-      */
+     * The original name of the model.
+     *
+     * @var string
+     */
     protected static $openAPIModelName = 'MeetingCreate';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
+     * Array of property to type mappings. Used for (de)serialization
+     *
+     * @var string[]
+     */
     protected static $openAPITypes = [
         'agenda' => 'string',
         'early_access_minutes' => 'int',
         'end' => '\DateTime',
         'group_links' => '\Alfaview\Client\Model\GroupLinkCreate[]',
         'guest_links' => '\Alfaview\Client\Model\GuestLinkCreate[]',
-        'room_features' => '\Alfaview\Client\Model\RoomFeatures',
+        'invited_users' => '\Alfaview\Client\Model\MeetingUserInvitation[]',
+        'passcode_required' => 'bool',
+        'recurrence_rule' => 'string',
+        'room_features' => '\Alfaview\Client\Model\RoomFeaturesEdit',
         'start' => '\DateTime',
         'subroom_display_names' => 'string[]',
         'timezone' => 'string',
@@ -72,18 +75,21 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * Array of property to format mappings. Used for (de)serialization
-      *
-      * @var string[]
-      * @phpstan-var array<string, string|null>
-      * @psalm-var array<string, string|null>
-      */
+     * Array of property to format mappings. Used for (de)serialization
+     *
+     * @var string[]
+     * @phpstan-var array<string, string|null>
+     * @psalm-var array<string, string|null>
+     */
     protected static $openAPIFormats = [
         'agenda' => null,
         'early_access_minutes' => 'int64',
         'end' => 'date-time',
         'group_links' => null,
         'guest_links' => null,
+        'invited_users' => null,
+        'passcode_required' => null,
+        'recurrence_rule' => null,
         'room_features' => null,
         'start' => 'date-time',
         'subroom_display_names' => null,
@@ -94,16 +100,19 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * Array of nullable properties. Used for (de)serialization
-      *
-      * @var boolean[]
-      */
+     * Array of nullable properties. Used for (de)serialization
+     *
+     * @var boolean[]
+     */
     protected static array $openAPINullables = [
         'agenda' => true,
         'early_access_minutes' => true,
         'end' => false,
         'group_links' => true,
         'guest_links' => true,
+        'invited_users' => true,
+        'passcode_required' => true,
+        'recurrence_rule' => true,
         'room_features' => false,
         'start' => false,
         'subroom_display_names' => true,
@@ -114,10 +123,10 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * If a nullable field gets set to null, insert it here
-      *
-      * @var boolean[]
-      */
+     * If a nullable field gets set to null, insert it here
+     *
+     * @var boolean[]
+     */
     protected array $openAPINullablesSetToNull = [];
 
     /**
@@ -204,6 +213,9 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
         'end' => 'end',
         'group_links' => 'groupLinks',
         'guest_links' => 'guestLinks',
+        'invited_users' => 'invitedUsers',
+        'passcode_required' => 'passcodeRequired',
+        'recurrence_rule' => 'recurrenceRule',
         'room_features' => 'roomFeatures',
         'start' => 'start',
         'subroom_display_names' => 'subroomDisplayNames',
@@ -224,6 +236,9 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
         'end' => 'setEnd',
         'group_links' => 'setGroupLinks',
         'guest_links' => 'setGuestLinks',
+        'invited_users' => 'setInvitedUsers',
+        'passcode_required' => 'setPasscodeRequired',
+        'recurrence_rule' => 'setRecurrenceRule',
         'room_features' => 'setRoomFeatures',
         'start' => 'setStart',
         'subroom_display_names' => 'setSubroomDisplayNames',
@@ -244,6 +259,9 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
         'end' => 'getEnd',
         'group_links' => 'getGroupLinks',
         'guest_links' => 'getGuestLinks',
+        'invited_users' => 'getInvitedUsers',
+        'passcode_required' => 'getPasscodeRequired',
+        'recurrence_rule' => 'getRecurrenceRule',
         'room_features' => 'getRoomFeatures',
         'start' => 'getStart',
         'subroom_display_names' => 'getSubroomDisplayNames',
@@ -315,6 +333,9 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('end', $data ?? [], null);
         $this->setIfExists('group_links', $data ?? [], null);
         $this->setIfExists('guest_links', $data ?? [], null);
+        $this->setIfExists('invited_users', $data ?? [], null);
+        $this->setIfExists('passcode_required', $data ?? [], null);
+        $this->setIfExists('recurrence_rule', $data ?? [], null);
         $this->setIfExists('room_features', $data ?? [], null);
         $this->setIfExists('start', $data ?? [], null);
         $this->setIfExists('subroom_display_names', $data ?? [], null);
@@ -325,14 +346,14 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-    * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
-    * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
-    * $this->openAPINullablesSetToNull array
-    *
-    * @param string $variableName
-    * @param array  $fields
-    * @param mixed  $defaultValue
-    */
+     * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
+     * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
+     * $this->openAPINullablesSetToNull array
+     *
+     * @param string $variableName
+     * @param array  $fields
+     * @param mixed  $defaultValue
+     */
     private function setIfExists(string $variableName, array $fields, $defaultValue): void
     {
         if (self::isNullable($variableName) && array_key_exists($variableName, $fields) && is_null($fields[$variableName])) {
@@ -405,7 +426,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets agenda
      *
-     * @param string|null $agenda The agenda of the meeting. HTML is not allowed.
+     * @param string|null $agenda The meeting agenda. HTML is not allowed.
      *
      * @return self
      */
@@ -439,7 +460,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets early_access_minutes
      *
-     * @param int|null $early_access_minutes The duration of the early access period to the meeting room in minutes.
+     * @param int|null $early_access_minutes The duration of the early access period to the meeting room in minutes. In this period, invitees without moderator or administrator permissions can join the meeting. The meeting creator can always join 1 hour and invitees with moderator or administrator permissions 30 minutes before the meeting starts.
      *
      * @return self
      */
@@ -455,7 +476,6 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
                 $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
             }
         }
-
         if (!is_null($early_access_minutes) && ($early_access_minutes > 30)) {
             throw new \InvalidArgumentException('invalid value for $early_access_minutes when calling MeetingCreate., must be smaller than or equal to 30.');
         }
@@ -481,7 +501,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets end
      *
-     * @param \DateTime $end The end time of the meeting.
+     * @param \DateTime $end The end time.
      *
      * @return self
      */
@@ -508,7 +528,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets group_links
      *
-     * @param \Alfaview\Client\Model\GroupLinkCreate[]|null $group_links The group links to create for the meeting. If not provided, four default group links (moderator, participant, guest, spectator) will be created. If an empty list is provided, no links will be created.
+     * @param \Alfaview\Client\Model\GroupLinkCreate[]|null $group_links The group links for the meeting. They are created in addition to the four default group links (moderator, participant, guest, spectator), which every meeting gets.
      *
      * @return self
      */
@@ -542,7 +562,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets guest_links
      *
-     * @param \Alfaview\Client\Model\GuestLinkCreate[]|null $guest_links The guest links to create for the meeting.
+     * @param \Alfaview\Client\Model\GuestLinkCreate[]|null $guest_links The guest links for the meeting.
      *
      * @return self
      */
@@ -564,9 +584,111 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
+     * Gets invited_users
+     *
+     * @return \Alfaview\Client\Model\MeetingUserInvitation[]|null
+     */
+    public function getInvitedUsers()
+    {
+        return $this->container['invited_users'];
+    }
+
+    /**
+     * Sets invited_users
+     *
+     * @param \Alfaview\Client\Model\MeetingUserInvitation[]|null $invited_users The registered users to invite to the meeting. Every invited user receives an invitation email.
+     *
+     * @return self
+     */
+    public function setInvitedUsers($invited_users)
+    {
+        if (is_null($invited_users)) {
+            array_push($this->openAPINullablesSetToNull, 'invited_users');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('invited_users', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['invited_users'] = $invited_users;
+
+        return $this;
+    }
+
+    /**
+     * Gets passcode_required
+     *
+     * @return bool|null
+     */
+    public function getPasscodeRequired()
+    {
+        return $this->container['passcode_required'];
+    }
+
+    /**
+     * Sets passcode_required
+     *
+     * @param bool|null $passcode_required If true, a passcode is required to enter the meeting room.
+     *
+     * @return self
+     */
+    public function setPasscodeRequired($passcode_required)
+    {
+        if (is_null($passcode_required)) {
+            array_push($this->openAPINullablesSetToNull, 'passcode_required');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('passcode_required', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['passcode_required'] = $passcode_required;
+
+        return $this;
+    }
+
+    /**
+     * Gets recurrence_rule
+     *
+     * @return string|null
+     */
+    public function getRecurrenceRule()
+    {
+        return $this->container['recurrence_rule'];
+    }
+
+    /**
+     * Sets recurrence_rule
+     *
+     * @param string|null $recurrence_rule The recurrence rule that makes the meeting recurring, as an RFC 5545 RRULE with times in UTC. The prefix <code>RRULE:</code> is optional. A <code>DTSTART</code> line may precede the rule only together with the prefix <code>RRULE:</code>. <code>start</code> is the start of the first instance, and <code>end</code> minus <code>start</code> is the duration of each instance.
+     *
+     * @return self
+     */
+    public function setRecurrenceRule($recurrence_rule)
+    {
+        if (is_null($recurrence_rule)) {
+            array_push($this->openAPINullablesSetToNull, 'recurrence_rule');
+        } else {
+            $nullablesSetToNull = $this->getOpenAPINullablesSetToNull();
+            $index = array_search('recurrence_rule', $nullablesSetToNull);
+            if ($index !== FALSE) {
+                unset($nullablesSetToNull[$index]);
+                $this->setOpenAPINullablesSetToNull($nullablesSetToNull);
+            }
+        }
+        $this->container['recurrence_rule'] = $recurrence_rule;
+
+        return $this;
+    }
+
+    /**
      * Gets room_features
      *
-     * @return \Alfaview\Client\Model\RoomFeatures
+     * @return \Alfaview\Client\Model\RoomFeaturesEdit
      */
     public function getRoomFeatures()
     {
@@ -576,7 +698,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets room_features
      *
-     * @param \Alfaview\Client\Model\RoomFeatures $room_features The features of the meeting room.
+     * @param \Alfaview\Client\Model\RoomFeaturesEdit $room_features The feature configuration. If no state is specified for a feature, <code>default</code> is assumed.
      *
      * @return self
      */
@@ -603,7 +725,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets start
      *
-     * @param \DateTime $start The start time of the meeting.
+     * @param \DateTime $start The start time.
      *
      * @return self
      */
@@ -630,7 +752,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets subroom_display_names
      *
-     * @param string[]|null $subroom_display_names The display names of the subrooms in the meeting room.
+     * @param string[]|null $subroom_display_names The names of the subrooms of the meeting room that are displayed in UIs.
      *
      * @return self
      */
@@ -664,7 +786,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets timezone
      *
-     * @param string $timezone The time zone of the meeting.
+     * @param string $timezone The time zone used for time information.
      *
      * @return self
      */
@@ -691,7 +813,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets title
      *
-     * @param string $title The title of the meeting.
+     * @param string $title The meeting title.
      *
      * @return self
      */
@@ -718,7 +840,7 @@ class MeetingCreate implements ModelInterface, ArrayAccess, \JsonSerializable
     /**
      * Sets waiting_room_enabled
      *
-     * @param bool $waiting_room_enabled If true, participants will join the waiting room to be admitted by a moderator.
+     * @param bool $waiting_room_enabled If true, participants will enter the waiting room when joining the room. A moderator can admit waiting participants to join the actual room.
      *
      * @return self
      */

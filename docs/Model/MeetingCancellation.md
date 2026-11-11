@@ -1,4 +1,4 @@
-# # MeetingCancellation
+# MeetingCancellation
 
 ## Properties
 

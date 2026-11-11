@@ -1,13 +1,16 @@
-# # User
+# User
 
 ## Properties
 
 Name | Type | Description | Notes
 ------------ | ------------- | ------------- | -------------
-**email_address** | **string** | The email of the user. |
-**first_name** | **string** | The first name of the user. |
-**id** | **string** | The ID of the user. |
-**last_name** | **string** | The last name of the user. |
-**title** | **string** | An optional title of the user. | [optional]
+**city** | **string** | The city the user is located in. | [optional]
+**email_address** | **string** | The email address. |
+**first_name** | **string** | The first name. |
+**id** | **string** | The user ID. |
+**initials** | **string** | The initials. | [optional]
+**last_name** | **string** | The last name. |
+**locale** | **string** | The locale settings (e.g., UI language) for the user. |
+**title** | **string** | The title. | [optional]
 
 [[Back to Model list]](../../README.md#models) [[Back to API list]](../../README.md#endpoints) [[Back to README]](../../README.md)

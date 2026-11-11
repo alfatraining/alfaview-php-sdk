@@ -12,11 +12,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -98,19 +98,25 @@ class RoomsApi
         'getLanguageSettings' => [
             'application/json',
         ],
+        'getPasscode' => [
+            'application/json',
+        ],
         'getRoom' => [
             'application/json',
         ],
         'getRoomFeatures' => [
             'application/json',
         ],
+        'getRoomFileShareLimits' => [
+            'application/json',
+        ],
+        'getRoomFileShareSettings' => [
+            'application/json',
+        ],
         'listAvailableLanguages' => [
             'application/json',
         ],
         'listParticipants' => [
-            'application/json',
-        ],
-        'listPermissionGroups' => [
             'application/json',
         ],
         'listPermissions' => [
@@ -125,6 +131,9 @@ class RoomsApi
         'listSubrooms' => [
             'application/json',
         ],
+        'regeneratePasscode' => [
+            'application/json',
+        ],
         'updateLanguageSettings' => [
             'application/json',
         ],
@@ -135,6 +144,9 @@ class RoomsApi
             'application/json',
         ],
         'updateRoomFeatures' => [
+            'application/json',
+        ],
+        'updateRoomFileShareSettings' => [
             'application/json',
         ],
         'updateSubroom' => [
@@ -191,39 +203,37 @@ class RoomsApi
     /**
      * Operation createPermissions
      *
-     * Create Permissions
+     * Create Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions participant_permissions (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions The permissions to apply. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createPermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function createPermissions($room_id, $participant_permissions, $authorization = null, string $contentType = self::contentTypes['createPermissions'][0])
+    public function createPermissions($room_id, $participant_permissions, string $contentType = self::contentTypes['createPermissions'][0])
     {
-        $this->createPermissionsWithHttpInfo($room_id, $participant_permissions, $authorization, $contentType);
+        $this->createPermissionsWithHttpInfo($room_id, $participant_permissions, $contentType);
     }
 
     /**
      * Operation createPermissionsWithHttpInfo
      *
-     * Create Permissions
+     * Create Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions The permissions to apply. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createPermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createPermissionsWithHttpInfo($room_id, $participant_permissions, $authorization = null, string $contentType = self::contentTypes['createPermissions'][0])
+    public function createPermissionsWithHttpInfo($room_id, $participant_permissions, string $contentType = self::contentTypes['createPermissions'][0])
     {
-        $request = $this->createPermissionsRequest($room_id, $participant_permissions, $authorization, $contentType);
+        $request = $this->createPermissionsRequest($room_id, $participant_permissions, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -251,6 +261,54 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 409:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -261,19 +319,18 @@ class RoomsApi
     /**
      * Operation createPermissionsAsync
      *
-     * Create Permissions
+     * Create Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions The permissions to apply. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createPermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createPermissionsAsync($room_id, $participant_permissions, $authorization = null, string $contentType = self::contentTypes['createPermissions'][0])
+    public function createPermissionsAsync($room_id, $participant_permissions, string $contentType = self::contentTypes['createPermissions'][0])
     {
-        return $this->createPermissionsAsyncWithHttpInfo($room_id, $participant_permissions, $authorization, $contentType)
+        return $this->createPermissionsAsyncWithHttpInfo($room_id, $participant_permissions, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -284,20 +341,19 @@ class RoomsApi
     /**
      * Operation createPermissionsAsyncWithHttpInfo
      *
-     * Create Permissions
+     * Create Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions The permissions to apply. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createPermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createPermissionsAsyncWithHttpInfo($room_id, $participant_permissions, $authorization = null, string $contentType = self::contentTypes['createPermissions'][0])
+    public function createPermissionsAsyncWithHttpInfo($room_id, $participant_permissions, string $contentType = self::contentTypes['createPermissions'][0])
     {
         $returnType = '';
-        $request = $this->createPermissionsRequest($room_id, $participant_permissions, $authorization, $contentType);
+        $request = $this->createPermissionsRequest($room_id, $participant_permissions, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -325,15 +381,14 @@ class RoomsApi
     /**
      * Create request for operation 'createPermissions'
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\ParticipantPermissions $participant_permissions The permissions to apply. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createPermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createPermissionsRequest($room_id, $participant_permissions, $authorization = null, string $contentType = self::contentTypes['createPermissions'][0])
+    public function createPermissionsRequest($room_id, $participant_permissions, string $contentType = self::contentTypes['createPermissions'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -351,7 +406,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/permissions';
         $formParams = [];
         $queryParams = [];
@@ -360,15 +414,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -376,7 +426,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -385,7 +435,11 @@ class RoomsApi
         if (isset($participant_permissions)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($participant_permissions));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($participant_permissions), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $participant_permissions;
             }
@@ -406,13 +460,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -441,16 +503,15 @@ class RoomsApi
      * Create Room
      *
      * @param  \Alfaview\Client\Model\RoomCreate $room_create The room to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\ID
+     * @return \Alfaview\Client\Model\ID|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function createRoom($room_create, $authorization = null, string $contentType = self::contentTypes['createRoom'][0])
+    public function createRoom($room_create, string $contentType = self::contentTypes['createRoom'][0])
     {
-        list($response) = $this->createRoomWithHttpInfo($room_create, $authorization, $contentType);
+        list($response) = $this->createRoomWithHttpInfo($room_create, $contentType);
         return $response;
     }
 
@@ -460,16 +521,15 @@ class RoomsApi
      * Create Room
      *
      * @param  \Alfaview\Client\Model\RoomCreate $room_create The room to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\ID, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\ID|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createRoomWithHttpInfo($room_create, $authorization = null, string $contentType = self::contentTypes['createRoom'][0])
+    public function createRoomWithHttpInfo($room_create, string $contentType = self::contentTypes['createRoom'][0])
     {
-        $request = $this->createRoomRequest($room_create, $authorization, $contentType);
+        $request = $this->createRoomRequest($room_create, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -498,6 +558,30 @@ class RoomsApi
                 case 201:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\ID',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -533,6 +617,38 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -546,15 +662,14 @@ class RoomsApi
      * Create Room
      *
      * @param  \Alfaview\Client\Model\RoomCreate $room_create The room to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createRoomAsync($room_create, $authorization = null, string $contentType = self::contentTypes['createRoom'][0])
+    public function createRoomAsync($room_create, string $contentType = self::contentTypes['createRoom'][0])
     {
-        return $this->createRoomAsyncWithHttpInfo($room_create, $authorization, $contentType)
+        return $this->createRoomAsyncWithHttpInfo($room_create, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -568,16 +683,15 @@ class RoomsApi
      * Create Room
      *
      * @param  \Alfaview\Client\Model\RoomCreate $room_create The room to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createRoomAsyncWithHttpInfo($room_create, $authorization = null, string $contentType = self::contentTypes['createRoom'][0])
+    public function createRoomAsyncWithHttpInfo($room_create, string $contentType = self::contentTypes['createRoom'][0])
     {
         $returnType = '\Alfaview\Client\Model\ID';
-        $request = $this->createRoomRequest($room_create, $authorization, $contentType);
+        $request = $this->createRoomRequest($room_create, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -619,13 +733,12 @@ class RoomsApi
      * Create request for operation 'createRoom'
      *
      * @param  \Alfaview\Client\Model\RoomCreate $room_create The room to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createRoomRequest($room_create, $authorization = null, string $contentType = self::contentTypes['createRoom'][0])
+    public function createRoomRequest($room_create, string $contentType = self::contentTypes['createRoom'][0])
     {
 
         // verify the required parameter 'room_create' is set
@@ -636,7 +749,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms';
         $formParams = [];
         $queryParams = [];
@@ -645,15 +757,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -662,7 +770,11 @@ class RoomsApi
         if (isset($room_create)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($room_create));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($room_create), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $room_create;
             }
@@ -683,13 +795,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -717,18 +837,17 @@ class RoomsApi
      *
      * Create Subroom
      *
-     * @param  string $room_id The ID of the room in which to create the subroom. (required)
+     * @param  string $room_id The room ID to assign the subroom to. (required)
      * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The subroom to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSubroom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\ID
+     * @return \Alfaview\Client\Model\ID|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function createSubroom($room_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['createSubroom'][0])
+    public function createSubroom($room_id, $subroom_edit, string $contentType = self::contentTypes['createSubroom'][0])
     {
-        list($response) = $this->createSubroomWithHttpInfo($room_id, $subroom_edit, $authorization, $contentType);
+        list($response) = $this->createSubroomWithHttpInfo($room_id, $subroom_edit, $contentType);
         return $response;
     }
 
@@ -737,18 +856,17 @@ class RoomsApi
      *
      * Create Subroom
      *
-     * @param  string $room_id The ID of the room in which to create the subroom. (required)
+     * @param  string $room_id The room ID to assign the subroom to. (required)
      * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The subroom to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSubroom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\ID, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\ID|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function createSubroomWithHttpInfo($room_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['createSubroom'][0])
+    public function createSubroomWithHttpInfo($room_id, $subroom_edit, string $contentType = self::contentTypes['createSubroom'][0])
     {
-        $request = $this->createSubroomRequest($room_id, $subroom_edit, $authorization, $contentType);
+        $request = $this->createSubroomRequest($room_id, $subroom_edit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -777,6 +895,36 @@ class RoomsApi
                 case 201:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\ID',
+                        $request,
+                        $response,
+                    );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -812,6 +960,46 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -824,17 +1012,16 @@ class RoomsApi
      *
      * Create Subroom
      *
-     * @param  string $room_id The ID of the room in which to create the subroom. (required)
+     * @param  string $room_id The room ID to assign the subroom to. (required)
      * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The subroom to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createSubroomAsync($room_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['createSubroom'][0])
+    public function createSubroomAsync($room_id, $subroom_edit, string $contentType = self::contentTypes['createSubroom'][0])
     {
-        return $this->createSubroomAsyncWithHttpInfo($room_id, $subroom_edit, $authorization, $contentType)
+        return $this->createSubroomAsyncWithHttpInfo($room_id, $subroom_edit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -847,18 +1034,17 @@ class RoomsApi
      *
      * Create Subroom
      *
-     * @param  string $room_id The ID of the room in which to create the subroom. (required)
+     * @param  string $room_id The room ID to assign the subroom to. (required)
      * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The subroom to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function createSubroomAsyncWithHttpInfo($room_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['createSubroom'][0])
+    public function createSubroomAsyncWithHttpInfo($room_id, $subroom_edit, string $contentType = self::contentTypes['createSubroom'][0])
     {
         $returnType = '\Alfaview\Client\Model\ID';
-        $request = $this->createSubroomRequest($room_id, $subroom_edit, $authorization, $contentType);
+        $request = $this->createSubroomRequest($room_id, $subroom_edit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -899,15 +1085,14 @@ class RoomsApi
     /**
      * Create request for operation 'createSubroom'
      *
-     * @param  string $room_id The ID of the room in which to create the subroom. (required)
+     * @param  string $room_id The room ID to assign the subroom to. (required)
      * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The subroom to create. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['createSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function createSubroomRequest($room_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['createSubroom'][0])
+    public function createSubroomRequest($room_id, $subroom_edit, string $contentType = self::contentTypes['createSubroom'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -925,7 +1110,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/subrooms';
         $formParams = [];
         $queryParams = [];
@@ -934,15 +1118,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -950,7 +1130,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -959,7 +1139,11 @@ class RoomsApi
         if (isset($subroom_edit)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($subroom_edit));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($subroom_edit), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $subroom_edit;
             }
@@ -980,13 +1164,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1012,39 +1204,37 @@ class RoomsApi
     /**
      * Operation deletePermissions
      *
-     * Delete Permissions
+     * Delete Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deletePermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function deletePermissions($room_id, $user_id, $authorization = null, string $contentType = self::contentTypes['deletePermissions'][0])
+    public function deletePermissions($room_id, $user_id, string $contentType = self::contentTypes['deletePermissions'][0])
     {
-        $this->deletePermissionsWithHttpInfo($room_id, $user_id, $authorization, $contentType);
+        $this->deletePermissionsWithHttpInfo($room_id, $user_id, $contentType);
     }
 
     /**
      * Operation deletePermissionsWithHttpInfo
      *
-     * Delete Permissions
+     * Delete Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deletePermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deletePermissionsWithHttpInfo($room_id, $user_id, $authorization = null, string $contentType = self::contentTypes['deletePermissions'][0])
+    public function deletePermissionsWithHttpInfo($room_id, $user_id, string $contentType = self::contentTypes['deletePermissions'][0])
     {
-        $request = $this->deletePermissionsRequest($room_id, $user_id, $authorization, $contentType);
+        $request = $this->deletePermissionsRequest($room_id, $user_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1072,6 +1262,38 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1082,19 +1304,18 @@ class RoomsApi
     /**
      * Operation deletePermissionsAsync
      *
-     * Delete Permissions
+     * Delete Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deletePermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deletePermissionsAsync($room_id, $user_id, $authorization = null, string $contentType = self::contentTypes['deletePermissions'][0])
+    public function deletePermissionsAsync($room_id, $user_id, string $contentType = self::contentTypes['deletePermissions'][0])
     {
-        return $this->deletePermissionsAsyncWithHttpInfo($room_id, $user_id, $authorization, $contentType)
+        return $this->deletePermissionsAsyncWithHttpInfo($room_id, $user_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1105,20 +1326,19 @@ class RoomsApi
     /**
      * Operation deletePermissionsAsyncWithHttpInfo
      *
-     * Delete Permissions
+     * Delete Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deletePermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deletePermissionsAsyncWithHttpInfo($room_id, $user_id, $authorization = null, string $contentType = self::contentTypes['deletePermissions'][0])
+    public function deletePermissionsAsyncWithHttpInfo($room_id, $user_id, string $contentType = self::contentTypes['deletePermissions'][0])
     {
         $returnType = '';
-        $request = $this->deletePermissionsRequest($room_id, $user_id, $authorization, $contentType);
+        $request = $this->deletePermissionsRequest($room_id, $user_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1146,15 +1366,14 @@ class RoomsApi
     /**
      * Create request for operation 'deletePermissions'
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deletePermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function deletePermissionsRequest($room_id, $user_id, $authorization = null, string $contentType = self::contentTypes['deletePermissions'][0])
+    public function deletePermissionsRequest($room_id, $user_id, string $contentType = self::contentTypes['deletePermissions'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -1172,7 +1391,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/permissions/{userId}';
         $formParams = [];
         $queryParams = [];
@@ -1181,15 +1399,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -1197,7 +1411,7 @@ class RoomsApi
         // path params
         if ($user_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'userId' . '}',
+                '{userId}',
                 ObjectSerializer::toPathValue($user_id),
                 $resourcePath
             );
@@ -1205,7 +1419,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1228,13 +1442,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1262,17 +1484,16 @@ class RoomsApi
      *
      * Delete Room
      *
-     * @param  string $id The ID of the room to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function deleteRoom($id, $authorization = null, string $contentType = self::contentTypes['deleteRoom'][0])
+    public function deleteRoom($id, string $contentType = self::contentTypes['deleteRoom'][0])
     {
-        $this->deleteRoomWithHttpInfo($id, $authorization, $contentType);
+        $this->deleteRoomWithHttpInfo($id, $contentType);
     }
 
     /**
@@ -1280,17 +1501,16 @@ class RoomsApi
      *
      * Delete Room
      *
-     * @param  string $id The ID of the room to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteRoomWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['deleteRoom'][0])
+    public function deleteRoomWithHttpInfo($id, string $contentType = self::contentTypes['deleteRoom'][0])
     {
-        $request = $this->deleteRoomRequest($id, $authorization, $contentType);
+        $request = $this->deleteRoomRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1318,6 +1538,30 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1330,16 +1574,15 @@ class RoomsApi
      *
      * Delete Room
      *
-     * @param  string $id The ID of the room to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteRoomAsync($id, $authorization = null, string $contentType = self::contentTypes['deleteRoom'][0])
+    public function deleteRoomAsync($id, string $contentType = self::contentTypes['deleteRoom'][0])
     {
-        return $this->deleteRoomAsyncWithHttpInfo($id, $authorization, $contentType)
+        return $this->deleteRoomAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1352,17 +1595,16 @@ class RoomsApi
      *
      * Delete Room
      *
-     * @param  string $id The ID of the room to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteRoomAsyncWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['deleteRoom'][0])
+    public function deleteRoomAsyncWithHttpInfo($id, string $contentType = self::contentTypes['deleteRoom'][0])
     {
         $returnType = '';
-        $request = $this->deleteRoomRequest($id, $authorization, $contentType);
+        $request = $this->deleteRoomRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1390,14 +1632,13 @@ class RoomsApi
     /**
      * Create request for operation 'deleteRoom'
      *
-     * @param  string $id The ID of the room to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function deleteRoomRequest($id, $authorization = null, string $contentType = self::contentTypes['deleteRoom'][0])
+    public function deleteRoomRequest($id, string $contentType = self::contentTypes['deleteRoom'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -1408,7 +1649,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{id}';
         $formParams = [];
         $queryParams = [];
@@ -1417,15 +1657,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -1433,7 +1669,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1456,13 +1692,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1490,17 +1734,16 @@ class RoomsApi
      *
      * Delete Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoomFeatures'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function deleteRoomFeatures($room_id, $authorization = null, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
+    public function deleteRoomFeatures($room_id, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
     {
-        $this->deleteRoomFeaturesWithHttpInfo($room_id, $authorization, $contentType);
+        $this->deleteRoomFeaturesWithHttpInfo($room_id, $contentType);
     }
 
     /**
@@ -1508,17 +1751,16 @@ class RoomsApi
      *
      * Delete Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoomFeatures'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteRoomFeaturesWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
+    public function deleteRoomFeaturesWithHttpInfo($room_id, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
     {
-        $request = $this->deleteRoomFeaturesRequest($room_id, $authorization, $contentType);
+        $request = $this->deleteRoomFeaturesRequest($room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1546,6 +1788,38 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1558,16 +1832,15 @@ class RoomsApi
      *
      * Delete Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteRoomFeaturesAsync($room_id, $authorization = null, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
+    public function deleteRoomFeaturesAsync($room_id, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
     {
-        return $this->deleteRoomFeaturesAsyncWithHttpInfo($room_id, $authorization, $contentType)
+        return $this->deleteRoomFeaturesAsyncWithHttpInfo($room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1580,17 +1853,16 @@ class RoomsApi
      *
      * Delete Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteRoomFeaturesAsyncWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
+    public function deleteRoomFeaturesAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
     {
         $returnType = '';
-        $request = $this->deleteRoomFeaturesRequest($room_id, $authorization, $contentType);
+        $request = $this->deleteRoomFeaturesRequest($room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1618,14 +1890,13 @@ class RoomsApi
     /**
      * Create request for operation 'deleteRoomFeatures'
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function deleteRoomFeaturesRequest($room_id, $authorization = null, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
+    public function deleteRoomFeaturesRequest($room_id, string $contentType = self::contentTypes['deleteRoomFeatures'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -1636,7 +1907,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/features';
         $formParams = [];
         $queryParams = [];
@@ -1645,15 +1915,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -1661,7 +1927,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1684,13 +1950,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1718,18 +1992,17 @@ class RoomsApi
      *
      * Delete Subroom
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteSubroom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function deleteSubroom($room_id, $subroom_id, $authorization = null, string $contentType = self::contentTypes['deleteSubroom'][0])
+    public function deleteSubroom($room_id, $subroom_id, string $contentType = self::contentTypes['deleteSubroom'][0])
     {
-        $this->deleteSubroomWithHttpInfo($room_id, $subroom_id, $authorization, $contentType);
+        $this->deleteSubroomWithHttpInfo($room_id, $subroom_id, $contentType);
     }
 
     /**
@@ -1737,18 +2010,17 @@ class RoomsApi
      *
      * Delete Subroom
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteSubroom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function deleteSubroomWithHttpInfo($room_id, $subroom_id, $authorization = null, string $contentType = self::contentTypes['deleteSubroom'][0])
+    public function deleteSubroomWithHttpInfo($room_id, $subroom_id, string $contentType = self::contentTypes['deleteSubroom'][0])
     {
-        $request = $this->deleteSubroomRequest($room_id, $subroom_id, $authorization, $contentType);
+        $request = $this->deleteSubroomRequest($room_id, $subroom_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1776,6 +2048,38 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1788,17 +2092,16 @@ class RoomsApi
      *
      * Delete Subroom
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteSubroomAsync($room_id, $subroom_id, $authorization = null, string $contentType = self::contentTypes['deleteSubroom'][0])
+    public function deleteSubroomAsync($room_id, $subroom_id, string $contentType = self::contentTypes['deleteSubroom'][0])
     {
-        return $this->deleteSubroomAsyncWithHttpInfo($room_id, $subroom_id, $authorization, $contentType)
+        return $this->deleteSubroomAsyncWithHttpInfo($room_id, $subroom_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1811,18 +2114,17 @@ class RoomsApi
      *
      * Delete Subroom
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function deleteSubroomAsyncWithHttpInfo($room_id, $subroom_id, $authorization = null, string $contentType = self::contentTypes['deleteSubroom'][0])
+    public function deleteSubroomAsyncWithHttpInfo($room_id, $subroom_id, string $contentType = self::contentTypes['deleteSubroom'][0])
     {
         $returnType = '';
-        $request = $this->deleteSubroomRequest($room_id, $subroom_id, $authorization, $contentType);
+        $request = $this->deleteSubroomRequest($room_id, $subroom_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1850,15 +2152,14 @@ class RoomsApi
     /**
      * Create request for operation 'deleteSubroom'
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to delete. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['deleteSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function deleteSubroomRequest($room_id, $subroom_id, $authorization = null, string $contentType = self::contentTypes['deleteSubroom'][0])
+    public function deleteSubroomRequest($room_id, $subroom_id, string $contentType = self::contentTypes['deleteSubroom'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -1876,7 +2177,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/subrooms/{subroomId}';
         $formParams = [];
         $queryParams = [];
@@ -1885,15 +2185,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -1901,7 +2197,7 @@ class RoomsApi
         // path params
         if ($subroom_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'subroomId' . '}',
+                '{subroomId}',
                 ObjectSerializer::toPathValue($subroom_id),
                 $resourcePath
             );
@@ -1909,7 +2205,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1932,13 +2228,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1966,17 +2270,16 @@ class RoomsApi
      *
      * Get Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getLanguageSettings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\LanguageSettings
+     * @return \Alfaview\Client\Model\LanguageSettings|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function getLanguageSettings($room_id, $authorization = null, string $contentType = self::contentTypes['getLanguageSettings'][0])
+    public function getLanguageSettings($room_id, string $contentType = self::contentTypes['getLanguageSettings'][0])
     {
-        list($response) = $this->getLanguageSettingsWithHttpInfo($room_id, $authorization, $contentType);
+        list($response) = $this->getLanguageSettingsWithHttpInfo($room_id, $contentType);
         return $response;
     }
 
@@ -1985,17 +2288,16 @@ class RoomsApi
      *
      * Get Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getLanguageSettings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\LanguageSettings, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\LanguageSettings|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getLanguageSettingsWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['getLanguageSettings'][0])
+    public function getLanguageSettingsWithHttpInfo($room_id, string $contentType = self::contentTypes['getLanguageSettings'][0])
     {
-        $request = $this->getLanguageSettingsRequest($room_id, $authorization, $contentType);
+        $request = $this->getLanguageSettingsRequest($room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2024,6 +2326,24 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\LanguageSettings',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2059,6 +2379,30 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2071,16 +2415,15 @@ class RoomsApi
      *
      * Get Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getLanguageSettings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getLanguageSettingsAsync($room_id, $authorization = null, string $contentType = self::contentTypes['getLanguageSettings'][0])
+    public function getLanguageSettingsAsync($room_id, string $contentType = self::contentTypes['getLanguageSettings'][0])
     {
-        return $this->getLanguageSettingsAsyncWithHttpInfo($room_id, $authorization, $contentType)
+        return $this->getLanguageSettingsAsyncWithHttpInfo($room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2093,17 +2436,16 @@ class RoomsApi
      *
      * Get Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getLanguageSettings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getLanguageSettingsAsyncWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['getLanguageSettings'][0])
+    public function getLanguageSettingsAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['getLanguageSettings'][0])
     {
         $returnType = '\Alfaview\Client\Model\LanguageSettings';
-        $request = $this->getLanguageSettingsRequest($room_id, $authorization, $contentType);
+        $request = $this->getLanguageSettingsRequest($room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2144,14 +2486,13 @@ class RoomsApi
     /**
      * Create request for operation 'getLanguageSettings'
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getLanguageSettings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getLanguageSettingsRequest($room_id, $authorization = null, string $contentType = self::contentTypes['getLanguageSettings'][0])
+    public function getLanguageSettingsRequest($room_id, string $contentType = self::contentTypes['getLanguageSettings'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -2162,7 +2503,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/language-settings';
         $formParams = [];
         $queryParams = [];
@@ -2171,15 +2511,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -2187,7 +2523,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2210,13 +2546,353 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getPasscode
+     *
+     * Get Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getPasscode'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\Passcode|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function getPasscode($room_id, string $contentType = self::contentTypes['getPasscode'][0])
+    {
+        list($response) = $this->getPasscodeWithHttpInfo($room_id, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getPasscodeWithHttpInfo
+     *
+     * Get Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getPasscode'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\Passcode|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getPasscodeWithHttpInfo($room_id, string $contentType = self::contentTypes['getPasscode'][0])
+    {
+        $request = $this->getPasscodeRequest($room_id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\Passcode',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\Passcode',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\Passcode',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getPasscodeAsync
+     *
+     * Get Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getPasscode'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getPasscodeAsync($room_id, string $contentType = self::contentTypes['getPasscode'][0])
+    {
+        return $this->getPasscodeAsyncWithHttpInfo($room_id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getPasscodeAsyncWithHttpInfo
+     *
+     * Get Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getPasscode'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getPasscodeAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['getPasscode'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\Passcode';
+        $request = $this->getPasscodeRequest($room_id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getPasscode'
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getPasscode'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getPasscodeRequest($room_id, string $contentType = self::contentTypes['getPasscode'][0])
+    {
+
+        // verify the required parameter 'room_id' is set
+        if ($room_id === null || (is_array($room_id) && count($room_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $room_id when calling getPasscode'
+            );
+        }
+
+
+        $resourcePath = '/v2/rooms/{roomId}/passcode';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($room_id !== null) {
+            $resourcePath = str_replace(
+                '{roomId}',
+                ObjectSerializer::toPathValue($room_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -2244,17 +2920,16 @@ class RoomsApi
      *
      * Get Room
      *
-     * @param  string $id The ID of the room to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\Room
+     * @return \Alfaview\Client\Model\Room|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function getRoom($id, $authorization = null, string $contentType = self::contentTypes['getRoom'][0])
+    public function getRoom($id, string $contentType = self::contentTypes['getRoom'][0])
     {
-        list($response) = $this->getRoomWithHttpInfo($id, $authorization, $contentType);
+        list($response) = $this->getRoomWithHttpInfo($id, $contentType);
         return $response;
     }
 
@@ -2263,17 +2938,16 @@ class RoomsApi
      *
      * Get Room
      *
-     * @param  string $id The ID of the room to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\Room, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\Room|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getRoomWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getRoom'][0])
+    public function getRoomWithHttpInfo($id, string $contentType = self::contentTypes['getRoom'][0])
     {
-        $request = $this->getRoomRequest($id, $authorization, $contentType);
+        $request = $this->getRoomRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2302,6 +2976,30 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\Room',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2337,6 +3035,38 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2349,16 +3079,15 @@ class RoomsApi
      *
      * Get Room
      *
-     * @param  string $id The ID of the room to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getRoomAsync($id, $authorization = null, string $contentType = self::contentTypes['getRoom'][0])
+    public function getRoomAsync($id, string $contentType = self::contentTypes['getRoom'][0])
     {
-        return $this->getRoomAsyncWithHttpInfo($id, $authorization, $contentType)
+        return $this->getRoomAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2371,17 +3100,16 @@ class RoomsApi
      *
      * Get Room
      *
-     * @param  string $id The ID of the room to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getRoomAsyncWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['getRoom'][0])
+    public function getRoomAsyncWithHttpInfo($id, string $contentType = self::contentTypes['getRoom'][0])
     {
         $returnType = '\Alfaview\Client\Model\Room';
-        $request = $this->getRoomRequest($id, $authorization, $contentType);
+        $request = $this->getRoomRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2422,14 +3150,13 @@ class RoomsApi
     /**
      * Create request for operation 'getRoom'
      *
-     * @param  string $id The ID of the room to get. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getRoomRequest($id, $authorization = null, string $contentType = self::contentTypes['getRoom'][0])
+    public function getRoomRequest($id, string $contentType = self::contentTypes['getRoom'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -2440,7 +3167,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{id}';
         $formParams = [];
         $queryParams = [];
@@ -2449,15 +3175,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -2465,7 +3187,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2488,13 +3210,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -2522,17 +3252,16 @@ class RoomsApi
      *
      * Get Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFeatures'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\RoomFeatures
+     * @return \Alfaview\Client\Model\RoomFeatures|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function getRoomFeatures($room_id, $authorization = null, string $contentType = self::contentTypes['getRoomFeatures'][0])
+    public function getRoomFeatures($room_id, string $contentType = self::contentTypes['getRoomFeatures'][0])
     {
-        list($response) = $this->getRoomFeaturesWithHttpInfo($room_id, $authorization, $contentType);
+        list($response) = $this->getRoomFeaturesWithHttpInfo($room_id, $contentType);
         return $response;
     }
 
@@ -2541,17 +3270,16 @@ class RoomsApi
      *
      * Get Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFeatures'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\RoomFeatures, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\RoomFeatures|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getRoomFeaturesWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['getRoomFeatures'][0])
+    public function getRoomFeaturesWithHttpInfo($room_id, string $contentType = self::contentTypes['getRoomFeatures'][0])
     {
-        $request = $this->getRoomFeaturesRequest($room_id, $authorization, $contentType);
+        $request = $this->getRoomFeaturesRequest($room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2580,6 +3308,24 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\RoomFeatures',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2615,6 +3361,30 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2627,16 +3397,15 @@ class RoomsApi
      *
      * Get Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getRoomFeaturesAsync($room_id, $authorization = null, string $contentType = self::contentTypes['getRoomFeatures'][0])
+    public function getRoomFeaturesAsync($room_id, string $contentType = self::contentTypes['getRoomFeatures'][0])
     {
-        return $this->getRoomFeaturesAsyncWithHttpInfo($room_id, $authorization, $contentType)
+        return $this->getRoomFeaturesAsyncWithHttpInfo($room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2649,17 +3418,16 @@ class RoomsApi
      *
      * Get Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getRoomFeaturesAsyncWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['getRoomFeatures'][0])
+    public function getRoomFeaturesAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['getRoomFeatures'][0])
     {
         $returnType = '\Alfaview\Client\Model\RoomFeatures';
-        $request = $this->getRoomFeaturesRequest($room_id, $authorization, $contentType);
+        $request = $this->getRoomFeaturesRequest($room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2700,14 +3468,13 @@ class RoomsApi
     /**
      * Create request for operation 'getRoomFeatures'
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getRoomFeaturesRequest($room_id, $authorization = null, string $contentType = self::contentTypes['getRoomFeatures'][0])
+    public function getRoomFeaturesRequest($room_id, string $contentType = self::contentTypes['getRoomFeatures'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -2718,7 +3485,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/features';
         $formParams = [];
         $queryParams = [];
@@ -2727,15 +3493,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -2743,7 +3505,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -2766,13 +3528,657 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getRoomFileShareLimits
+     *
+     * Get File Share Limits
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareLimits'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\RoomLimits|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function getRoomFileShareLimits($room_id, string $contentType = self::contentTypes['getRoomFileShareLimits'][0])
+    {
+        list($response) = $this->getRoomFileShareLimitsWithHttpInfo($room_id, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getRoomFileShareLimitsWithHttpInfo
+     *
+     * Get File Share Limits
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareLimits'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\RoomLimits|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getRoomFileShareLimitsWithHttpInfo($room_id, string $contentType = self::contentTypes['getRoomFileShareLimits'][0])
+    {
+        $request = $this->getRoomFileShareLimitsRequest($room_id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\RoomLimits',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\RoomLimits',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\RoomLimits',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getRoomFileShareLimitsAsync
+     *
+     * Get File Share Limits
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareLimits'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getRoomFileShareLimitsAsync($room_id, string $contentType = self::contentTypes['getRoomFileShareLimits'][0])
+    {
+        return $this->getRoomFileShareLimitsAsyncWithHttpInfo($room_id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getRoomFileShareLimitsAsyncWithHttpInfo
+     *
+     * Get File Share Limits
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareLimits'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getRoomFileShareLimitsAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['getRoomFileShareLimits'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\RoomLimits';
+        $request = $this->getRoomFileShareLimitsRequest($room_id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getRoomFileShareLimits'
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareLimits'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getRoomFileShareLimitsRequest($room_id, string $contentType = self::contentTypes['getRoomFileShareLimits'][0])
+    {
+
+        // verify the required parameter 'room_id' is set
+        if ($room_id === null || (is_array($room_id) && count($room_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $room_id when calling getRoomFileShareLimits'
+            );
+        }
+
+
+        $resourcePath = '/v2/rooms/{roomId}/file-share-limits';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($room_id !== null) {
+            $resourcePath = str_replace(
+                '{roomId}',
+                ObjectSerializer::toPathValue($room_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'GET',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation getRoomFileShareSettings
+     *
+     * Get File Share Settings
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\RoomSettings|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function getRoomFileShareSettings($room_id, string $contentType = self::contentTypes['getRoomFileShareSettings'][0])
+    {
+        list($response) = $this->getRoomFileShareSettingsWithHttpInfo($room_id, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation getRoomFileShareSettingsWithHttpInfo
+     *
+     * Get File Share Settings
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\RoomSettings|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function getRoomFileShareSettingsWithHttpInfo($room_id, string $contentType = self::contentTypes['getRoomFileShareSettings'][0])
+    {
+        $request = $this->getRoomFileShareSettingsRequest($room_id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\RoomSettings',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\RoomSettings',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\RoomSettings',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation getRoomFileShareSettingsAsync
+     *
+     * Get File Share Settings
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getRoomFileShareSettingsAsync($room_id, string $contentType = self::contentTypes['getRoomFileShareSettings'][0])
+    {
+        return $this->getRoomFileShareSettingsAsyncWithHttpInfo($room_id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation getRoomFileShareSettingsAsyncWithHttpInfo
+     *
+     * Get File Share Settings
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function getRoomFileShareSettingsAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['getRoomFileShareSettings'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\RoomSettings';
+        $request = $this->getRoomFileShareSettingsRequest($room_id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'getRoomFileShareSettings'
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function getRoomFileShareSettingsRequest($room_id, string $contentType = self::contentTypes['getRoomFileShareSettings'][0])
+    {
+
+        // verify the required parameter 'room_id' is set
+        if ($room_id === null || (is_array($room_id) && count($room_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $room_id when calling getRoomFileShareSettings'
+            );
+        }
+
+
+        $resourcePath = '/v2/rooms/{roomId}/file-share-settings';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($room_id !== null) {
+            $resourcePath = str_replace(
+                '{roomId}',
+                ObjectSerializer::toPathValue($room_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -2800,16 +4206,15 @@ class RoomsApi
      *
      * List Available Languages
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAvailableLanguages'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\Languages
+     * @return \Alfaview\Client\Model\Languages|\Alfaview\Client\Model\ErrorModel
      */
-    public function listAvailableLanguages($authorization = null, string $contentType = self::contentTypes['listAvailableLanguages'][0])
+    public function listAvailableLanguages(string $contentType = self::contentTypes['listAvailableLanguages'][0])
     {
-        list($response) = $this->listAvailableLanguagesWithHttpInfo($authorization, $contentType);
+        list($response) = $this->listAvailableLanguagesWithHttpInfo($contentType);
         return $response;
     }
 
@@ -2818,16 +4223,15 @@ class RoomsApi
      *
      * List Available Languages
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAvailableLanguages'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\Languages, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\Languages|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listAvailableLanguagesWithHttpInfo($authorization = null, string $contentType = self::contentTypes['listAvailableLanguages'][0])
+    public function listAvailableLanguagesWithHttpInfo(string $contentType = self::contentTypes['listAvailableLanguages'][0])
     {
-        $request = $this->listAvailableLanguagesRequest($authorization, $contentType);
+        $request = $this->listAvailableLanguagesRequest($contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -2856,6 +4260,12 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\Languages',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -2891,6 +4301,14 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -2903,15 +4321,14 @@ class RoomsApi
      *
      * List Available Languages
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAvailableLanguages'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listAvailableLanguagesAsync($authorization = null, string $contentType = self::contentTypes['listAvailableLanguages'][0])
+    public function listAvailableLanguagesAsync(string $contentType = self::contentTypes['listAvailableLanguages'][0])
     {
-        return $this->listAvailableLanguagesAsyncWithHttpInfo($authorization, $contentType)
+        return $this->listAvailableLanguagesAsyncWithHttpInfo($contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -2924,16 +4341,15 @@ class RoomsApi
      *
      * List Available Languages
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAvailableLanguages'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listAvailableLanguagesAsyncWithHttpInfo($authorization = null, string $contentType = self::contentTypes['listAvailableLanguages'][0])
+    public function listAvailableLanguagesAsyncWithHttpInfo(string $contentType = self::contentTypes['listAvailableLanguages'][0])
     {
         $returnType = '\Alfaview\Client\Model\Languages';
-        $request = $this->listAvailableLanguagesRequest($authorization, $contentType);
+        $request = $this->listAvailableLanguagesRequest($contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -2974,15 +4390,13 @@ class RoomsApi
     /**
      * Create request for operation 'listAvailableLanguages'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listAvailableLanguages'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listAvailableLanguagesRequest($authorization = null, string $contentType = self::contentTypes['listAvailableLanguages'][0])
+    public function listAvailableLanguagesRequest(string $contentType = self::contentTypes['listAvailableLanguages'][0])
     {
-
 
 
         $resourcePath = '/v2/languages';
@@ -2993,15 +4407,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -3024,13 +4434,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -3058,17 +4476,16 @@ class RoomsApi
      *
      * List Participants
      *
-     * @param  string $id The room ID of the participants. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listParticipants'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\SubroomParticipants[]
+     * @return \Alfaview\Client\Model\SubroomParticipants[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listParticipants($id, $authorization = null, string $contentType = self::contentTypes['listParticipants'][0])
+    public function listParticipants($id, string $contentType = self::contentTypes['listParticipants'][0])
     {
-        list($response) = $this->listParticipantsWithHttpInfo($id, $authorization, $contentType);
+        list($response) = $this->listParticipantsWithHttpInfo($id, $contentType);
         return $response;
     }
 
@@ -3077,17 +4494,16 @@ class RoomsApi
      *
      * List Participants
      *
-     * @param  string $id The room ID of the participants. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listParticipants'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\SubroomParticipants[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\SubroomParticipants[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listParticipantsWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['listParticipants'][0])
+    public function listParticipantsWithHttpInfo($id, string $contentType = self::contentTypes['listParticipants'][0])
     {
-        $request = $this->listParticipantsRequest($id, $authorization, $contentType);
+        $request = $this->listParticipantsRequest($id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3116,6 +4532,30 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\SubroomParticipants[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -3151,6 +4591,38 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -3163,16 +4635,15 @@ class RoomsApi
      *
      * List Participants
      *
-     * @param  string $id The room ID of the participants. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listParticipants'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listParticipantsAsync($id, $authorization = null, string $contentType = self::contentTypes['listParticipants'][0])
+    public function listParticipantsAsync($id, string $contentType = self::contentTypes['listParticipants'][0])
     {
-        return $this->listParticipantsAsyncWithHttpInfo($id, $authorization, $contentType)
+        return $this->listParticipantsAsyncWithHttpInfo($id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3185,17 +4656,16 @@ class RoomsApi
      *
      * List Participants
      *
-     * @param  string $id The room ID of the participants. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listParticipants'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listParticipantsAsyncWithHttpInfo($id, $authorization = null, string $contentType = self::contentTypes['listParticipants'][0])
+    public function listParticipantsAsyncWithHttpInfo($id, string $contentType = self::contentTypes['listParticipants'][0])
     {
         $returnType = '\Alfaview\Client\Model\SubroomParticipants[]';
-        $request = $this->listParticipantsRequest($id, $authorization, $contentType);
+        $request = $this->listParticipantsRequest($id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3236,14 +4706,13 @@ class RoomsApi
     /**
      * Create request for operation 'listParticipants'
      *
-     * @param  string $id The room ID of the participants. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listParticipants'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listParticipantsRequest($id, $authorization = null, string $contentType = self::contentTypes['listParticipants'][0])
+    public function listParticipantsRequest($id, string $contentType = self::contentTypes['listParticipants'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -3254,7 +4723,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{id}/participants';
         $formParams = [];
         $queryParams = [];
@@ -3263,15 +4731,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -3279,7 +4743,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -3302,271 +4766,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
-
-        $defaultHeaders = [];
-        if ($this->config->getUserAgent()) {
-            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
         }
-
-        $headers = array_merge(
-            $defaultHeaders,
-            $headerParams,
-            $headers
-        );
-
-        $operationHost = $this->config->getHost();
-        $query = ObjectSerializer::buildQuery($queryParams);
-        return new Request(
-            'GET',
-            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
-            $headers,
-            $httpBody
-        );
-    }
-
-    /**
-     * Operation listPermissionGroups
-     *
-     * List Permission Groups
-     *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissionGroups'] to see the possible values for this operation
-     *
-     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\PermissionGroup[]
-     */
-    public function listPermissionGroups($authorization = null, string $contentType = self::contentTypes['listPermissionGroups'][0])
-    {
-        list($response) = $this->listPermissionGroupsWithHttpInfo($authorization, $contentType);
-        return $response;
-    }
-
-    /**
-     * Operation listPermissionGroupsWithHttpInfo
-     *
-     * List Permission Groups
-     *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissionGroups'] to see the possible values for this operation
-     *
-     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
-     * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\PermissionGroup[], HTTP status code, HTTP response headers (array of strings)
-     */
-    public function listPermissionGroupsWithHttpInfo($authorization = null, string $contentType = self::contentTypes['listPermissionGroups'][0])
-    {
-        $request = $this->listPermissionGroupsRequest($authorization, $contentType);
-
-        try {
-            $options = $this->createHttpClientOption();
-            try {
-                $response = $this->client->send($request, $options);
-            } catch (RequestException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
-                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
-                );
-            } catch (ConnectException $e) {
-                throw new ApiException(
-                    "[{$e->getCode()}] {$e->getMessage()}",
-                    (int) $e->getCode(),
-                    null,
-                    null
-                );
-            }
-
-            $statusCode = $response->getStatusCode();
-
-
-            switch($statusCode) {
-                case 200:
-                    return $this->handleResponseWithDataType(
-                        '\Alfaview\Client\Model\PermissionGroup[]',
-                        $request,
-                        $response,
-                    );
-            }
-
-            
-
-            if ($statusCode < 200 || $statusCode > 299) {
-                throw new ApiException(
-                    sprintf(
-                        '[%d] Error connecting to the API (%s)',
-                        $statusCode,
-                        (string) $request->getUri()
-                    ),
-                    $statusCode,
-                    $response->getHeaders(),
-                    (string) $response->getBody()
-                );
-            }
-
-            return $this->handleResponseWithDataType(
-                '\Alfaview\Client\Model\PermissionGroup[]',
-                $request,
-                $response,
-            );
-        } catch (ApiException $e) {
-            switch ($e->getCode()) {
-                case 200:
-                    $data = ObjectSerializer::deserialize(
-                        $e->getResponseBody(),
-                        '\Alfaview\Client\Model\PermissionGroup[]',
-                        $e->getResponseHeaders()
-                    );
-                    $e->setResponseObject($data);
-                    throw $e;
-            }
-        
-
-            throw $e;
-        }
-    }
-
-    /**
-     * Operation listPermissionGroupsAsync
-     *
-     * List Permission Groups
-     *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissionGroups'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function listPermissionGroupsAsync($authorization = null, string $contentType = self::contentTypes['listPermissionGroups'][0])
-    {
-        return $this->listPermissionGroupsAsyncWithHttpInfo($authorization, $contentType)
-            ->then(
-                function ($response) {
-                    return $response[0];
-                }
-            );
-    }
-
-    /**
-     * Operation listPermissionGroupsAsyncWithHttpInfo
-     *
-     * List Permission Groups
-     *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissionGroups'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Promise\PromiseInterface
-     */
-    public function listPermissionGroupsAsyncWithHttpInfo($authorization = null, string $contentType = self::contentTypes['listPermissionGroups'][0])
-    {
-        $returnType = '\Alfaview\Client\Model\PermissionGroup[]';
-        $request = $this->listPermissionGroupsRequest($authorization, $contentType);
-
-        return $this->client
-            ->sendAsync($request, $this->createHttpClientOption())
-            ->then(
-                function ($response) use ($returnType) {
-                    if ($returnType === '\SplFileObject') {
-                        $content = $response->getBody(); //stream goes to serializer
-                    } else {
-                        $content = (string) $response->getBody();
-                        if ($returnType !== 'string') {
-                            $content = json_decode($content);
-                        }
-                    }
-
-                    return [
-                        ObjectSerializer::deserialize($content, $returnType, []),
-                        $response->getStatusCode(),
-                        $response->getHeaders()
-                    ];
-                },
-                function ($exception) {
-                    $response = $exception->getResponse();
-                    $statusCode = $response->getStatusCode();
-                    throw new ApiException(
-                        sprintf(
-                            '[%d] Error connecting to the API (%s)',
-                            $statusCode,
-                            $exception->getRequest()->getUri()
-                        ),
-                        $statusCode,
-                        $response->getHeaders(),
-                        (string) $response->getBody()
-                    );
-                }
-            );
-    }
-
-    /**
-     * Create request for operation 'listPermissionGroups'
-     *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissionGroups'] to see the possible values for this operation
-     *
-     * @throws \InvalidArgumentException
-     * @return \GuzzleHttp\Psr7\Request
-     */
-    public function listPermissionGroupsRequest($authorization = null, string $contentType = self::contentTypes['listPermissionGroups'][0])
-    {
-
-
-
-        $resourcePath = '/v2/permission-groups';
-        $formParams = [];
-        $queryParams = [];
-        $headerParams = [];
-        $httpBody = '';
-        $multipart = false;
-
-
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
-
-
-
-        $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
-            $contentType,
-            $multipart
-        );
-
-        // for model (json/xml)
-        if (count($formParams) > 0) {
-            if ($multipart) {
-                $multipartContents = [];
-                foreach ($formParams as $formParamName => $formParamValue) {
-                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
-                    foreach ($formParamValueItems as $formParamValueItem) {
-                        $multipartContents[] = [
-                            'name' => $formParamName,
-                            'contents' => $formParamValueItem
-                        ];
-                    }
-                }
-                // for HTTP post (form)
-                $httpBody = new MultipartStream($multipartContents);
-
-            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
-                # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
-            } else {
-                // for HTTP post (form)
-                $httpBody = ObjectSerializer::buildQuery($formParams);
-            }
-        }
-
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -3594,17 +4808,16 @@ class RoomsApi
      *
      * List Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\RoomPermissions
+     * @return \Alfaview\Client\Model\RoomPermissions|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listPermissions($room_id, $authorization = null, string $contentType = self::contentTypes['listPermissions'][0])
+    public function listPermissions($room_id, string $contentType = self::contentTypes['listPermissions'][0])
     {
-        list($response) = $this->listPermissionsWithHttpInfo($room_id, $authorization, $contentType);
+        list($response) = $this->listPermissionsWithHttpInfo($room_id, $contentType);
         return $response;
     }
 
@@ -3613,17 +4826,16 @@ class RoomsApi
      *
      * List Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\RoomPermissions, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\RoomPermissions|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listPermissionsWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['listPermissions'][0])
+    public function listPermissionsWithHttpInfo($room_id, string $contentType = self::contentTypes['listPermissions'][0])
     {
-        $request = $this->listPermissionsRequest($room_id, $authorization, $contentType);
+        $request = $this->listPermissionsRequest($room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3652,6 +4864,24 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\RoomPermissions',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -3687,6 +4917,30 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -3699,16 +4953,15 @@ class RoomsApi
      *
      * List Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listPermissionsAsync($room_id, $authorization = null, string $contentType = self::contentTypes['listPermissions'][0])
+    public function listPermissionsAsync($room_id, string $contentType = self::contentTypes['listPermissions'][0])
     {
-        return $this->listPermissionsAsyncWithHttpInfo($room_id, $authorization, $contentType)
+        return $this->listPermissionsAsyncWithHttpInfo($room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3721,17 +4974,16 @@ class RoomsApi
      *
      * List Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listPermissionsAsyncWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['listPermissions'][0])
+    public function listPermissionsAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['listPermissions'][0])
     {
         $returnType = '\Alfaview\Client\Model\RoomPermissions';
-        $request = $this->listPermissionsRequest($room_id, $authorization, $contentType);
+        $request = $this->listPermissionsRequest($room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -3772,14 +5024,13 @@ class RoomsApi
     /**
      * Create request for operation 'listPermissions'
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listPermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listPermissionsRequest($room_id, $authorization = null, string $contentType = self::contentTypes['listPermissions'][0])
+    public function listPermissionsRequest($room_id, string $contentType = self::contentTypes['listPermissions'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -3790,7 +5041,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/permissions';
         $formParams = [];
         $queryParams = [];
@@ -3799,15 +5049,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -3815,7 +5061,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -3838,13 +5084,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -3872,16 +5126,15 @@ class RoomsApi
      *
      * List Room Types
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRoomTypes'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\RoomTypeData[]
+     * @return \Alfaview\Client\Model\RoomTypeData[]|\Alfaview\Client\Model\ErrorModel
      */
-    public function listRoomTypes($authorization = null, string $contentType = self::contentTypes['listRoomTypes'][0])
+    public function listRoomTypes(string $contentType = self::contentTypes['listRoomTypes'][0])
     {
-        list($response) = $this->listRoomTypesWithHttpInfo($authorization, $contentType);
+        list($response) = $this->listRoomTypesWithHttpInfo($contentType);
         return $response;
     }
 
@@ -3890,16 +5143,15 @@ class RoomsApi
      *
      * List Room Types
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRoomTypes'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\RoomTypeData[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\RoomTypeData[]|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listRoomTypesWithHttpInfo($authorization = null, string $contentType = self::contentTypes['listRoomTypes'][0])
+    public function listRoomTypesWithHttpInfo(string $contentType = self::contentTypes['listRoomTypes'][0])
     {
-        $request = $this->listRoomTypesRequest($authorization, $contentType);
+        $request = $this->listRoomTypesRequest($contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -3928,6 +5180,12 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\RoomTypeData[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -3963,6 +5221,14 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -3975,15 +5241,14 @@ class RoomsApi
      *
      * List Room Types
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRoomTypes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listRoomTypesAsync($authorization = null, string $contentType = self::contentTypes['listRoomTypes'][0])
+    public function listRoomTypesAsync(string $contentType = self::contentTypes['listRoomTypes'][0])
     {
-        return $this->listRoomTypesAsyncWithHttpInfo($authorization, $contentType)
+        return $this->listRoomTypesAsyncWithHttpInfo($contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -3996,16 +5261,15 @@ class RoomsApi
      *
      * List Room Types
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRoomTypes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listRoomTypesAsyncWithHttpInfo($authorization = null, string $contentType = self::contentTypes['listRoomTypes'][0])
+    public function listRoomTypesAsyncWithHttpInfo(string $contentType = self::contentTypes['listRoomTypes'][0])
     {
         $returnType = '\Alfaview\Client\Model\RoomTypeData[]';
-        $request = $this->listRoomTypesRequest($authorization, $contentType);
+        $request = $this->listRoomTypesRequest($contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4046,15 +5310,13 @@ class RoomsApi
     /**
      * Create request for operation 'listRoomTypes'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRoomTypes'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listRoomTypesRequest($authorization = null, string $contentType = self::contentTypes['listRoomTypes'][0])
+    public function listRoomTypesRequest(string $contentType = self::contentTypes['listRoomTypes'][0])
     {
-
 
 
         $resourcePath = '/v2/room-types';
@@ -4065,15 +5327,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -4096,13 +5354,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -4130,19 +5396,18 @@ class RoomsApi
      *
      * List Rooms
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string[]|null $room_types Filters the result by room type. (optional)
+     * @param  string[]|null $room_types Filters the result by room type.  - &lt;code&gt;room&lt;/code&gt; is used for normal rooms.  - &lt;code&gt;departments&lt;/code&gt; are unjoinable rooms that can hold multiple child rooms to help improving room structuring.  - &lt;code&gt;meeting&lt;/code&gt; marks temporary meeting rooms. (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
      * @param  int|null $limit For pagination: Set a limit on the number of returned rooms. (optional, default to 50)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRooms'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\PaginatedBodyListRoom
+     * @return \Alfaview\Client\Model\PaginatedBodyListRoom|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listRooms($authorization = null, $room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
+    public function listRooms($room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
     {
-        list($response) = $this->listRoomsWithHttpInfo($authorization, $room_types, $page_token, $limit, $contentType);
+        list($response) = $this->listRoomsWithHttpInfo($room_types, $page_token, $limit, $contentType);
         return $response;
     }
 
@@ -4151,19 +5416,18 @@ class RoomsApi
      *
      * List Rooms
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string[]|null $room_types Filters the result by room type. (optional)
+     * @param  string[]|null $room_types Filters the result by room type.  - &lt;code&gt;room&lt;/code&gt; is used for normal rooms.  - &lt;code&gt;departments&lt;/code&gt; are unjoinable rooms that can hold multiple child rooms to help improving room structuring.  - &lt;code&gt;meeting&lt;/code&gt; marks temporary meeting rooms. (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
      * @param  int|null $limit For pagination: Set a limit on the number of returned rooms. (optional, default to 50)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRooms'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\PaginatedBodyListRoom, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\PaginatedBodyListRoom|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listRoomsWithHttpInfo($authorization = null, $room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
+    public function listRoomsWithHttpInfo($room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
     {
-        $request = $this->listRoomsRequest($authorization, $room_types, $page_token, $limit, $contentType);
+        $request = $this->listRoomsRequest($room_types, $page_token, $limit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4192,6 +5456,24 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\PaginatedBodyListRoom',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -4227,6 +5509,30 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -4239,8 +5545,7 @@ class RoomsApi
      *
      * List Rooms
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string[]|null $room_types Filters the result by room type. (optional)
+     * @param  string[]|null $room_types Filters the result by room type.  - &lt;code&gt;room&lt;/code&gt; is used for normal rooms.  - &lt;code&gt;departments&lt;/code&gt; are unjoinable rooms that can hold multiple child rooms to help improving room structuring.  - &lt;code&gt;meeting&lt;/code&gt; marks temporary meeting rooms. (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
      * @param  int|null $limit For pagination: Set a limit on the number of returned rooms. (optional, default to 50)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRooms'] to see the possible values for this operation
@@ -4248,9 +5553,9 @@ class RoomsApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listRoomsAsync($authorization = null, $room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
+    public function listRoomsAsync($room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
     {
-        return $this->listRoomsAsyncWithHttpInfo($authorization, $room_types, $page_token, $limit, $contentType)
+        return $this->listRoomsAsyncWithHttpInfo($room_types, $page_token, $limit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4263,8 +5568,7 @@ class RoomsApi
      *
      * List Rooms
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string[]|null $room_types Filters the result by room type. (optional)
+     * @param  string[]|null $room_types Filters the result by room type.  - &lt;code&gt;room&lt;/code&gt; is used for normal rooms.  - &lt;code&gt;departments&lt;/code&gt; are unjoinable rooms that can hold multiple child rooms to help improving room structuring.  - &lt;code&gt;meeting&lt;/code&gt; marks temporary meeting rooms. (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
      * @param  int|null $limit For pagination: Set a limit on the number of returned rooms. (optional, default to 50)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRooms'] to see the possible values for this operation
@@ -4272,10 +5576,10 @@ class RoomsApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listRoomsAsyncWithHttpInfo($authorization = null, $room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
+    public function listRoomsAsyncWithHttpInfo($room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
     {
         $returnType = '\Alfaview\Client\Model\PaginatedBodyListRoom';
-        $request = $this->listRoomsRequest($authorization, $room_types, $page_token, $limit, $contentType);
+        $request = $this->listRoomsRequest($room_types, $page_token, $limit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4316,8 +5620,7 @@ class RoomsApi
     /**
      * Create request for operation 'listRooms'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string[]|null $room_types Filters the result by room type. (optional)
+     * @param  string[]|null $room_types Filters the result by room type.  - &lt;code&gt;room&lt;/code&gt; is used for normal rooms.  - &lt;code&gt;departments&lt;/code&gt; are unjoinable rooms that can hold multiple child rooms to help improving room structuring.  - &lt;code&gt;meeting&lt;/code&gt; marks temporary meeting rooms. (optional)
      * @param  string|null $page_token For pagination: Pass the nextPageToken from the last successful request to obtain the next page. Omit on first request. (optional)
      * @param  int|null $limit For pagination: Set a limit on the number of returned rooms. (optional, default to 50)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listRooms'] to see the possible values for this operation
@@ -4325,9 +5628,8 @@ class RoomsApi
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listRoomsRequest($authorization = null, $room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
+    public function listRoomsRequest($room_types = null, $page_token = null, $limit = 50, string $contentType = self::contentTypes['listRooms'][0])
     {
-
 
 
 
@@ -4374,15 +5676,11 @@ class RoomsApi
             false // required
         ) ?? []);
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -4405,13 +5703,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -4440,16 +5746,15 @@ class RoomsApi
      * List Subrooms
      *
      * @param  string $room_id The room ID of the subrooms. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSubrooms'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\Subroom[]
+     * @return \Alfaview\Client\Model\Subroom[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
-    public function listSubrooms($room_id, $authorization = null, string $contentType = self::contentTypes['listSubrooms'][0])
+    public function listSubrooms($room_id, string $contentType = self::contentTypes['listSubrooms'][0])
     {
-        list($response) = $this->listSubroomsWithHttpInfo($room_id, $authorization, $contentType);
+        list($response) = $this->listSubroomsWithHttpInfo($room_id, $contentType);
         return $response;
     }
 
@@ -4459,16 +5764,15 @@ class RoomsApi
      * List Subrooms
      *
      * @param  string $room_id The room ID of the subrooms. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSubrooms'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\Subroom[], HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\Subroom[]|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function listSubroomsWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['listSubrooms'][0])
+    public function listSubroomsWithHttpInfo($room_id, string $contentType = self::contentTypes['listSubrooms'][0])
     {
-        $request = $this->listSubroomsRequest($room_id, $authorization, $contentType);
+        $request = $this->listSubroomsRequest($room_id, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4497,6 +5801,24 @@ class RoomsApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\Subroom[]',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -4532,6 +5854,30 @@ class RoomsApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -4545,15 +5891,14 @@ class RoomsApi
      * List Subrooms
      *
      * @param  string $room_id The room ID of the subrooms. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSubrooms'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listSubroomsAsync($room_id, $authorization = null, string $contentType = self::contentTypes['listSubrooms'][0])
+    public function listSubroomsAsync($room_id, string $contentType = self::contentTypes['listSubrooms'][0])
     {
-        return $this->listSubroomsAsyncWithHttpInfo($room_id, $authorization, $contentType)
+        return $this->listSubroomsAsyncWithHttpInfo($room_id, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4567,16 +5912,15 @@ class RoomsApi
      * List Subrooms
      *
      * @param  string $room_id The room ID of the subrooms. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSubrooms'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function listSubroomsAsyncWithHttpInfo($room_id, $authorization = null, string $contentType = self::contentTypes['listSubrooms'][0])
+    public function listSubroomsAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['listSubrooms'][0])
     {
         $returnType = '\Alfaview\Client\Model\Subroom[]';
-        $request = $this->listSubroomsRequest($room_id, $authorization, $contentType);
+        $request = $this->listSubroomsRequest($room_id, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4618,13 +5962,12 @@ class RoomsApi
      * Create request for operation 'listSubrooms'
      *
      * @param  string $room_id The room ID of the subrooms. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['listSubrooms'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function listSubroomsRequest($room_id, $authorization = null, string $contentType = self::contentTypes['listSubrooms'][0])
+    public function listSubroomsRequest($room_id, string $contentType = self::contentTypes['listSubrooms'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -4635,7 +5978,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/subrooms';
         $formParams = [];
         $queryParams = [];
@@ -4644,15 +5986,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -4660,7 +5998,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -4683,13 +6021,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -4713,22 +6059,353 @@ class RoomsApi
     }
 
     /**
+     * Operation regeneratePasscode
+     *
+     * Regenerate Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['regeneratePasscode'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return \Alfaview\Client\Model\Passcode|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
+     */
+    public function regeneratePasscode($room_id, string $contentType = self::contentTypes['regeneratePasscode'][0])
+    {
+        list($response) = $this->regeneratePasscodeWithHttpInfo($room_id, $contentType);
+        return $response;
+    }
+
+    /**
+     * Operation regeneratePasscodeWithHttpInfo
+     *
+     * Regenerate Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['regeneratePasscode'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of \Alfaview\Client\Model\Passcode|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function regeneratePasscodeWithHttpInfo($room_id, string $contentType = self::contentTypes['regeneratePasscode'][0])
+    {
+        $request = $this->regeneratePasscodeRequest($room_id, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            switch($statusCode) {
+                case 200:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\Passcode',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 404:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+            }
+
+            
+
+            if ($statusCode < 200 || $statusCode > 299) {
+                throw new ApiException(
+                    sprintf(
+                        '[%d] Error connecting to the API (%s)',
+                        $statusCode,
+                        (string) $request->getUri()
+                    ),
+                    $statusCode,
+                    $response->getHeaders(),
+                    (string) $response->getBody()
+                );
+            }
+
+            return $this->handleResponseWithDataType(
+                '\Alfaview\Client\Model\Passcode',
+                $request,
+                $response,
+            );
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 200:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\Passcode',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation regeneratePasscodeAsync
+     *
+     * Regenerate Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['regeneratePasscode'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function regeneratePasscodeAsync($room_id, string $contentType = self::contentTypes['regeneratePasscode'][0])
+    {
+        return $this->regeneratePasscodeAsyncWithHttpInfo($room_id, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation regeneratePasscodeAsyncWithHttpInfo
+     *
+     * Regenerate Passcode
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['regeneratePasscode'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function regeneratePasscodeAsyncWithHttpInfo($room_id, string $contentType = self::contentTypes['regeneratePasscode'][0])
+    {
+        $returnType = '\Alfaview\Client\Model\Passcode';
+        $request = $this->regeneratePasscodeRequest($room_id, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    if ($returnType === '\SplFileObject') {
+                        $content = $response->getBody(); //stream goes to serializer
+                    } else {
+                        $content = (string) $response->getBody();
+                        if ($returnType !== 'string') {
+                            $content = json_decode($content);
+                        }
+                    }
+
+                    return [
+                        ObjectSerializer::deserialize($content, $returnType, []),
+                        $response->getStatusCode(),
+                        $response->getHeaders()
+                    ];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'regeneratePasscode'
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['regeneratePasscode'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function regeneratePasscodeRequest($room_id, string $contentType = self::contentTypes['regeneratePasscode'][0])
+    {
+
+        // verify the required parameter 'room_id' is set
+        if ($room_id === null || (is_array($room_id) && count($room_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $room_id when calling regeneratePasscode'
+            );
+        }
+
+
+        $resourcePath = '/v2/rooms/{roomId}/passcode';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($room_id !== null) {
+            $resourcePath = str_replace(
+                '{roomId}',
+                ObjectSerializer::toPathValue($room_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/json', 'application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'POST',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
      * Operation updateLanguageSettings
      *
      * Update Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The settings for the transcription and translation features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The updated settings for the transcription and translation features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateLanguageSettings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateLanguageSettings($room_id, $language_settings_edit, $authorization = null, string $contentType = self::contentTypes['updateLanguageSettings'][0])
+    public function updateLanguageSettings($room_id, $language_settings_edit, string $contentType = self::contentTypes['updateLanguageSettings'][0])
     {
-        $this->updateLanguageSettingsWithHttpInfo($room_id, $language_settings_edit, $authorization, $contentType);
+        $this->updateLanguageSettingsWithHttpInfo($room_id, $language_settings_edit, $contentType);
     }
 
     /**
@@ -4736,18 +6413,17 @@ class RoomsApi
      *
      * Update Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The settings for the transcription and translation features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The updated settings for the transcription and translation features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateLanguageSettings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateLanguageSettingsWithHttpInfo($room_id, $language_settings_edit, $authorization = null, string $contentType = self::contentTypes['updateLanguageSettings'][0])
+    public function updateLanguageSettingsWithHttpInfo($room_id, $language_settings_edit, string $contentType = self::contentTypes['updateLanguageSettings'][0])
     {
-        $request = $this->updateLanguageSettingsRequest($room_id, $language_settings_edit, $authorization, $contentType);
+        $request = $this->updateLanguageSettingsRequest($room_id, $language_settings_edit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -4775,6 +6451,46 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -4787,17 +6503,16 @@ class RoomsApi
      *
      * Update Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The settings for the transcription and translation features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The updated settings for the transcription and translation features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateLanguageSettings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateLanguageSettingsAsync($room_id, $language_settings_edit, $authorization = null, string $contentType = self::contentTypes['updateLanguageSettings'][0])
+    public function updateLanguageSettingsAsync($room_id, $language_settings_edit, string $contentType = self::contentTypes['updateLanguageSettings'][0])
     {
-        return $this->updateLanguageSettingsAsyncWithHttpInfo($room_id, $language_settings_edit, $authorization, $contentType)
+        return $this->updateLanguageSettingsAsyncWithHttpInfo($room_id, $language_settings_edit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -4810,18 +6525,17 @@ class RoomsApi
      *
      * Update Language Settings
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The settings for the transcription and translation features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The updated settings for the transcription and translation features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateLanguageSettings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateLanguageSettingsAsyncWithHttpInfo($room_id, $language_settings_edit, $authorization = null, string $contentType = self::contentTypes['updateLanguageSettings'][0])
+    public function updateLanguageSettingsAsyncWithHttpInfo($room_id, $language_settings_edit, string $contentType = self::contentTypes['updateLanguageSettings'][0])
     {
         $returnType = '';
-        $request = $this->updateLanguageSettingsRequest($room_id, $language_settings_edit, $authorization, $contentType);
+        $request = $this->updateLanguageSettingsRequest($room_id, $language_settings_edit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -4849,15 +6563,14 @@ class RoomsApi
     /**
      * Create request for operation 'updateLanguageSettings'
      *
-     * @param  string $room_id The ID of the room. (required)
-     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The settings for the transcription and translation features. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\LanguageSettingsEdit $language_settings_edit The updated settings for the transcription and translation features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateLanguageSettings'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateLanguageSettingsRequest($room_id, $language_settings_edit, $authorization = null, string $contentType = self::contentTypes['updateLanguageSettings'][0])
+    public function updateLanguageSettingsRequest($room_id, $language_settings_edit, string $contentType = self::contentTypes['updateLanguageSettings'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -4875,7 +6588,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/language-settings';
         $formParams = [];
         $queryParams = [];
@@ -4884,15 +6596,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -4900,7 +6608,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -4909,7 +6617,11 @@ class RoomsApi
         if (isset($language_settings_edit)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($language_settings_edit));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($language_settings_edit), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $language_settings_edit;
             }
@@ -4930,13 +6642,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -4962,41 +6682,39 @@ class RoomsApi
     /**
      * Operation updatePermissions
      *
-     * Update Permissions
+     * Update Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit permissions_edit (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
+     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit The updated permissions. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updatePermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updatePermissions($room_id, $user_id, $permissions_edit, $authorization = null, string $contentType = self::contentTypes['updatePermissions'][0])
+    public function updatePermissions($room_id, $user_id, $permissions_edit, string $contentType = self::contentTypes['updatePermissions'][0])
     {
-        $this->updatePermissionsWithHttpInfo($room_id, $user_id, $permissions_edit, $authorization, $contentType);
+        $this->updatePermissionsWithHttpInfo($room_id, $user_id, $permissions_edit, $contentType);
     }
 
     /**
      * Operation updatePermissionsWithHttpInfo
      *
-     * Update Permissions
+     * Update Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
+     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit The updated permissions. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updatePermissions'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updatePermissionsWithHttpInfo($room_id, $user_id, $permissions_edit, $authorization = null, string $contentType = self::contentTypes['updatePermissions'][0])
+    public function updatePermissionsWithHttpInfo($room_id, $user_id, $permissions_edit, string $contentType = self::contentTypes['updatePermissions'][0])
     {
-        $request = $this->updatePermissionsRequest($room_id, $user_id, $permissions_edit, $authorization, $contentType);
+        $request = $this->updatePermissionsRequest($room_id, $user_id, $permissions_edit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5024,6 +6742,46 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -5034,20 +6792,19 @@ class RoomsApi
     /**
      * Operation updatePermissionsAsync
      *
-     * Update Permissions
+     * Update Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
+     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit The updated permissions. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updatePermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updatePermissionsAsync($room_id, $user_id, $permissions_edit, $authorization = null, string $contentType = self::contentTypes['updatePermissions'][0])
+    public function updatePermissionsAsync($room_id, $user_id, $permissions_edit, string $contentType = self::contentTypes['updatePermissions'][0])
     {
-        return $this->updatePermissionsAsyncWithHttpInfo($room_id, $user_id, $permissions_edit, $authorization, $contentType)
+        return $this->updatePermissionsAsyncWithHttpInfo($room_id, $user_id, $permissions_edit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5058,21 +6815,20 @@ class RoomsApi
     /**
      * Operation updatePermissionsAsyncWithHttpInfo
      *
-     * Update Permissions
+     * Update Room Permissions
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
+     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit The updated permissions. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updatePermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updatePermissionsAsyncWithHttpInfo($room_id, $user_id, $permissions_edit, $authorization = null, string $contentType = self::contentTypes['updatePermissions'][0])
+    public function updatePermissionsAsyncWithHttpInfo($room_id, $user_id, $permissions_edit, string $contentType = self::contentTypes['updatePermissions'][0])
     {
         $returnType = '';
-        $request = $this->updatePermissionsRequest($room_id, $user_id, $permissions_edit, $authorization, $contentType);
+        $request = $this->updatePermissionsRequest($room_id, $user_id, $permissions_edit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5100,16 +6856,15 @@ class RoomsApi
     /**
      * Create request for operation 'updatePermissions'
      *
-     * @param  string $room_id The room ID of the permissions. (required)
-     * @param  string $user_id The user ID of the permissions. (required)
-     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  string $user_id The user ID. (required)
+     * @param  \Alfaview\Client\Model\PermissionsEdit $permissions_edit The updated permissions. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updatePermissions'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updatePermissionsRequest($room_id, $user_id, $permissions_edit, $authorization = null, string $contentType = self::contentTypes['updatePermissions'][0])
+    public function updatePermissionsRequest($room_id, $user_id, $permissions_edit, string $contentType = self::contentTypes['updatePermissions'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -5134,7 +6889,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/permissions/{userId}';
         $formParams = [];
         $queryParams = [];
@@ -5143,15 +6897,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -5159,7 +6909,7 @@ class RoomsApi
         // path params
         if ($user_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'userId' . '}',
+                '{userId}',
                 ObjectSerializer::toPathValue($user_id),
                 $resourcePath
             );
@@ -5167,7 +6917,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -5176,7 +6926,11 @@ class RoomsApi
         if (isset($permissions_edit)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($permissions_edit));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($permissions_edit), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $permissions_edit;
             }
@@ -5197,13 +6951,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -5231,18 +6993,17 @@ class RoomsApi
      *
      * Update Room
      *
-     * @param  string $id The ID of the room to update. (required)
-     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The fields of the room that should be changed. Nested objects and arrays can only be replaced as a whole, not partially. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The updated room fields. Nested objects and arrays can only be replaced as a whole, not partially. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateRoom($id, $room_update, $authorization = null, string $contentType = self::contentTypes['updateRoom'][0])
+    public function updateRoom($id, $room_update, string $contentType = self::contentTypes['updateRoom'][0])
     {
-        $this->updateRoomWithHttpInfo($id, $room_update, $authorization, $contentType);
+        $this->updateRoomWithHttpInfo($id, $room_update, $contentType);
     }
 
     /**
@@ -5250,18 +7011,17 @@ class RoomsApi
      *
      * Update Room
      *
-     * @param  string $id The ID of the room to update. (required)
-     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The fields of the room that should be changed. Nested objects and arrays can only be replaced as a whole, not partially. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The updated room fields. Nested objects and arrays can only be replaced as a whole, not partially. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoom'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateRoomWithHttpInfo($id, $room_update, $authorization = null, string $contentType = self::contentTypes['updateRoom'][0])
+    public function updateRoomWithHttpInfo($id, $room_update, string $contentType = self::contentTypes['updateRoom'][0])
     {
-        $request = $this->updateRoomRequest($id, $room_update, $authorization, $contentType);
+        $request = $this->updateRoomRequest($id, $room_update, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5289,6 +7049,46 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -5301,17 +7101,16 @@ class RoomsApi
      *
      * Update Room
      *
-     * @param  string $id The ID of the room to update. (required)
-     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The fields of the room that should be changed. Nested objects and arrays can only be replaced as a whole, not partially. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The updated room fields. Nested objects and arrays can only be replaced as a whole, not partially. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateRoomAsync($id, $room_update, $authorization = null, string $contentType = self::contentTypes['updateRoom'][0])
+    public function updateRoomAsync($id, $room_update, string $contentType = self::contentTypes['updateRoom'][0])
     {
-        return $this->updateRoomAsyncWithHttpInfo($id, $room_update, $authorization, $contentType)
+        return $this->updateRoomAsyncWithHttpInfo($id, $room_update, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5324,18 +7123,17 @@ class RoomsApi
      *
      * Update Room
      *
-     * @param  string $id The ID of the room to update. (required)
-     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The fields of the room that should be changed. Nested objects and arrays can only be replaced as a whole, not partially. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The updated room fields. Nested objects and arrays can only be replaced as a whole, not partially. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateRoomAsyncWithHttpInfo($id, $room_update, $authorization = null, string $contentType = self::contentTypes['updateRoom'][0])
+    public function updateRoomAsyncWithHttpInfo($id, $room_update, string $contentType = self::contentTypes['updateRoom'][0])
     {
         $returnType = '';
-        $request = $this->updateRoomRequest($id, $room_update, $authorization, $contentType);
+        $request = $this->updateRoomRequest($id, $room_update, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5363,15 +7161,14 @@ class RoomsApi
     /**
      * Create request for operation 'updateRoom'
      *
-     * @param  string $id The ID of the room to update. (required)
-     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The fields of the room that should be changed. Nested objects and arrays can only be replaced as a whole, not partially. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomUpdate $room_update The updated room fields. Nested objects and arrays can only be replaced as a whole, not partially. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateRoomRequest($id, $room_update, $authorization = null, string $contentType = self::contentTypes['updateRoom'][0])
+    public function updateRoomRequest($id, $room_update, string $contentType = self::contentTypes['updateRoom'][0])
     {
 
         // verify the required parameter 'id' is set
@@ -5389,7 +7186,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{id}';
         $formParams = [];
         $queryParams = [];
@@ -5398,15 +7194,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($id !== null) {
             $resourcePath = str_replace(
-                '{' . 'id' . '}',
+                '{id}',
                 ObjectSerializer::toPathValue($id),
                 $resourcePath
             );
@@ -5414,7 +7206,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -5423,7 +7215,11 @@ class RoomsApi
         if (isset($room_update)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($room_update));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($room_update), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $room_update;
             }
@@ -5444,13 +7240,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -5478,18 +7282,17 @@ class RoomsApi
      *
      * Update Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The room features that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The updated room features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFeatures'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateRoomFeatures($room_id, $room_features_edit, $authorization = null, string $contentType = self::contentTypes['updateRoomFeatures'][0])
+    public function updateRoomFeatures($room_id, $room_features_edit, string $contentType = self::contentTypes['updateRoomFeatures'][0])
     {
-        $this->updateRoomFeaturesWithHttpInfo($room_id, $room_features_edit, $authorization, $contentType);
+        $this->updateRoomFeaturesWithHttpInfo($room_id, $room_features_edit, $contentType);
     }
 
     /**
@@ -5497,18 +7300,17 @@ class RoomsApi
      *
      * Update Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The room features that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The updated room features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFeatures'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateRoomFeaturesWithHttpInfo($room_id, $room_features_edit, $authorization = null, string $contentType = self::contentTypes['updateRoomFeatures'][0])
+    public function updateRoomFeaturesWithHttpInfo($room_id, $room_features_edit, string $contentType = self::contentTypes['updateRoomFeatures'][0])
     {
-        $request = $this->updateRoomFeaturesRequest($room_id, $room_features_edit, $authorization, $contentType);
+        $request = $this->updateRoomFeaturesRequest($room_id, $room_features_edit, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5536,6 +7338,46 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -5548,17 +7390,16 @@ class RoomsApi
      *
      * Update Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The room features that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The updated room features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateRoomFeaturesAsync($room_id, $room_features_edit, $authorization = null, string $contentType = self::contentTypes['updateRoomFeatures'][0])
+    public function updateRoomFeaturesAsync($room_id, $room_features_edit, string $contentType = self::contentTypes['updateRoomFeatures'][0])
     {
-        return $this->updateRoomFeaturesAsyncWithHttpInfo($room_id, $room_features_edit, $authorization, $contentType)
+        return $this->updateRoomFeaturesAsyncWithHttpInfo($room_id, $room_features_edit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5571,18 +7412,17 @@ class RoomsApi
      *
      * Update Room Features
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The room features that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The updated room features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateRoomFeaturesAsyncWithHttpInfo($room_id, $room_features_edit, $authorization = null, string $contentType = self::contentTypes['updateRoomFeatures'][0])
+    public function updateRoomFeaturesAsyncWithHttpInfo($room_id, $room_features_edit, string $contentType = self::contentTypes['updateRoomFeatures'][0])
     {
         $returnType = '';
-        $request = $this->updateRoomFeaturesRequest($room_id, $room_features_edit, $authorization, $contentType);
+        $request = $this->updateRoomFeaturesRequest($room_id, $room_features_edit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5610,15 +7450,14 @@ class RoomsApi
     /**
      * Create request for operation 'updateRoomFeatures'
      *
-     * @param  string $room_id The room ID of the features. (required)
-     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The room features that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomFeaturesEdit $room_features_edit The updated room features. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFeatures'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateRoomFeaturesRequest($room_id, $room_features_edit, $authorization = null, string $contentType = self::contentTypes['updateRoomFeatures'][0])
+    public function updateRoomFeaturesRequest($room_id, $room_features_edit, string $contentType = self::contentTypes['updateRoomFeatures'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -5636,7 +7475,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/features';
         $formParams = [];
         $queryParams = [];
@@ -5645,15 +7483,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -5661,7 +7495,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -5670,7 +7504,11 @@ class RoomsApi
         if (isset($room_features_edit)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($room_features_edit));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($room_features_edit), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $room_features_edit;
             }
@@ -5691,13 +7529,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -5721,43 +7567,39 @@ class RoomsApi
     }
 
     /**
-     * Operation updateSubroom
+     * Operation updateRoomFileShareSettings
      *
-     * Update Subroom
+     * Update File Share Settings
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to update. (required)
-     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The fields of the subroom that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomSettingsUpdate $room_settings_update The updated file share settings. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFileShareSettings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return void
      */
-    public function updateSubroom($room_id, $subroom_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['updateSubroom'][0])
+    public function updateRoomFileShareSettings($room_id, $room_settings_update, string $contentType = self::contentTypes['updateRoomFileShareSettings'][0])
     {
-        $this->updateSubroomWithHttpInfo($room_id, $subroom_id, $subroom_edit, $authorization, $contentType);
+        $this->updateRoomFileShareSettingsWithHttpInfo($room_id, $room_settings_update, $contentType);
     }
 
     /**
-     * Operation updateSubroomWithHttpInfo
+     * Operation updateRoomFileShareSettingsWithHttpInfo
      *
-     * Update Subroom
+     * Update File Share Settings
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to update. (required)
-     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The fields of the subroom that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
-     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomSettingsUpdate $room_settings_update The updated file share settings. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFileShareSettings'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
      * @return array of null, HTTP status code, HTTP response headers (array of strings)
      */
-    public function updateSubroomWithHttpInfo($room_id, $subroom_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['updateSubroom'][0])
+    public function updateRoomFileShareSettingsWithHttpInfo($room_id, $room_settings_update, string $contentType = self::contentTypes['updateRoomFileShareSettings'][0])
     {
-        $request = $this->updateSubroomRequest($room_id, $subroom_id, $subroom_edit, $authorization, $contentType);
+        $request = $this->updateRoomFileShareSettingsRequest($room_id, $room_settings_update, $contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -5785,6 +7627,329 @@ class RoomsApi
             return [null, $statusCode, $response->getHeaders()];
         } catch (ApiException $e) {
             switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+            }
+        
+
+            throw $e;
+        }
+    }
+
+    /**
+     * Operation updateRoomFileShareSettingsAsync
+     *
+     * Update File Share Settings
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomSettingsUpdate $room_settings_update The updated file share settings. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function updateRoomFileShareSettingsAsync($room_id, $room_settings_update, string $contentType = self::contentTypes['updateRoomFileShareSettings'][0])
+    {
+        return $this->updateRoomFileShareSettingsAsyncWithHttpInfo($room_id, $room_settings_update, $contentType)
+            ->then(
+                function ($response) {
+                    return $response[0];
+                }
+            );
+    }
+
+    /**
+     * Operation updateRoomFileShareSettingsAsyncWithHttpInfo
+     *
+     * Update File Share Settings
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomSettingsUpdate $room_settings_update The updated file share settings. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Promise\PromiseInterface
+     */
+    public function updateRoomFileShareSettingsAsyncWithHttpInfo($room_id, $room_settings_update, string $contentType = self::contentTypes['updateRoomFileShareSettings'][0])
+    {
+        $returnType = '';
+        $request = $this->updateRoomFileShareSettingsRequest($room_id, $room_settings_update, $contentType);
+
+        return $this->client
+            ->sendAsync($request, $this->createHttpClientOption())
+            ->then(
+                function ($response) use ($returnType) {
+                    return [null, $response->getStatusCode(), $response->getHeaders()];
+                },
+                function ($exception) {
+                    $response = $exception->getResponse();
+                    $statusCode = $response->getStatusCode();
+                    throw new ApiException(
+                        sprintf(
+                            '[%d] Error connecting to the API (%s)',
+                            $statusCode,
+                            $exception->getRequest()->getUri()
+                        ),
+                        $statusCode,
+                        $response->getHeaders(),
+                        (string) $response->getBody()
+                    );
+                }
+            );
+    }
+
+    /**
+     * Create request for operation 'updateRoomFileShareSettings'
+     *
+     * @param  string $room_id The room ID. (required)
+     * @param  \Alfaview\Client\Model\RoomSettingsUpdate $room_settings_update The updated file share settings. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateRoomFileShareSettings'] to see the possible values for this operation
+     *
+     * @throws \InvalidArgumentException
+     * @return \GuzzleHttp\Psr7\Request
+     */
+    public function updateRoomFileShareSettingsRequest($room_id, $room_settings_update, string $contentType = self::contentTypes['updateRoomFileShareSettings'][0])
+    {
+
+        // verify the required parameter 'room_id' is set
+        if ($room_id === null || (is_array($room_id) && count($room_id) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $room_id when calling updateRoomFileShareSettings'
+            );
+        }
+
+        // verify the required parameter 'room_settings_update' is set
+        if ($room_settings_update === null || (is_array($room_settings_update) && count($room_settings_update) === 0)) {
+            throw new \InvalidArgumentException(
+                'Missing the required parameter $room_settings_update when calling updateRoomFileShareSettings'
+            );
+        }
+
+
+        $resourcePath = '/v2/rooms/{roomId}/file-share-settings';
+        $formParams = [];
+        $queryParams = [];
+        $headerParams = [];
+        $httpBody = '';
+        $multipart = false;
+
+
+
+        // path params
+        if ($room_id !== null) {
+            $resourcePath = str_replace(
+                '{roomId}',
+                ObjectSerializer::toPathValue($room_id),
+                $resourcePath
+            );
+        }
+
+
+        $headers = $this->headerSelector->selectHeaders(
+            ['application/problem+json', ],
+            $contentType,
+            $multipart
+        );
+
+        // for model (json/xml)
+        if (isset($room_settings_update)) {
+            if (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the body
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($room_settings_update), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                $httpBody = $room_settings_update;
+            }
+        } elseif (count($formParams) > 0) {
+            if ($multipart) {
+                $multipartContents = [];
+                foreach ($formParams as $formParamName => $formParamValue) {
+                    $formParamValueItems = is_array($formParamValue) ? $formParamValue : [$formParamValue];
+                    foreach ($formParamValueItems as $formParamValueItem) {
+                        $multipartContents[] = [
+                            'name' => $formParamName,
+                            'contents' => $formParamValueItem
+                        ];
+                    }
+                }
+                // for HTTP post (form)
+                $httpBody = new MultipartStream($multipartContents);
+
+            } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
+                # if Content-Type contains "application/json", json_encode the form parameters
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
+            } else {
+                // for HTTP post (form)
+                $httpBody = ObjectSerializer::buildQuery($formParams);
+            }
+        }
+
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
+
+        $defaultHeaders = [];
+        if ($this->config->getUserAgent()) {
+            $defaultHeaders['User-Agent'] = $this->config->getUserAgent();
+        }
+
+        $headers = array_merge(
+            $defaultHeaders,
+            $headerParams,
+            $headers
+        );
+
+        $operationHost = $this->config->getHost();
+        $query = ObjectSerializer::buildQuery($queryParams);
+        return new Request(
+            'PATCH',
+            $operationHost . $resourcePath . ($query ? "?{$query}" : ''),
+            $headers,
+            $httpBody
+        );
+    }
+
+    /**
+     * Operation updateSubroom
+     *
+     * Update Subroom
+     *
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
+     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The updated subroom fields. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return void
+     */
+    public function updateSubroom($room_id, $subroom_id, $subroom_edit, string $contentType = self::contentTypes['updateSubroom'][0])
+    {
+        $this->updateSubroomWithHttpInfo($room_id, $subroom_id, $subroom_edit, $contentType);
+    }
+
+    /**
+     * Operation updateSubroomWithHttpInfo
+     *
+     * Update Subroom
+     *
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
+     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The updated subroom fields. (required)
+     * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
+     *
+     * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
+     * @throws \InvalidArgumentException
+     * @return array of null, HTTP status code, HTTP response headers (array of strings)
+     */
+    public function updateSubroomWithHttpInfo($room_id, $subroom_id, $subroom_edit, string $contentType = self::contentTypes['updateSubroom'][0])
+    {
+        $request = $this->updateSubroomRequest($room_id, $subroom_id, $subroom_edit, $contentType);
+
+        try {
+            $options = $this->createHttpClientOption();
+            try {
+                $response = $this->client->send($request, $options);
+            } catch (RequestException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    $e->getResponse() ? $e->getResponse()->getHeaders() : null,
+                    $e->getResponse() ? (string) $e->getResponse()->getBody() : null
+                );
+            } catch (ConnectException $e) {
+                throw new ApiException(
+                    "[{$e->getCode()}] {$e->getMessage()}",
+                    (int) $e->getCode(),
+                    null,
+                    null
+                );
+            }
+
+            $statusCode = $response->getStatusCode();
+
+
+            return [null, $statusCode, $response->getHeaders()];
+        } catch (ApiException $e) {
+            switch ($e->getCode()) {
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 404:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -5797,18 +7962,17 @@ class RoomsApi
      *
      * Update Subroom
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to update. (required)
-     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The fields of the subroom that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
+     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The updated subroom fields. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateSubroomAsync($room_id, $subroom_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['updateSubroom'][0])
+    public function updateSubroomAsync($room_id, $subroom_id, $subroom_edit, string $contentType = self::contentTypes['updateSubroom'][0])
     {
-        return $this->updateSubroomAsyncWithHttpInfo($room_id, $subroom_id, $subroom_edit, $authorization, $contentType)
+        return $this->updateSubroomAsyncWithHttpInfo($room_id, $subroom_id, $subroom_edit, $contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -5821,19 +7985,18 @@ class RoomsApi
      *
      * Update Subroom
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to update. (required)
-     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The fields of the subroom that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
+     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The updated subroom fields. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function updateSubroomAsyncWithHttpInfo($room_id, $subroom_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['updateSubroom'][0])
+    public function updateSubroomAsyncWithHttpInfo($room_id, $subroom_id, $subroom_edit, string $contentType = self::contentTypes['updateSubroom'][0])
     {
         $returnType = '';
-        $request = $this->updateSubroomRequest($room_id, $subroom_id, $subroom_edit, $authorization, $contentType);
+        $request = $this->updateSubroomRequest($room_id, $subroom_id, $subroom_edit, $contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -5861,16 +8024,15 @@ class RoomsApi
     /**
      * Create request for operation 'updateSubroom'
      *
-     * @param  string $room_id The ID of the room the subroom is assigned to. (required)
-     * @param  string $subroom_id The ID of the subroom to update. (required)
-     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The fields of the subroom that should be changed. (required)
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
+     * @param  string $room_id The room ID the subroom is assigned to. (required)
+     * @param  string $subroom_id The subroom ID. (required)
+     * @param  \Alfaview\Client\Model\SubroomEdit $subroom_edit The updated subroom fields. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['updateSubroom'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function updateSubroomRequest($room_id, $subroom_id, $subroom_edit, $authorization = null, string $contentType = self::contentTypes['updateSubroom'][0])
+    public function updateSubroomRequest($room_id, $subroom_id, $subroom_edit, string $contentType = self::contentTypes['updateSubroom'][0])
     {
 
         // verify the required parameter 'room_id' is set
@@ -5895,7 +8057,6 @@ class RoomsApi
         }
 
 
-
         $resourcePath = '/v2/rooms/{roomId}/subrooms/{subroomId}';
         $formParams = [];
         $queryParams = [];
@@ -5904,15 +8065,11 @@ class RoomsApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
         // path params
         if ($room_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'roomId' . '}',
+                '{roomId}',
                 ObjectSerializer::toPathValue($room_id),
                 $resourcePath
             );
@@ -5920,7 +8077,7 @@ class RoomsApi
         // path params
         if ($subroom_id !== null) {
             $resourcePath = str_replace(
-                '{' . 'subroomId' . '}',
+                '{subroomId}',
                 ObjectSerializer::toPathValue($subroom_id),
                 $resourcePath
             );
@@ -5928,7 +8085,7 @@ class RoomsApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            [],
+            ['application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -5937,7 +8094,11 @@ class RoomsApi
         if (isset($subroom_edit)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($subroom_edit));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($subroom_edit), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $subroom_edit;
             }
@@ -5958,13 +8119,21 @@ class RoomsApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -6001,6 +8170,14 @@ class RoomsApi
             if (!$options[RequestOptions::DEBUG]) {
                 throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
             }
+        }
+
+        if ($this->config->getCertFile()) {
+            $options[RequestOptions::CERT] = $this->config->getCertFile();
+        }
+
+        if ($this->config->getKeyFile()) {
+            $options[RequestOptions::SSL_KEY] = $this->config->getKeyFile();
         }
 
         return $options;

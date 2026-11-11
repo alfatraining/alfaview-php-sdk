@@ -1,4 +1,4 @@
-# # PaginatedBodyListGuestLink
+# PaginatedBodyListGuestLink
 
 ## Properties
 

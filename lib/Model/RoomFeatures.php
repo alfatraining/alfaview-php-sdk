@@ -13,11 +13,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -45,17 +45,17 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
     public const DISCRIMINATOR = null;
 
     /**
-      * The original name of the model.
-      *
-      * @var string
-      */
+     * The original name of the model.
+     *
+     * @var string
+     */
     protected static $openAPIModelName = 'RoomFeatures';
 
     /**
-      * Array of property to type mappings. Used for (de)serialization
-      *
-      * @var string[]
-      */
+     * Array of property to type mappings. Used for (de)serialization
+     *
+     * @var string[]
+     */
     protected static $openAPITypes = [
         'allow_copy_room_info' => 'string',
         'block_webclient' => 'string',
@@ -63,6 +63,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         'disable_camera_off' => 'string',
         'disable_join_and_leave_notifications' => 'string',
         'disable_mini_window' => 'string',
+        'exam_screenshare' => 'string',
+        'live_streaming' => 'string',
+        'local_recording' => 'string',
         'raise_hands' => 'string',
         'share_content_only_to_moderators' => 'string',
         'show_raised_hands_only_to_moderators' => 'string',
@@ -71,12 +74,12 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * Array of property to format mappings. Used for (de)serialization
-      *
-      * @var string[]
-      * @phpstan-var array<string, string|null>
-      * @psalm-var array<string, string|null>
-      */
+     * Array of property to format mappings. Used for (de)serialization
+     *
+     * @var string[]
+     * @phpstan-var array<string, string|null>
+     * @psalm-var array<string, string|null>
+     */
     protected static $openAPIFormats = [
         'allow_copy_room_info' => null,
         'block_webclient' => null,
@@ -84,6 +87,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         'disable_camera_off' => null,
         'disable_join_and_leave_notifications' => null,
         'disable_mini_window' => null,
+        'exam_screenshare' => null,
+        'live_streaming' => null,
+        'local_recording' => null,
         'raise_hands' => null,
         'share_content_only_to_moderators' => null,
         'show_raised_hands_only_to_moderators' => null,
@@ -92,10 +98,10 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * Array of nullable properties. Used for (de)serialization
-      *
-      * @var boolean[]
-      */
+     * Array of nullable properties. Used for (de)serialization
+     *
+     * @var boolean[]
+     */
     protected static array $openAPINullables = [
         'allow_copy_room_info' => false,
         'block_webclient' => false,
@@ -103,6 +109,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         'disable_camera_off' => false,
         'disable_join_and_leave_notifications' => false,
         'disable_mini_window' => false,
+        'exam_screenshare' => false,
+        'live_streaming' => false,
+        'local_recording' => false,
         'raise_hands' => false,
         'share_content_only_to_moderators' => false,
         'show_raised_hands_only_to_moderators' => false,
@@ -111,10 +120,10 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
     ];
 
     /**
-      * If a nullable field gets set to null, insert it here
-      *
-      * @var boolean[]
-      */
+     * If a nullable field gets set to null, insert it here
+     *
+     * @var boolean[]
+     */
     protected array $openAPINullablesSetToNull = [];
 
     /**
@@ -202,6 +211,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         'disable_camera_off' => 'disableCameraOff',
         'disable_join_and_leave_notifications' => 'disableJoinAndLeaveNotifications',
         'disable_mini_window' => 'disableMiniWindow',
+        'exam_screenshare' => 'examScreenshare',
+        'live_streaming' => 'liveStreaming',
+        'local_recording' => 'localRecording',
         'raise_hands' => 'raiseHands',
         'share_content_only_to_moderators' => 'shareContentOnlyToModerators',
         'show_raised_hands_only_to_moderators' => 'showRaisedHandsOnlyToModerators',
@@ -221,6 +233,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         'disable_camera_off' => 'setDisableCameraOff',
         'disable_join_and_leave_notifications' => 'setDisableJoinAndLeaveNotifications',
         'disable_mini_window' => 'setDisableMiniWindow',
+        'exam_screenshare' => 'setExamScreenshare',
+        'live_streaming' => 'setLiveStreaming',
+        'local_recording' => 'setLocalRecording',
         'raise_hands' => 'setRaiseHands',
         'share_content_only_to_moderators' => 'setShareContentOnlyToModerators',
         'show_raised_hands_only_to_moderators' => 'setShowRaisedHandsOnlyToModerators',
@@ -240,6 +255,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         'disable_camera_off' => 'getDisableCameraOff',
         'disable_join_and_leave_notifications' => 'getDisableJoinAndLeaveNotifications',
         'disable_mini_window' => 'getDisableMiniWindow',
+        'exam_screenshare' => 'getExamScreenshare',
+        'live_streaming' => 'getLiveStreaming',
+        'local_recording' => 'getLocalRecording',
         'raise_hands' => 'getRaiseHands',
         'share_content_only_to_moderators' => 'getShareContentOnlyToModerators',
         'show_raised_hands_only_to_moderators' => 'getShowRaisedHandsOnlyToModerators',
@@ -306,6 +324,15 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
     public const DISABLE_MINI_WINDOW_ENABLED = 'enabled';
     public const DISABLE_MINI_WINDOW_DISABLED = 'disabled';
     public const DISABLE_MINI_WINDOW__DEFAULT = 'default';
+    public const EXAM_SCREENSHARE_ENABLED = 'enabled';
+    public const EXAM_SCREENSHARE_DISABLED = 'disabled';
+    public const EXAM_SCREENSHARE__DEFAULT = 'default';
+    public const LIVE_STREAMING_ENABLED = 'enabled';
+    public const LIVE_STREAMING_DISABLED = 'disabled';
+    public const LIVE_STREAMING__DEFAULT = 'default';
+    public const LOCAL_RECORDING_ENABLED = 'enabled';
+    public const LOCAL_RECORDING_DISABLED = 'disabled';
+    public const LOCAL_RECORDING__DEFAULT = 'default';
     public const RAISE_HANDS_ENABLED = 'enabled';
     public const RAISE_HANDS_DISABLED = 'disabled';
     public const RAISE_HANDS__DEFAULT = 'default';
@@ -411,6 +438,48 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
      *
      * @return string[]
      */
+    public function getExamScreenshareAllowableValues()
+    {
+        return [
+            self::EXAM_SCREENSHARE_ENABLED,
+            self::EXAM_SCREENSHARE_DISABLED,
+            self::EXAM_SCREENSHARE__DEFAULT,
+        ];
+    }
+
+    /**
+     * Gets allowable values of the enum
+     *
+     * @return string[]
+     */
+    public function getLiveStreamingAllowableValues()
+    {
+        return [
+            self::LIVE_STREAMING_ENABLED,
+            self::LIVE_STREAMING_DISABLED,
+            self::LIVE_STREAMING__DEFAULT,
+        ];
+    }
+
+    /**
+     * Gets allowable values of the enum
+     *
+     * @return string[]
+     */
+    public function getLocalRecordingAllowableValues()
+    {
+        return [
+            self::LOCAL_RECORDING_ENABLED,
+            self::LOCAL_RECORDING_DISABLED,
+            self::LOCAL_RECORDING__DEFAULT,
+        ];
+    }
+
+    /**
+     * Gets allowable values of the enum
+     *
+     * @return string[]
+     */
     public function getRaiseHandsAllowableValues()
     {
         return [
@@ -497,6 +566,9 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
         $this->setIfExists('disable_camera_off', $data ?? [], null);
         $this->setIfExists('disable_join_and_leave_notifications', $data ?? [], null);
         $this->setIfExists('disable_mini_window', $data ?? [], null);
+        $this->setIfExists('exam_screenshare', $data ?? [], null);
+        $this->setIfExists('live_streaming', $data ?? [], null);
+        $this->setIfExists('local_recording', $data ?? [], null);
         $this->setIfExists('raise_hands', $data ?? [], null);
         $this->setIfExists('share_content_only_to_moderators', $data ?? [], null);
         $this->setIfExists('show_raised_hands_only_to_moderators', $data ?? [], null);
@@ -505,14 +577,14 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
     }
 
     /**
-    * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
-    * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
-    * $this->openAPINullablesSetToNull array
-    *
-    * @param string $variableName
-    * @param array  $fields
-    * @param mixed  $defaultValue
-    */
+     * Sets $this->container[$variableName] to the given data or to the given default Value; if $variableName
+     * is nullable and its value is set to null in the $fields array, then mark it as "set to null" in the
+     * $this->openAPINullablesSetToNull array
+     *
+     * @param string $variableName
+     * @param array  $fields
+     * @param mixed  $defaultValue
+     */
     private function setIfExists(string $variableName, array $fields, $defaultValue): void
     {
         if (self::isNullable($variableName) && array_key_exists($variableName, $fields) && is_null($fields[$variableName])) {
@@ -599,6 +671,42 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
             $invalidProperties[] = sprintf(
                 "invalid value '%s' for 'disable_mini_window', must be one of '%s'",
                 $this->container['disable_mini_window'],
+                implode("', '", $allowedValues)
+            );
+        }
+
+        if ($this->container['exam_screenshare'] === null) {
+            $invalidProperties[] = "'exam_screenshare' can't be null";
+        }
+        $allowedValues = $this->getExamScreenshareAllowableValues();
+        if (!is_null($this->container['exam_screenshare']) && !in_array($this->container['exam_screenshare'], $allowedValues, true)) {
+            $invalidProperties[] = sprintf(
+                "invalid value '%s' for 'exam_screenshare', must be one of '%s'",
+                $this->container['exam_screenshare'],
+                implode("', '", $allowedValues)
+            );
+        }
+
+        if ($this->container['live_streaming'] === null) {
+            $invalidProperties[] = "'live_streaming' can't be null";
+        }
+        $allowedValues = $this->getLiveStreamingAllowableValues();
+        if (!is_null($this->container['live_streaming']) && !in_array($this->container['live_streaming'], $allowedValues, true)) {
+            $invalidProperties[] = sprintf(
+                "invalid value '%s' for 'live_streaming', must be one of '%s'",
+                $this->container['live_streaming'],
+                implode("', '", $allowedValues)
+            );
+        }
+
+        if ($this->container['local_recording'] === null) {
+            $invalidProperties[] = "'local_recording' can't be null";
+        }
+        $allowedValues = $this->getLocalRecordingAllowableValues();
+        if (!is_null($this->container['local_recording']) && !in_array($this->container['local_recording'], $allowedValues, true)) {
+            $invalidProperties[] = sprintf(
+                "invalid value '%s' for 'local_recording', must be one of '%s'",
+                $this->container['local_recording'],
                 implode("', '", $allowedValues)
             );
         }
@@ -896,6 +1004,117 @@ class RoomFeatures implements ModelInterface, ArrayAccess, \JsonSerializable
             );
         }
         $this->container['disable_mini_window'] = $disable_mini_window;
+
+        return $this;
+    }
+
+    /**
+     * Gets exam_screenshare
+     *
+     * @return string
+     */
+    public function getExamScreenshare()
+    {
+        return $this->container['exam_screenshare'];
+    }
+
+    /**
+     * Sets exam_screenshare
+     *
+     * @param string $exam_screenshare All monitors of all participants in this room are shared with the moderators. Users with an incompatible version are not able to join the room. Linux users can always join the room due to technical limitations on Linux systems with this feature.
+     *
+     * @return self
+     */
+    public function setExamScreenshare($exam_screenshare)
+    {
+        if (is_null($exam_screenshare)) {
+            throw new \InvalidArgumentException('non-nullable exam_screenshare cannot be null');
+        }
+        $allowedValues = $this->getExamScreenshareAllowableValues();
+        if (!in_array($exam_screenshare, $allowedValues, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    "Invalid value '%s' for 'exam_screenshare', must be one of '%s'",
+                    $exam_screenshare,
+                    implode("', '", $allowedValues)
+                )
+            );
+        }
+        $this->container['exam_screenshare'] = $exam_screenshare;
+
+        return $this;
+    }
+
+    /**
+     * Gets live_streaming
+     *
+     * @return string
+     */
+    public function getLiveStreaming()
+    {
+        return $this->container['live_streaming'];
+    }
+
+    /**
+     * Sets live_streaming
+     *
+     * @param string $live_streaming Allows to live stream all video and audio in the alfaview room to external live streaming servers.
+     *
+     * @return self
+     */
+    public function setLiveStreaming($live_streaming)
+    {
+        if (is_null($live_streaming)) {
+            throw new \InvalidArgumentException('non-nullable live_streaming cannot be null');
+        }
+        $allowedValues = $this->getLiveStreamingAllowableValues();
+        if (!in_array($live_streaming, $allowedValues, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    "Invalid value '%s' for 'live_streaming', must be one of '%s'",
+                    $live_streaming,
+                    implode("', '", $allowedValues)
+                )
+            );
+        }
+        $this->container['live_streaming'] = $live_streaming;
+
+        return $this;
+    }
+
+    /**
+     * Gets local_recording
+     *
+     * @return string
+     */
+    public function getLocalRecording()
+    {
+        return $this->container['local_recording'];
+    }
+
+    /**
+     * Sets local_recording
+     *
+     * @param string $local_recording Allows to record all video and audio in the alfaview room. Recorded video files are stored locally.
+     *
+     * @return self
+     */
+    public function setLocalRecording($local_recording)
+    {
+        if (is_null($local_recording)) {
+            throw new \InvalidArgumentException('non-nullable local_recording cannot be null');
+        }
+        $allowedValues = $this->getLocalRecordingAllowableValues();
+        if (!in_array($local_recording, $allowedValues, true)) {
+            throw new \InvalidArgumentException(
+                sprintf(
+                    "Invalid value '%s' for 'local_recording', must be one of '%s'",
+                    $local_recording,
+                    implode("', '", $allowedValues)
+                )
+            );
+        }
+        $this->container['local_recording'] = $local_recording;
 
         return $this;
     }

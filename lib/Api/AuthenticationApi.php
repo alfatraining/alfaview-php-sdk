@@ -12,11 +12,11 @@
 /**
  * alfaview
  *
- * ## Format information * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Authentication ### API Key and Credentials All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be used as the value in the `Authorization` header in all subsequent API requests.  ### Token Time-To-Live (TTL) Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.
+ * ## Quickstart  ### 1. Obtain an access token  Obtain an access token, for example with an API key ([Authenticate via API Key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey)). Generate API credentials in the alfaview administration to get an API key, as the support article [Generate API credentials](https://support.alfaview.com/en/for-it-administration/advanced-configurations/generate-api-credentials/) describes.  ```shell curl -X POST https://apis.alfaview.com/v2/auth/api-key \\   -H \"Content-Type: application/json\" \\   -d '{\"companyId\": \"<company ID>\", \"clientId\": \"<API key alias>\", \"key\": \"<API key>\"}' ```  The response contains the token: `{\"accessToken\": \"<base64-encoded token>\"}`.  ### 2. Call the API with the token  Pass the token with the `Bearer` prefix in the `Authorization` header of every further request, for example to list the rooms ([List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms)):  ```shell curl https://apis.alfaview.com/v2/rooms -H \"Authorization: Bearer <base64-encoded token>\" ```  ## Format information  * All time fields are returned in RFC3339 format and in UTC if not mentioned otherwise.  ## Pagination  List endpoints are paginated. They return at most `limit` items (default and maximum depend on the endpoint, see its `limit` parameter) and a `nextPageToken` if more items exist. To obtain the next page, repeat the request with the `pageToken` parameter set to that value. The last page contains no `nextPageToken`.  ## Errors  Errors are returned as `application/problem+json` ([RFC 9457](https://www.rfc-editor.org/rfc/rfc9457)) with the fields `title`, `status` and `detail`, and an optional `errors` list with the `location`, `message` and `value` of each individual validation error.  A request that does not match the schema of the endpoint gets the response code `422`. This is the case when a required field or parameter is missing, a value has the wrong type or format or is out of range, or the body contains an unknown field. Additional cases are documented for each endpoint individually.  `401` responses of endpoints that require an access token additionally carry the header `WWW-Authenticate: Bearer`.  ## Authentication  ### API Key and Credentials  All API requests require an access token for authorization. Access tokens can be obtained by authenticating using any of the following endpoints: - [Authenticate via API key](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateAPIKey) - [Authenticate via password](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticatePassword) - [Authenticate a guest (guest link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGuestLink) - [Authenticate a guest (group link)](https://apis.alfaview.com/v2/docs/openapi#/operations/AuthenticateGroupLink) The access token is returned as a base64-encoded string. It needs to be sent in the `Authorization` header in all subsequent API requests, with an optional `Bearer ` prefix (`Authorization: Bearer <token>` or `Authorization: <token>`).  ### Token Time-To-Live (TTL)  Access tokens are valid for 1 hour. After this period, tokens will be expired and a new token must be obtained.  ## Permissions  The description of every endpoint states the user permissions and room permissions it requires. There are two distinct types of permissions that can be applied to users independently.  ### Room permissions  Room permissions are the permissions of users in a particular room. If users have no permissions for a room, they cannot get any information about the room and it is excluded from room lists. The main exceptions are users with the user permission `roomAdmin`. [List Rooms](https://apis.alfaview.com/v2/docs/openapi#/operations/ListRooms) states the exact rules.  To edit room properties or create resources (e.g., links, subrooms) for a room, users need room administrator permissions or user permissions that permit those actions. For further information please refer to the [room permissions section in the support center](https://support.alfaview.com/en/administration/general/room-permissions/).  ### User permissions  User permissions are high level permissions applied to users independently from specific rooms. For further information please refer to the [user permissions section in the support center](https://support.alfaview.com/en/administration/general/user-permissions/).
  *
  * The version of the OpenAPI document: 2
  * Generated by: https://openapi-generator.tech
- * Generator version: 7.16.0-SNAPSHOT
+ * Generator version: 7.27.0-SNAPSHOT
  */
 
 /**
@@ -142,12 +142,12 @@ class AuthenticationApi
      *
      * Authenticate via API Key
      *
-     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateAPIKey'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\AccessToken
+     * @return \Alfaview\Client\Model\AccessToken|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
     public function authenticateAPIKey($api_credentials, string $contentType = self::contentTypes['authenticateAPIKey'][0])
     {
@@ -160,12 +160,12 @@ class AuthenticationApi
      *
      * Authenticate via API Key
      *
-     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateAPIKey'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\AccessToken, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\AccessToken|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
     public function authenticateAPIKeyWithHttpInfo($api_credentials, string $contentType = self::contentTypes['authenticateAPIKey'][0])
     {
@@ -201,6 +201,30 @@ class AuthenticationApi
                         $request,
                         $response,
                     );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -233,6 +257,38 @@ class AuthenticationApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -245,7 +301,7 @@ class AuthenticationApi
      *
      * Authenticate via API Key
      *
-     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateAPIKey'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -266,7 +322,7 @@ class AuthenticationApi
      *
      * Authenticate via API Key
      *
-     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateAPIKey'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -316,7 +372,7 @@ class AuthenticationApi
     /**
      * Create request for operation 'authenticateAPIKey'
      *
-     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\APICredentials $api_credentials The API credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticateAPIKey'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -345,7 +401,7 @@ class AuthenticationApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -354,7 +410,11 @@ class AuthenticationApi
         if (isset($api_credentials)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($api_credentials));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($api_credentials), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $api_credentials;
             }
@@ -375,7 +435,11 @@ class AuthenticationApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
@@ -414,7 +478,7 @@ class AuthenticationApi
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\GroupLinkAuthenticationInfo
+     * @return \Alfaview\Client\Model\GroupLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
     public function authenticateGroupLink($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
     {
@@ -432,7 +496,7 @@ class AuthenticationApi
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\GroupLinkAuthenticationInfo, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\GroupLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
     public function authenticateGroupLinkWithHttpInfo($authenticate_group_link_request_body, string $contentType = self::contentTypes['authenticateGroupLink'][0])
     {
@@ -468,6 +532,24 @@ class AuthenticationApi
                         $request,
                         $response,
                     );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -496,6 +578,30 @@ class AuthenticationApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\Alfaview\Client\Model\GroupLinkAuthenticationInfo',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -612,7 +718,7 @@ class AuthenticationApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -621,7 +727,11 @@ class AuthenticationApi
         if (isset($authenticate_group_link_request_body)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($authenticate_group_link_request_body));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($authenticate_group_link_request_body), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $authenticate_group_link_request_body;
             }
@@ -642,7 +752,11 @@ class AuthenticationApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
@@ -681,7 +795,7 @@ class AuthenticationApi
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\GuestLinkAuthenticationInfo
+     * @return \Alfaview\Client\Model\GuestLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
     public function authenticateGuestLink($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
     {
@@ -699,7 +813,7 @@ class AuthenticationApi
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\GuestLinkAuthenticationInfo, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\GuestLinkAuthenticationInfo|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
     public function authenticateGuestLinkWithHttpInfo($authenticate_guest_link_request_body, string $contentType = self::contentTypes['authenticateGuestLink'][0])
     {
@@ -735,6 +849,24 @@ class AuthenticationApi
                         $request,
                         $response,
                     );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -763,6 +895,30 @@ class AuthenticationApi
                     $data = ObjectSerializer::deserialize(
                         $e->getResponseBody(),
                         '\Alfaview\Client\Model\GuestLinkAuthenticationInfo',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
                         $e->getResponseHeaders()
                     );
                     $e->setResponseObject($data);
@@ -879,7 +1035,7 @@ class AuthenticationApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -888,7 +1044,11 @@ class AuthenticationApi
         if (isset($authenticate_guest_link_request_body)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($authenticate_guest_link_request_body));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($authenticate_guest_link_request_body), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $authenticate_guest_link_request_body;
             }
@@ -909,7 +1069,11 @@ class AuthenticationApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
@@ -943,12 +1107,12 @@ class AuthenticationApi
      *
      * Authenticate via Password
      *
-     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticatePassword'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\AccessToken
+     * @return \Alfaview\Client\Model\AccessToken|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel
      */
     public function authenticatePassword($password_credentials, string $contentType = self::contentTypes['authenticatePassword'][0])
     {
@@ -961,12 +1125,12 @@ class AuthenticationApi
      *
      * Authenticate via Password
      *
-     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticatePassword'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\AccessToken, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\AccessToken|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
     public function authenticatePasswordWithHttpInfo($password_credentials, string $contentType = self::contentTypes['authenticatePassword'][0])
     {
@@ -1002,6 +1166,30 @@ class AuthenticationApi
                         $request,
                         $response,
                     );
+                case 400:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 401:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 403:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $request,
+                        $response,
+                    );
             }
 
             
@@ -1034,6 +1222,38 @@ class AuthenticationApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 400:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 401:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 403:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1046,7 +1266,7 @@ class AuthenticationApi
      *
      * Authenticate via Password
      *
-     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticatePassword'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -1067,7 +1287,7 @@ class AuthenticationApi
      *
      * Authenticate via Password
      *
-     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticatePassword'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -1117,7 +1337,7 @@ class AuthenticationApi
     /**
      * Create request for operation 'authenticatePassword'
      *
-     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials to authenticate. (required)
+     * @param  \Alfaview\Client\Model\PasswordCredentials $password_credentials The user credentials. (required)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['authenticatePassword'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
@@ -1146,7 +1366,7 @@ class AuthenticationApi
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1155,7 +1375,11 @@ class AuthenticationApi
         if (isset($password_credentials)) {
             if (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the body
-                $httpBody = \GuzzleHttp\Utils::jsonEncode(ObjectSerializer::sanitizeForSerialization($password_credentials));
+                try {
+                    $httpBody = json_encode(ObjectSerializer::sanitizeForSerialization($password_credentials), JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 $httpBody = $password_credentials;
             }
@@ -1176,7 +1400,11 @@ class AuthenticationApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
@@ -1210,16 +1438,15 @@ class AuthenticationApi
      *
      * Get Access Token Information
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getTokenInfo'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return \Alfaview\Client\Model\TokenInfo
+     * @return \Alfaview\Client\Model\TokenInfo|\Alfaview\Client\Model\ErrorModel
      */
-    public function getTokenInfo($authorization = null, string $contentType = self::contentTypes['getTokenInfo'][0])
+    public function getTokenInfo(string $contentType = self::contentTypes['getTokenInfo'][0])
     {
-        list($response) = $this->getTokenInfoWithHttpInfo($authorization, $contentType);
+        list($response) = $this->getTokenInfoWithHttpInfo($contentType);
         return $response;
     }
 
@@ -1228,16 +1455,15 @@ class AuthenticationApi
      *
      * Get Access Token Information
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getTokenInfo'] to see the possible values for this operation
      *
      * @throws \Alfaview\Client\ApiException on non-2xx response or if the response body is not in the expected format
      * @throws \InvalidArgumentException
-     * @return array of \Alfaview\Client\Model\TokenInfo, HTTP status code, HTTP response headers (array of strings)
+     * @return array of \Alfaview\Client\Model\TokenInfo|\Alfaview\Client\Model\ErrorModel, HTTP status code, HTTP response headers (array of strings)
      */
-    public function getTokenInfoWithHttpInfo($authorization = null, string $contentType = self::contentTypes['getTokenInfo'][0])
+    public function getTokenInfoWithHttpInfo(string $contentType = self::contentTypes['getTokenInfo'][0])
     {
-        $request = $this->getTokenInfoRequest($authorization, $contentType);
+        $request = $this->getTokenInfoRequest($contentType);
 
         try {
             $options = $this->createHttpClientOption();
@@ -1266,6 +1492,12 @@ class AuthenticationApi
                 case 200:
                     return $this->handleResponseWithDataType(
                         '\Alfaview\Client\Model\TokenInfo',
+                        $request,
+                        $response,
+                    );
+                case 422:
+                    return $this->handleResponseWithDataType(
+                        '\Alfaview\Client\Model\ErrorModel',
                         $request,
                         $response,
                     );
@@ -1301,6 +1533,14 @@ class AuthenticationApi
                     );
                     $e->setResponseObject($data);
                     throw $e;
+                case 422:
+                    $data = ObjectSerializer::deserialize(
+                        $e->getResponseBody(),
+                        '\Alfaview\Client\Model\ErrorModel',
+                        $e->getResponseHeaders()
+                    );
+                    $e->setResponseObject($data);
+                    throw $e;
             }
         
 
@@ -1313,15 +1553,14 @@ class AuthenticationApi
      *
      * Get Access Token Information
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getTokenInfo'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getTokenInfoAsync($authorization = null, string $contentType = self::contentTypes['getTokenInfo'][0])
+    public function getTokenInfoAsync(string $contentType = self::contentTypes['getTokenInfo'][0])
     {
-        return $this->getTokenInfoAsyncWithHttpInfo($authorization, $contentType)
+        return $this->getTokenInfoAsyncWithHttpInfo($contentType)
             ->then(
                 function ($response) {
                     return $response[0];
@@ -1334,16 +1573,15 @@ class AuthenticationApi
      *
      * Get Access Token Information
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getTokenInfo'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Promise\PromiseInterface
      */
-    public function getTokenInfoAsyncWithHttpInfo($authorization = null, string $contentType = self::contentTypes['getTokenInfo'][0])
+    public function getTokenInfoAsyncWithHttpInfo(string $contentType = self::contentTypes['getTokenInfo'][0])
     {
         $returnType = '\Alfaview\Client\Model\TokenInfo';
-        $request = $this->getTokenInfoRequest($authorization, $contentType);
+        $request = $this->getTokenInfoRequest($contentType);
 
         return $this->client
             ->sendAsync($request, $this->createHttpClientOption())
@@ -1384,15 +1622,13 @@ class AuthenticationApi
     /**
      * Create request for operation 'getTokenInfo'
      *
-     * @param  string|null $authorization A valid access token (can be obtained by authenticating). (optional)
      * @param  string $contentType The value for the Content-Type header. Check self::contentTypes['getTokenInfo'] to see the possible values for this operation
      *
      * @throws \InvalidArgumentException
      * @return \GuzzleHttp\Psr7\Request
      */
-    public function getTokenInfoRequest($authorization = null, string $contentType = self::contentTypes['getTokenInfo'][0])
+    public function getTokenInfoRequest(string $contentType = self::contentTypes['getTokenInfo'][0])
     {
-
 
 
         $resourcePath = '/v2/auth/token-info';
@@ -1403,15 +1639,11 @@ class AuthenticationApi
         $multipart = false;
 
 
-        // header params
-        if ($authorization !== null) {
-            $headerParams['Authorization'] = ObjectSerializer::toHeaderValue($authorization);
-        }
 
 
 
         $headers = $this->headerSelector->selectHeaders(
-            ['application/json', ],
+            ['application/json', 'application/problem+json', ],
             $contentType,
             $multipart
         );
@@ -1434,13 +1666,21 @@ class AuthenticationApi
 
             } elseif (stripos($headers['Content-Type'], 'application/json') !== false) {
                 # if Content-Type contains "application/json", json_encode the form parameters
-                $httpBody = \GuzzleHttp\Utils::jsonEncode($formParams);
+                try {
+                    $httpBody = json_encode($formParams, JSON_THROW_ON_ERROR);
+                } catch (\JsonException $e) {
+                    throw new \InvalidArgumentException('json_encode error: ' . $e->getMessage(), 0, $e);
+                }
             } else {
                 // for HTTP post (form)
                 $httpBody = ObjectSerializer::buildQuery($formParams);
             }
         }
 
+        // this endpoint requires Bearer (opaque) authentication (access token)
+        if (!empty($this->config->getAccessToken())) {
+            $headers['Authorization'] = 'Bearer ' . $this->config->getAccessToken();
+        }
 
         $defaultHeaders = [];
         if ($this->config->getUserAgent()) {
@@ -1477,6 +1717,14 @@ class AuthenticationApi
             if (!$options[RequestOptions::DEBUG]) {
                 throw new \RuntimeException('Failed to open the debug file: ' . $this->config->getDebugFile());
             }
+        }
+
+        if ($this->config->getCertFile()) {
+            $options[RequestOptions::CERT] = $this->config->getCertFile();
+        }
+
+        if ($this->config->getKeyFile()) {
+            $options[RequestOptions::SSL_KEY] = $this->config->getKeyFile();
         }
 
         return $options;
